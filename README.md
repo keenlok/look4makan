@@ -21,6 +21,7 @@ account, and administrators can create/modify/delete entries.
 ##Installation process:
 1. Download/clone
 2. Run `npm install`
-3. Setup `.env` file with the following line inside:
-`DATABASE_URL=postgres://username:password@host_address:port/database_name`
+3. Setup `.env` file with the following line inside:  
+`DATABASE_URL=postgres://username:password@host_address:port/database_name`  
+ This is to allow the app to connect to your postgres database.
 4. Run `npm run start`

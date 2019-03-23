@@ -1,6 +1,9 @@
 function convertDayToStr (day) {
     let dayStr;
     switch (day) {
+        case 0:
+            dayStr = 'Sunday';
+            break;
         case 1:
             dayStr = 'Monday';
             break;
@@ -19,11 +22,8 @@ function convertDayToStr (day) {
         case 6:
             dayStr = 'Saturday';
             break;
-        case 7:
-            dayStr = 'Sunday';
-            break;
         default:
-            dayStr = "Error can't get valid day";
+            dayStr = "Error can't get valid day " + day;
             break;
     }
     return dayStr;

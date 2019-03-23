@@ -151,14 +151,3 @@ insert into freetables (rid, bid, tid, pax, availablesince) values
 (1, 1, 5, 4, '10:00:00'),
 (1, 1, 6, 4, '10:00:00');
 
-select * from advertises natural join restaurants natural join branches;
-
-SELECT rname, location
-FROM ((advertises  natural join restaurants) natural join branches) R
-WHERE EXISTS (
-    SELECT 1
-    FROM freetables F
-    WHERE F.rid = R.rid
-    AND F.bid = R.bid
-	AND F.availableSince < '20:19:00'
-);

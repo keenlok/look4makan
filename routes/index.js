@@ -12,10 +12,17 @@ const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSecond
 
 const query = require('./sql/sqlQueries').findAllAvailableRestaurants;
 
+const title = 'Looking for places to eat?';
+
+const dayStr = require('./utils/util').convertDayToStr(today.getDay());
+const monthStr = require('./utils/util').convertMonthToStr(today.getMonth());
+
+const date = dayStr + ' ' + today.getDate() + ' ' + monthStr + ' ' + today.getFullYear();
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   pool.query(query, [time], (err, data) => {
-      res.render('index', {title: 'Look4Makan', data: data.rows});
+      res.render('index', {title: title, date:date, data: data.rows});
   })
 });
 

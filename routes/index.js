@@ -7,17 +7,15 @@ const pool = new Pool({
     connectionString: process.env.DATABASE_URL
 });
 
-let today = new Date();
-const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+const utils = require('./utils/util');
 
-const query = require('./sql/sqlQueries').findAllAvailableRestaurants;
+let today = new Date();
+const time = utils.getTime(today);
+const date = utils.getDateInStr(today);
+
+const query = require('./sql/sqlQueries').allBranchWithStatus;
 
 const title = 'Looking for places to eat?';
-
-const dayStr = require('./utils/util').convertDayToStr(today.getDay());
-const monthStr = require('./utils/util').convertMonthToStr(today.getMonth());
-
-const date = dayStr + ' ' + today.getDate() + ' ' + monthStr + ' ' + today.getFullYear();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
+const restaurantRouter = require('./routes/restaurant');
 
 let app = express();
 
@@ -31,7 +32,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.use('/', indexRouter);
-
+app.use('/restaurant', restaurantRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

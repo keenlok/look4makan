@@ -75,5 +75,34 @@ function convertMonthToStr (month) {
     return monthStr;
 }
 
+function getDateInStr(today) {
+    if (typeof today === 'undefined') {
+        today = new Date();
+    }
+    const dayStr = convertDayToStr(today.getDay());
+    const monthStr = convertMonthToStr(today.getMonth());
+    const date = dayStr + ' ' + today.getDate() + ' ' + monthStr + ' ' + today.getFullYear();
+    return date;
+}
 module.exports.convertDayToStr = convertDayToStr;
 module.exports.convertMonthToStr = convertMonthToStr;
+module.exports.getDateInStr = getDateInStr;
+
+function checkAndExtend(val) {
+    if (val < 10) {
+        val = '0' + val;
+    }
+    return val;
+}
+
+function getTime(today) {
+    if (typeof today === 'undefined') {
+        today = new Date();
+    }
+    let hours = checkAndExtend(today.getHours());
+    let minutes = checkAndExtend(today.getMinutes());
+    let seconds = checkAndExtend(today.getSeconds());
+    return hours + ':' + minutes + ':' + seconds;
+}
+
+module.exports.getTime = getTime;

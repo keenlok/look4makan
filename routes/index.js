@@ -7,9 +7,11 @@ const pool = new Pool({
     connectionString: process.env.DATABASE_URL
 });
 
-const sql_query = 'SELECT * FROM student_info';
+let today = new Date();
+console.log(today);
+const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+console.log(time);
 const test = require('./sql/sqlQueries').findAllAvailableRestaurants;
-const time = '12:10:00';
 /* GET home page. */
 router.get('/', function(req, res, next) {
   pool.query(test, [time], (err, data) => {

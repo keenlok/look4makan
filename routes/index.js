@@ -8,13 +8,13 @@ const pool = new Pool({
 });
 
 let today = new Date();
-console.log(today);
 const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
-console.log(time);
-const test = require('./sql/sqlQueries').findAllAvailableRestaurants;
+
+const query = require('./sql/sqlQueries').findAllAvailableRestaurants;
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  pool.query(test, [time], (err, data) => {
+  pool.query(query, [time], (err, data) => {
       res.render('index', {title: 'Look4Makan', data: data.rows});
   })
 });

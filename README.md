@@ -1,4 +1,5 @@
-#Restaurant Reservation 
+# Restaurant Reservation 
+
 This is a restaurant reservation application that allows diners to book 
 reservations at restaurants (e.g., https://www.chope.co). Restaurants can advertise their availability
 (e.g., cuisine type, branch locations, opening hours, menu prices) and diners can search for 
@@ -10,15 +11,14 @@ various incentives (e.g., award points for each confirmed booking) to retain use
 account, and administrators can create/modify/delete entries.
 
 
-##Required Features:
--[ ] Login
--[ ] Add Reservations
--[ ] Home page with available restaurants at current time
--[ ] Find Restaurants with conditions
--[ ] 
+## Required Features:
+- Login
+- Add Reservations
+- Home page with available restaurants at current time
+- Find Restaurants with conditions
 
 
-##Installation process:
+## Installation process:
 1. Download/clone
 2. Run `npm install`
 3. Setup `.env` file with the following line inside:  

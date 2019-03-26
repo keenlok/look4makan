@@ -16,7 +16,7 @@ console.log(time);
 
 router.get('/', function(req, res, next) {
     pool.query(query, [time, rname], (err, data) => {
-        res.render('restaurant', {title: 'Look4Makan', data: data.rows});
+        res.render('restaurant', {page: 'Look4Makan', data: data.rows});
     })
 });
 

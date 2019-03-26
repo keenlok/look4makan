@@ -9,9 +9,8 @@ const pool = new Pool({
 
 const utils = require('./utils/util');
 
-let today = new Date();
-const time = utils.getTime(today);
-const date = utils.getDateInStr(today);
+let time = utils.getTime();
+let date = utils.getDateInStr();
 
 const query = require('./sql/sqlQueries').allBranchWithStatus;
 

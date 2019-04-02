@@ -21,12 +21,7 @@ const title = 'Looking for places to eat?';
 /* GET home page. */
 router.get('/', function(req, res, next) {
   pool.query(query, [time], (err, data) => {
-//      if(err) {
-//        res.render('index', {title: title, date:date, data: []});
-//      }
-    //  else {
       res.render('index', {title: title, date:date, data: data.rows});
-   //   }
   })
 
 });

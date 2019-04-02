@@ -7,10 +7,15 @@ insert into restaurants (rname) values
 ('GoodFood'),
 ('HelloWorld');
 
+insert into CuisineTypes (cuisineName) values
+('Chinese'),
+('Western');
+
 insert into branches (rname, bid, location, openinghours, opentime, closetime, cuisinetype, postalCode) values
-('GoodFood', 1, 'Jurong Point', '10am - 10pm', '10:00:00', '22:00:00', 'chinese', 648886),
-('GoodFood', 2, 'Clementi Mall', '10am - 10pm', '10:00:00', '22:00:00', 'chinese', 129588),
-('HelloWorld', 1, 'Jurong Point', '10am - 10pm', '10:00:00', '22:00:00', 'western', 648886);
+('GoodFood', 1, 'Jurong Point', '10am - 10pm', '10:00:00', '22:00:00', 'Chinese', 648886),
+('GoodFood', 2, 'Clementi Mall', '10am - 10pm', '10:00:00', '22:00:00', 'Chinese', 129588),
+('HelloWorld', 1, 'Jurong Point', '10am - 10pm', '10:00:00', '22:00:00', 'Western', 648886);
+
 
 insert into advertises (rname, bid) values
 ('GoodFood', 1),

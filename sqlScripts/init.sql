@@ -26,6 +26,10 @@ accountID integer primary key,
 awardPoints integer
 );
 
+create table CuisineTypes (
+cuisineName varchar(10) primary key
+);
+
 create table ConfirmedBookings (
 accountID integer,
 rname varchar(40),
@@ -38,7 +42,7 @@ accountID integer,
 preferredLoc varchar(40),
 preferredDate date,
 preferredTime time,
-cuisineType varchar(10),
+cuisineType varchar(10) references CuisineTypes,
 paxNum integer,
 budget integer,
 primary key (accountID, preferredLoc,preferredDate,preferredTime)
@@ -92,7 +96,7 @@ postalCode integer CHECK (postalCode BETWEEN 010000 AND 809999),
 openingHours varchar(20),
 openTime time,
 closeTime time,
-cuisineType varchar(10),
+cuisineType varchar(10) references CuisineTypes,
 primary key (rname, bid)
 );
 

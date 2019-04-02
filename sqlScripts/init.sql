@@ -13,6 +13,7 @@ drop table if exists Advertises  cascade;
 drop table if exists Menu  cascade;
 drop table if exists menuItems  cascade;
 drop table if exists Sells  cascade;
+drop table if exists CuisineTypes cascade;
 
 
 create table Diners (

@@ -60,6 +60,6 @@ insert into freetables (rname, bid, tid, pax, availablesince) values
 ('BurgerKing', 1, 3, 4, '10:00:00'),
 ('BurgerKing', 1, 4, 4, '10:00:00'),
 ('BurgerKing', 1, 5, 4, '10:00:00'),
-('BurgerKing', 1, 6, 4, '10:00:00')
+('BurgerKing', 1, 6, 4, '10:00:00'),
 ('Crystal Jade', 1, 1, 25, '10:00:00')
 ;

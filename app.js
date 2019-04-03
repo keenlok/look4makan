@@ -9,6 +9,7 @@ const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const restaurantRouter = require('./routes/restaurant');
 const searchRouter = require('./routes/search');
+const loginRouter = require('./routes/signin');
 
 let app = express();
 
@@ -35,6 +36,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', indexRouter);
 app.use('/search', searchRouter);
 app.use('/restaurant', restaurantRouter);
+app.use('/signin', loginRouter);
 
 
 // catch 404 and forward to error handler

@@ -13,6 +13,7 @@ drop table if exists Advertises  cascade;
 drop table if exists Menu  cascade;
 drop table if exists menuItems  cascade;
 drop table if exists Sells  cascade;
+drop table if exists CuisineTypes cascade;
 
 
 create table Diners (
@@ -26,11 +27,15 @@ accountID integer primary key,
 awardPoints integer
 );
 
+create table CuisineTypes (
+cuisineName varchar(10) primary key
+);
+
 create table ConfirmedBookings (
 accountID integer,
-rid integer,
+rname varchar(40),
 bid integer,
-primary key (accountID, rid, bid)
+primary key (accountID, rname, bid)
 );
 
 create table UserPreferences (
@@ -38,33 +43,33 @@ accountID integer,
 preferredLoc varchar(40),
 preferredDate date,
 preferredTime time,
-cuisineType varchar(10),
+cuisineType varchar(10) references CuisineTypes,
 paxNum integer,
 budget integer,
 primary key (accountID, preferredLoc,preferredDate,preferredTime)
 );
 
 create table BranchTables (
-rid integer,
+rname varchar(40),
 bid integer,
 tid integer,
 pax integer,
-primary key (rid, bid, tid)
+primary key (rname, bid, tid)
 );
 
 
 create table freeTables (
-rid integer,
+rname varchar(40),
 bid integer,
 tid integer,
 pax integer,
 --freeTime time,
 availableSince time,
-primary key (rid, bid, tid, availableSince)
+primary key (rname, bid, tid, availableSince)
 );
 
 create table Books (
-rid integer,
+rname varchar(40),
 bid integer,
 tid integer,
 pax integer,
@@ -73,38 +78,38 @@ accountID integer,
 preferredLoc varchar(40),
 preferredDate date,
 preferredTime time,
-primary key (accountID, preferredLoc,preferredDate,preferredTime, rid, bid, tid,freeTime)
+primary key (accountID, preferredLoc,preferredDate,preferredTime, rname, bid, tid,freeTime)
 );
 
 create table Ratings (
 review varchar(50),
 accountID integer references Diners,
-rid integer,
+rname varchar(40),
 bid integer,
-foreign key (accountID,rid,bid) references ConfirmedBookings
+foreign key (accountID,rname,bid) references ConfirmedBookings
 );
 
 create table Branches (
-rid integer,
+rname varchar(40),
 bid integer,
 location varchar(40),
+postalCode integer CHECK (postalCode BETWEEN 010000 AND 809999),
 openingHours varchar(20),
 openTime time,
 closeTime time,
-cuisineType varchar(10),
-primary key (rid, bid)
+cuisineType varchar(10) references CuisineTypes,
+primary key (rname, bid)
 );
 
 create table Restaurants (
-rid integer primary key,
-rname varchar(40)
+rname varchar(40) primary key
 );
 
 create table Advertises (
-rid integer references Restaurants,
+rname varchar(40)references Restaurants,
 bid integer,
-primary key (rid,bid),
-foreign key (rid,bid) references Branches
+primary key (rname,bid),
+foreign key (rname,bid) references Branches
 );
 
 create table Menu (
@@ -120,8 +125,8 @@ primary key (menuName,foodName)
 
 create table Sells (
 menuName varchar(20) references Menu,
-rid integer,
+rname varchar(40),
 bid integer,
-primary key (menuName, rid, bid),
-foreign key (rid,bid) references Branches
+primary key (menuName, rname, bid),
+foreign key (rname,bid) references Branches
 );

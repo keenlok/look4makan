@@ -7,6 +7,8 @@ const pool = new Pool({
     connectionString: process.env.DATABASE_URL
 });
 
+console.log(process.env.DATABASE_URL);
+
 const utils = require('./utils/util');
 
 let time = utils.getTime();
@@ -21,6 +23,7 @@ router.get('/', function(req, res, next) {
   pool.query(query, [time], (err, data) => {
       res.render('index', {title: title, date:date, data: data.rows});
   })
+
 });
 
 module.exports = router;

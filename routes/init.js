@@ -17,7 +17,6 @@ const salt  = bcrypt.genSaltSync(round);
 function initRouter(app) {
   app.get('/'                 , index     )
   app.get('/search'           , search    )
-  // app.get('/search/postalCode', postalCode)
   app.get('/search/restaurants', search_restaurant)
   app.get('/restaurant'       , restaurant)
 
@@ -44,7 +43,7 @@ function index(req, res, next) {
   let query = sql_query.allBranchWithStatus
   const title = 'Looking for places to eat?'
 
-  console.log(time, date)
+  // console.log(time, date)
   // console.log(query)
 
   pool.query(query, [time], (err, data) => {
@@ -98,8 +97,7 @@ function search_restaurant(req, res, next) {
   let paxNo = req.query.paxNo;
 
   if(rname !== '')  {
-    console.log("GOT HERE");
-    rname = '%' + rname + '%'
+    //rname = '%' + rname + '%'
     rname = pad(rname);
   }
   else {
@@ -114,7 +112,6 @@ function search_restaurant(req, res, next) {
   else {
     location = 'SELECT DISTINCT location FROM branches';
   }
-  console.log(location);
 
 
   searchQuery = searchQuery.replace('$2', location);
@@ -148,13 +145,12 @@ function search_restaurant(req, res, next) {
 
   searchQuery = searchQuery.replace('$5', paxNo);
 
-  console.log(searchQuery);
 
   pool.query(searchQuery, (err, data) => {
     if (err || !data.rows || data.rows.length === 0) {
       ctx = 0
       table = []
-      console.log("some problem...", err);
+        console.log("PROBLEM", err);
     } else {
       ctx = data.rows.length
       table = data.rows
@@ -201,7 +197,7 @@ function registerUser(req, res, next) {
         lastname: lastName
       }, function(err) {
         if (err)  {
-          console.log(err)
+          //console.log(err)
           return res.redirect('/register?reg=fail')
         } else {
           return res.redirect('/')
@@ -222,6 +218,3 @@ function logout(req, res, next) {
 }
 
 module.exports = initRouter;
-
-
-

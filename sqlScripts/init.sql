@@ -26,7 +26,7 @@ isAdmin boolean
 
 create table Locations (
 locName varchar(40) primary key
-)
+);
 
 
 create table Awards(
@@ -81,7 +81,7 @@ tid integer,
 pax integer,
 freeTime time,
 userName varchar(20),
-preferredLoc varchar(40) refereneces Location,
+preferredLoc varchar(40) references Locations,
 preferredDate date,
 preferredTime time,
 primary key (userName, preferredLoc,preferredDate,preferredTime, rname, bid, tid,freeTime)
@@ -98,7 +98,7 @@ foreign key (userName,rname,bid) references ConfirmedBookings
 create table Branches (
 rname varchar(40),
 bid integer,
-location varchar(40) references Location,
+location varchar(40) references Locations,
 postalCode integer CHECK (postalCode BETWEEN 010000 AND 809999),
 openingHours varchar(20),
 openTime time,

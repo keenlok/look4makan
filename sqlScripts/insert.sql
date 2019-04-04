@@ -1,13 +1,29 @@
-delete from advertises;
-delete from restaurants;
-delete from branches;
-delete from freetables;
-delete from CuisineTypes;
+delete from advertises cascade;
+delete from restaurants cascade;
+delete from branches cascade;
+delete from freetables cascade;
+delete from CuisineTypes cascade;
+delete from menu cascade;
+delete from menuitems cascade;
+delete from Sells cascade;
+delete from Locations cascade;
 
 insert into restaurants (rname) values
 ('MacDonalds'),
 ('BurgerKing'),
 ('Crystal Jade');
+
+insert into Locations (locName) values
+('Jurong Point'),
+('CentrePoint'),
+('Causeway Point'),
+('Vivo City'),
+('Clementi Mall'),
+('Plaza Singapura'),
+('Orchard Scape'),
+('Kent Ridge Mall');
+
+
 
 insert into CuisineTypes (cuisineName) values
 ('Chinese'),
@@ -63,7 +79,55 @@ insert into freetables (rname, bid, tid, pax, availablesince) values
 ('Crystal Jade', 1, 1, 25, '10:00:00')
 ;
 
+insert into menu (name) values
+('MacDonalds Breakfast Menu'),
+('MacDonalds Lunch Menu'),
+('BurgerKing Breakfast Menu'),
+('BurgerKing Lunch Menu'),
+('Crystal Jade Main Menu'),
+('Crystal Jade Promotion Menu')
+;
 
+insert into menuitems (menuname, foodname, price) values
+('MacDonalds Breakfast Menu', 'Big Breakfast', 5),
+('MacDonalds Breakfast Menu', 'McMuffin' ,5),
+('MacDonalds Breakfast Menu', 'Deluxe Breakfast', 7),
+('MacDonalds Lunch Menu', 'McSpicy', 5),
+('MacDonalds Lunch Menu', 'McChicken', 2),
+('MacDonalds Lunch Menu', 'Fillet-o-Fish', 3),
+('BurgerKing Breakfast Menu', 'Hot Milo', 2),
+('BurgerKing Breakfast Menu', 'Hot Coffee', 2),
+('BurgerKing Lunch Menu', 'Zinger Burger', 5),
+('BurgerKing Lunch Menu', 'Cheese Fries', 3),
+('Crystal Jade Promotion Menu', 'Siew Mai', 2),
+('Crystal Jade Promotion Menu', 'Ha Kau', 2),
+('Crystal Jade Main Menu', 'Mango Prawn Roll', 5),
+('Crystal Jade Main Menu', 'Wasabi Prawn Roll', 5)
+;
+
+insert into Sells (menuname, rname, bid) values
+('MacDonalds Breakfast Menu', 'MacDonalds', 1),
+('MacDonalds Breakfast Menu', 'MacDonalds', 2),
+('MacDonalds Breakfast Menu', 'MacDonalds', 3),
+('MacDonalds Breakfast Menu', 'MacDonalds', 4),
+('MacDonalds Breakfast Menu', 'MacDonalds', 5),
+('MacDonalds Lunch Menu', 'MacDonalds', 1),
+('MacDonalds Lunch Menu', 'MacDonalds', 2),
+('MacDonalds Lunch Menu', 'MacDonalds', 3),
+('MacDonalds Lunch Menu', 'MacDonalds', 4),
+('MacDonalds Lunch Menu', 'MacDonalds', 5),
+('BurgerKing Lunch Menu', 'BurgerKing', 1),
+('BurgerKing Lunch Menu', 'BurgerKing', 2),
+('BurgerKing Lunch Menu', 'BurgerKing', 3),
+('BurgerKing Lunch Menu', 'BurgerKing', 4),
+('BurgerKing Lunch Menu', 'BurgerKing', 5),
+('BurgerKing Breakfast Menu', 'BurgerKing', 1),
+('BurgerKing Breakfast Menu', 'BurgerKing', 2),
+('BurgerKing Breakfast Menu', 'BurgerKing', 3),
+('BurgerKing Breakfast Menu', 'BurgerKing', 4),
+('BurgerKing Breakfast Menu', 'BurgerKing', 5),
+('Crystal Jade Main Menu', 'Crystal Jade', 1)
+;
 
 
 

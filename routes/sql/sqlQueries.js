@@ -10,9 +10,13 @@ const find_restaurant = 'WITH restaurantStatus AS ( SELECT rname, bid, COUNT(tid
 const find_postal_code = 'WITH restaurantStatus AS ( SELECT rname, bid, COUNT(tid) AS num FROM freetables GROUP BY rname, bid ) SELECT DISTINCT R.rname, openinghours, location, CASE WHEN (opentime > $1 OR closeTime < $1) THEN \'CLOSED\' WHEN num > 0 THEN \'AVAILABLE\' WHEN num = 0 THEN \'FULL\' END AS status FROM (restaurants R LEFT JOIN branches B ON R.rname = B.rname) LEFT JOIN restaurantStatus S ON R.rname = S.rname WHERE ABS(B.postalCode - $2) <= 9999;'
 
 const add_user = 'INSERT INTO diners (userName, password, firstName, lastName, isAdmin) VALUES ($1, $2, $3, $4, FALSE);'
+<<<<<<< HEAD
 
 const find_user_preference = 'SELECT distinct rname, openingHours, location FROM branches B natural JOIN freeTables F WHERE lower(B.rname) like $1 and B.location in ($2) and cuisineType in ($3) and B.openTime <= $4 and B.closeTime >= $4 and F.pax >= $5 and F.availableSince <= $4;'
 
+=======
+const find_user_preference = 'SELECT distinct rname, openingHours, location FROM branches B natural JOIN freeTables F WHERE B.rname in ($1) and B.location in ($2) and cuisineType in ($3) and B.openTime <= $4 and B.closeTime >= $4 and F.pax >= $5 and F.availableSince <= $4;'
+>>>>>>> 542a910dce78fc0a8d6bfdd36ce4cea1dfb3095a
 const userpass = 'SELECT * FROM diners WHERE username = $1'
 
 const get_menu_items = 'SELECT DISTINCT menuname, foodname, price FROM menu M NATURAL JOIN menuitems F NATURAL JOIN sells S WHERE S.rname = $1 ORDER BY menuname;'

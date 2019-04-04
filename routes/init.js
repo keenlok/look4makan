@@ -165,9 +165,9 @@ function search_restaurant(req, res, next) {
 }
 
 function restaurant(req, res, next) {
-  let rname = 'MacDonalds'
+  let rname = req.query.rname
   const time = utils.getTime()
-  console.log(time)
+  // console.log(time, req.query)
   let query = sql_query.getRestaurant
 
   pool.query(query, [rname, time], (err, data) => {

@@ -41,7 +41,6 @@ insert into advertises (rname, bid) values
 ('Crystal Jade', 1);
 
 
-
 insert into freetables (rname, bid, tid, pax, availablesince) values
 ('MacDonalds', 1, 1, 4, '10:00:00'),
 ('MacDonalds', 1, 2, 4, '10:00:00'),
@@ -63,3 +62,22 @@ insert into freetables (rname, bid, tid, pax, availablesince) values
 ('BurgerKing', 1, 6, 4, '10:00:00'),
 ('Crystal Jade', 1, 1, 25, '10:00:00')
 ;
+
+
+
+SELECT distinct rname, openingHours, location 
+FROM branches B natural JOIN freeTables F 
+WHERE B.rname in('Macdonalds') and B.location in ('Clementi Mall') 
+and cuisineType in ('Western') and B.openTime <= '11:00:00' 
+and B.closeTime >= '11:00:00' and 
+F.pax >= 2 and F.availableSince <= '11:00:00';
+
+
+
+--SELECT distinct rname, openingHours, location FROM branches B natural JOIN freeTables F WHERE B.rname in (SELECT DISTINCT rname FROM branches) and B.location in (SELECT DISTINCT location FROM branches) and cuisineType in (SELECT cuisineName FROM cuisineTypes) and B.openTime <='11:00:00' and B.closeTime >= '11:00:00' and F.pax >= '2' and F.availableSince <= '11:00:00';
+
+   
+
+
+
+

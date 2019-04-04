@@ -116,5 +116,3 @@ insert into Sells (menuname, rname, bid) values
 ('Crystal Jade Main Menu', 'Crystal Jade', 1)
 ;
 
-
-

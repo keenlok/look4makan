@@ -17,13 +17,17 @@ drop table if exists CuisineTypes cascade;
 
 
 create table Diners (
-accountID integer primary key,
-password varchar(20)
+--accountID integer primary key,
+userName varchar(20) primary key,
+firstName varchar(20),
+lastName varchar(20),
+password varchar(64) NOT NULL,
+isAdmin boolean
 );
 
 
 create table Awards(
-accountID integer primary key,
+userName varchar(20) primary key,
 awardPoints integer
 );
 
@@ -32,21 +36,21 @@ cuisineName varchar(10) primary key
 );
 
 create table ConfirmedBookings (
-accountID integer,
+userName varchar(20),
 rname varchar(40),
 bid integer,
-primary key (accountID, rname, bid)
+primary key (userName, rname, bid)
 );
 
 create table UserPreferences (
-accountID integer,
+userName varchar(20),
 preferredLoc varchar(40),
 preferredDate date,
 preferredTime time,
 cuisineType varchar(10) references CuisineTypes,
 paxNum integer,
 budget integer,
-primary key (accountID, preferredLoc,preferredDate,preferredTime)
+primary key (userName, preferredLoc,preferredDate,preferredTime)
 );
 
 create table BranchTables (
@@ -74,19 +78,19 @@ bid integer,
 tid integer,
 pax integer,
 freeTime time,
-accountID integer,
+userName varchar(20),
 preferredLoc varchar(40),
 preferredDate date,
 preferredTime time,
-primary key (accountID, preferredLoc,preferredDate,preferredTime, rname, bid, tid,freeTime)
+primary key (userName, preferredLoc,preferredDate,preferredTime, rname, bid, tid,freeTime)
 );
 
 create table Ratings (
 review varchar(50),
-accountID integer references Diners,
+userName varchar(20) references Diners,
 rname varchar(40),
 bid integer,
-foreign key (accountID,rname,bid) references ConfirmedBookings
+foreign key (userName,rname,bid) references ConfirmedBookings
 );
 
 create table Branches (
@@ -113,18 +117,18 @@ foreign key (rname,bid) references Branches
 );
 
 create table Menu (
-name varchar(20) primary key
+name varchar(50) primary key
 );
 
 create table menuItems (
-menuName varchar(20) references Menu,
-foodName varchar(20),
+menuName varchar(50) references Menu,
+foodName varchar(50),
 price integer,
 primary key (menuName,foodName)
 );
 
 create table Sells (
-menuName varchar(20) references Menu,
+menuName varchar(50) references Menu,
 rname varchar(40),
 bid integer,
 primary key (menuName, rname, bid),

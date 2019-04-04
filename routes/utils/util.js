@@ -106,3 +106,30 @@ function getTime(today) {
 }
 
 module.exports.getTime = getTime;
+
+function pad(str) {
+  return "'" + str + "'";
+}
+
+module.exports.pad = pad;
+
+function separateData(data, menuCount) {
+  let separatedData = new Array(menuCount)
+  for (let i = 0; i < menuCount; i++) {
+    separatedData[i] = []
+  }
+  // console.log("initialised array", separatedData, separatedData[0], separatedData[1]);
+  for (let i = 0, j = 0; i < data.length && j < menuCount; i++) {
+    console.log(data[i])
+    if (i=== 0 || separatedData[j][0].menuname == data[i].menuname) {
+      separatedData[j].push(data[i])
+    } else {
+      console.log(j, separatedData[j][0].menuname, data[i].menuname);
+      separatedData[++j].push(data[i])
+    }
+  }
+  // console.log(separatedData);
+  return separatedData
+}
+
+module.exports.separateData = separateData;

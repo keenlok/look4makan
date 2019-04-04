@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%= page %> - <%= data[0].rname %></title>
+    <title><%= page %> - <%= rname %></title>
+
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
@@ -12,9 +13,17 @@
     <% include ./partials/header %>
 </header>
 <body>
+<div class="align-content-md-start">
+    <p><%= date %></p>
+</div>
+<% if (count === 0) { %>
+<h2>No restaurant with <%= rname %> found!</h2>
+<% } else { %>
 <h1><%= data[0].rname %></h1>
-    <table class="table">
-        <thead>
+<% } %>
+<div class="container-fluid justify-content-center m-auto">
+    <table class="table table-bordered">
+        <thead class="thead-dark">
         <tr>
             <th scope="col">Branch Location</th>
             <th scope="col">Opening Hours</th>
@@ -31,5 +40,30 @@
         <% } %>
         </tbody>
     </table>
+</div>
+<h2> Menu for <%= rname %> </h2>
+<table class="table table-bordered">
+    <thead class="thead-light">
+    <tr>
+        <th scope="col">Menu Name</th>
+        <th scope="col">Menu Item</th>
+        <th scope="col">Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% for(var i=0; i<menuCount; i++) {
+      var flag = true;
+      for(var j=0; j<menu[i].length; j++) { %>
+    <tr>
+        <% if(flag) { %>
+        <td rowspan="<%= menu[i].length%>" class="align-middle"><%= menu[i][j].menuname%></td>
+        <% flag = false; %>
+        <% } %>
+        <td><%= menu[i][j].foodname %></td>
+        <td><%= menu[i][j].price %></td>
+    </tr>
+    <% }} %>
+    </tbody>
+</table>
 </body>
 </html>

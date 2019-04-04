@@ -21,11 +21,11 @@ function initRouter(app) {
   app.get('/search/restaurants', search_restaurant)
   app.get('/restaurant'       , restaurant)
 
-  /* TODO: PROTECTED GET */
+  /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register)
   app.get('/signin', login   )
 
-  /* TODO: PROTECTED POST */
+  /*  PROTECTED POST */
   app.post('/reg_user', passport.antiMiddleware(), registerUser)
 
   app.post('/authenticate', passport.authenticate('local', {
@@ -49,9 +49,9 @@ function index(req, res, next) {
 
   pool.query(query, [time], (err, data) => {
     if (err) {
-      console.log(err)
+      console.error(err)
+      error(err, res);
     } else {
-      console.log("Am I authenticated", req.isAuthenticated(), req);
       if (req.isAuthenticated()) {
         res.render('index', {title: title, date: date, auth: true, data: data.rows})
       } else {
@@ -84,9 +84,7 @@ function search (req, res, next) {
   })
 }
 
-function pad(str) {
-  return "'" + str + "'";
-}
+const pad = utils.pad;
 
 function search_restaurant(req, res, next) {
   let ctx = 0, avg = 0, table
@@ -169,13 +167,67 @@ function search_restaurant(req, res, next) {
 }
 
 function restaurant(req, res, next) {
-  const rname = 'macdonalds';
-  const time = utils.getTime();
-  console.log(time);
-  let query = sql_query.findRestaurant
+  let rname = 'MacDonalds'
+  const time = utils.getTime()
+  console.log(time)
+  let query = sql_query.getRestaurant
 
-  pool.query(query, [time, rname], (err, data) => {
-    res.render('restaurant', {page: 'Look4Makan', data: data.rows});
+  pool.query(query, [rname, time], (err, data) => {
+    let table, count, auth
+    let date = utils.getDateInStr()
+
+    if (err) {
+      error(err, res)
+    } else if (!data.rows || data.rows.length === 0) {
+      table = []
+      count = 0
+    } else {
+      table = data.rows
+      count = data.rows.length
+      rname = table[0].rname
+    }
+
+    // Get menu items for this restaurant
+    let subquery = sql_query.getMenuItems
+    pool.query(subquery, [rname], (err, data) => {
+      let menu, menuCount
+
+      if (err) {
+        console.error("CANNOT GET MENU items")
+      } else if (!data.rows || data.rows.length === 0) {
+        menuCount = 0
+        menu = []
+      } else {
+        menu = data.rows
+        let getMenuCount = (menu) => {
+          let count = 0
+          for (let i = 0; i < menu.length; i++) {
+            if (i === 0 ) {
+              count++;
+            } else if (menu[i].menuname !== menu[i-1].menuname) {
+              count++
+            }
+          }
+          return count
+        }
+        menuCount = getMenuCount(menu)
+        menu = utils.separateData(menu, menuCount)
+        console.log("The menu count is: ",menuCount);
+      }
+
+      auth = !!req.isAuthenticated();
+      res.render('restaurant', {
+        page: 'Look4Makan',
+        data: table,
+        auth: auth,
+        count: count,
+        rname: rname,
+        date: date,
+        menu: menu,
+        menuCount: menuCount
+      })
+    })
+
   })
 }
 
@@ -201,7 +253,7 @@ function registerUser(req, res, next) {
         lastname: lastName
       }, function(err) {
         if (err)  {
-          console.log(err)
+          console.error(err)
           return res.redirect('/register?reg=fail')
         } else {
           return res.redirect('/')
@@ -220,6 +272,12 @@ function logout(req, res, next) {
   req.logout()
   res.redirect('/')
 }
+
+function error(err, res) {
+  res.render('error', {message: 'ERROR OCCURED', error: err})
+}
+
+
 
 module.exports = initRouter;
 

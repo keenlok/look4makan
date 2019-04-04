@@ -6,11 +6,24 @@ delete from CuisineTypes cascade;
 delete from menu cascade;
 delete from menuitems cascade;
 delete from Sells cascade;
+delete from Locations cascade;
 
 insert into restaurants (rname) values
 ('MacDonalds'),
 ('BurgerKing'),
 ('Crystal Jade');
+
+insert into Locations (locName) values
+('Jurong Point'),
+('CentrePoint'),
+('Causeway Point'),
+('Vivo City'),
+('Clementi Mall'),
+('Plaza Singapura'),
+('Orchard Scape'),
+('Kent Ridge Mall');
+
+
 
 insert into CuisineTypes (cuisineName) values
 ('Chinese'),

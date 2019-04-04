@@ -65,19 +65,5 @@ insert into freetables (rname, bid, tid, pax, availablesince) values
 
 
 
-SELECT distinct rname, openingHours, location 
-FROM branches B natural JOIN freeTables F 
-WHERE B.rname in('Macdonalds') and B.location in ('Clementi Mall') 
-and cuisineType in ('Western') and B.openTime <= '11:00:00' 
-and B.closeTime >= '11:00:00' and 
-F.pax >= 2 and F.availableSince <= '11:00:00';
-
-
-
---SELECT distinct rname, openingHours, location FROM branches B natural JOIN freeTables F WHERE B.rname in (SELECT DISTINCT rname FROM branches) and B.location in (SELECT DISTINCT location FROM branches) and cuisineType in (SELECT cuisineName FROM cuisineTypes) and B.openTime <='11:00:00' and B.closeTime >= '11:00:00' and F.pax >= '2' and F.availableSince <= '11:00:00';
-
-   
-
-
 
 

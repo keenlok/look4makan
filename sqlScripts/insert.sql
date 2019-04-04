@@ -1,11 +1,11 @@
 delete from advertises cascade;
 delete from restaurants cascade;
+delete from Sells cascade;
 delete from branches cascade;
 delete from freetables cascade;
 delete from CuisineTypes cascade;
-delete from menu cascade;
 delete from menuitems cascade;
-delete from Sells cascade;
+delete from menu cascade;
 delete from Locations cascade;
 
 insert into restaurants (rname) values
@@ -15,13 +15,18 @@ insert into restaurants (rname) values
 
 insert into Locations (locName) values
 ('Jurong Point'),
-('CentrePoint'),
+('Centre Point'),
 ('Causeway Point'),
 ('Vivo City'),
 ('Clementi Mall'),
 ('Plaza Singapura'),
 ('Orchard Scape'),
-('Kent Ridge Mall');
+('Kent Ridge Mall'),
+('100am Mall'),
+('Orchard Central'),
+('Shaw Plaza'),
+('Lucky Plaza');
+
 
 
 
@@ -38,7 +43,7 @@ insert into branches (rname, bid, location, openinghours, opentime, closetime, c
 ('BurgerKing', 1, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Western', 653741),
 ('BurgerKing', 2, 'Plaza Singapura', '8am - 8pm', '08:00:00', '20:00:00', 'Western', 458351),
 ('BurgerKing', 3, 'Causeway Point', '7am - 7pm', '07:00:00', '19:00:00', 'Western', 707605),
-('BurgerKing', 4, 'Centrepoint', '10am - 10pm', '10:00:00', '22:00:00', 'Western', 203193),
+('BurgerKing', 4, 'Centre Point', '10am - 10pm', '10:00:00', '22:00:00', 'Western', 203193),
 ('BurgerKing', 5, 'Kent Ridge Mall', '11am - 7pm', '11:00:00', '19:00:00', 'Western', 439013),
 ('Crystal Jade', 1, 'Vivo City', '10am - 10pm', '10:00:00', '22:00:00', 'Chinese', 403132);
 

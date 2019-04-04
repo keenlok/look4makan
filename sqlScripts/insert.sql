@@ -118,6 +118,3 @@ insert into Sells (menuname, rname, bid) values
 
 
 
-
-
-

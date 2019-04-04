@@ -113,18 +113,18 @@ foreign key (rname,bid) references Branches
 );
 
 create table Menu (
-name varchar(20) primary key
+name varchar(50) primary key
 );
 
 create table menuItems (
-menuName varchar(20) references Menu,
-foodName varchar(20),
+menuName varchar(50) references Menu,
+foodName varchar(50),
 price integer,
 primary key (menuName,foodName)
 );
 
 create table Sells (
-menuName varchar(20) references Menu,
+menuName varchar(50) references Menu,
 rname varchar(40),
 bid integer,
 primary key (menuName, rname, bid),

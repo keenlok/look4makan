@@ -15,22 +15,24 @@ const round = 10;
 const salt  = bcrypt.genSaltSync(round);
 
 function initRouter(app) {
-  app.get('/'                 , index     )
-  app.get('/search'           , search    )
-  app.get('/search/restaurants', search_restaurant)
-  app.get('/restaurant'       , restaurant)
+  app.get('/'                 , index     );
+  app.get('/search'           , search    );
+  app.get('/search/restaurants', search_restaurant);
+  app.get('/restaurant'       , restaurant);
+  app.get('/booking'        ,  booking);
+  app.get('/booking/confirmation', confirmation);
 
   /* TODO: PROTECTED GET */
-  app.get('/register', passport.antiMiddleware(), register)
-  app.get('/signin', login   )
+  app.get('/register', passport.antiMiddleware(), register);
+  app.get('/signin', login   );
 
   /* TODO: PROTECTED POST */
-  app.post('/reg_user', passport.antiMiddleware(), registerUser)
+  app.post('/reg_user', passport.antiMiddleware(), registerUser);
 
   app.post('/authenticate', passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/signin?=fail'
-  }))
+  }));
 
   /* LOGOUT */
   app.get('/logout', passport.authMiddleware(), logout);
@@ -38,10 +40,10 @@ function initRouter(app) {
 }
 
 function index(req, res, next) {
-  let time = utils.getTime()
-  let date = utils.getDateInStr()
+  let time = utils.getTime();
+  let date = utils.getDateInStr();
   let query = sql_query.allBranchWithStatus
-  const title = 'Looking for places to eat?'
+  const title = 'Looking for places to eat?';
 
   // console.log(time, date)
   // console.log(query)
@@ -207,8 +209,38 @@ function registerUser(req, res, next) {
   })
 }
 
+ function booking(req, res, next) {
+     // let rname = req.query.rname;
+     // let reservationTime = req.query.reservationTime;
+     // let paxNo = req.query.paxNo;
+     let rname = 'Me';
+     let reservationTime = '11:00:00';
+     let paxNo = '3';
+     if(req.isAuthenticated()) {
+       res.render('booking', { page: "Bookings", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth: true});
+     }
+     else {
+         res.render('booking', { page: "Bookings", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth : false});
+     }
+ }
+
+ function confirmation(req, res, next) {
+     // let rname = req.query.rname;
+     // let reservationTime = req.query.reservationTime;
+     // let paxNo = req.query.paxNo;
+     let rname = 'Me';
+     let reservationTime = '11:00:00';
+     let paxNo = '3';
+     if(req.isAuthenticated()) {
+         res.render('confirmation', { page: "Confirmation", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth: true});
+     }
+     else {
+         res.render('confirmation', { page: "Confirmation", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth : false});
+     }
+ }
+
 function login(req, res, next) {
-  res.render('signin', {title: 'Look4Makan', loginPage: true});
+    res.render('signin', {title: 'Look4Makan', loginPage: true});
 }
 
 function logout(req, res, next) {

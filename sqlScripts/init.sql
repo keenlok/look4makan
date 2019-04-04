@@ -14,16 +14,19 @@ drop table if exists Menu  cascade;
 drop table if exists menuItems  cascade;
 drop table if exists Sells  cascade;
 drop table if exists CuisineTypes cascade;
-
+drop table if exists Locations cascade;
 
 create table Diners (
---accountID integer primary key,
 userName varchar(20) primary key,
 firstName varchar(20),
 lastName varchar(20),
 password varchar(64) NOT NULL,
 isAdmin boolean
 );
+
+create table Locations (
+locName varchar(40) primary key
+)
 
 
 create table Awards(
@@ -67,7 +70,6 @@ rname varchar(40),
 bid integer,
 tid integer,
 pax integer,
---freeTime time,
 availableSince time,
 primary key (rname, bid, tid, availableSince)
 );
@@ -79,7 +81,7 @@ tid integer,
 pax integer,
 freeTime time,
 userName varchar(20),
-preferredLoc varchar(40),
+preferredLoc varchar(40) refereneces Location,
 preferredDate date,
 preferredTime time,
 primary key (userName, preferredLoc,preferredDate,preferredTime, rname, bid, tid,freeTime)
@@ -96,7 +98,7 @@ foreign key (userName,rname,bid) references ConfirmedBookings
 create table Branches (
 rname varchar(40),
 bid integer,
-location varchar(40),
+location varchar(40) references Location,
 postalCode integer CHECK (postalCode BETWEEN 010000 AND 809999),
 openingHours varchar(20),
 openTime time,

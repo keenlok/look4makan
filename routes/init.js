@@ -60,15 +60,14 @@ function index(req, res, next) {
   })
 }
 
-function search(req, res, next) {
+function search (req, res, next) {
   let ctx = 0, avg = 0, table
   let queryStr = req.query.restaurant;
   let rname = '%' + queryStr.toLowerCase() + '%'
   let searchQuery = sql_query.findRestaurant
   let time = utils.getTime();
-  console.log("rname here", rname)
 
-  pool.query(searchQuery, [time, rname], (err, data) => {
+  pool.query(searchQuery, [rname, time], (err, data) => {
     if (err || !data.rows || data.rows.length === 0) {
       ctx = 0
       table = []
@@ -76,7 +75,11 @@ function search(req, res, next) {
       ctx = data.rows.length
       table = data.rows
     }
-    res.render('search', {page: 'Search Results', query: queryStr, table: table, ctx: ctx})
+    if (req.isAuthenticated()) {
+      res.render('search', {page: 'Search Results', auth: true, query: queryStr, table: table, ctx: ctx})
+    } else {
+      res.render('search', {page: 'Search Results', auth: false, query: queryStr, table: table, ctx: ctx})
+    }
   })
 }
 
@@ -142,8 +145,6 @@ function registerUser(req, res, next) {
       })
     }
   })
-
-  console.log(req.body);
 }
 
 function login(req, res, next) {

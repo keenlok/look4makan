@@ -21,11 +21,19 @@ function initRouter(app) {
   app.get('/restaurant'       , restaurant)
 
   /* TODO: PROTECTED GET */
-  app.get('/signup', register)
-  app.get('/signin',   login   )
+  app.get('/register', passport.antiMiddleware(), register)
+  app.get('/signin', login   )
 
   /* TODO: PROTECTED POST */
-  app.post('/reg_user', registerUser)
+  app.post('/reg_user', passport.antiMiddleware(), registerUser)
+
+  app.post('/authenticate', passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/signin?=fail'
+  }))
+
+  /* LOGOUT */
+  app.get('/logout', passport.authMiddleware(), logout);
   
 }
 
@@ -36,13 +44,18 @@ function index(req, res, next) {
   const title = 'Looking for places to eat?'
 
   console.log(time, date)
-  console.log(query)
+  // console.log(query)
 
   pool.query(query, [time], (err, data) => {
-    if (err){
+    if (err) {
       console.log(err)
     } else {
-      res.render('index', {title: title, date: date, data: data.rows})
+      console.log("Am I authenticated", req.isAuthenticated(), req);
+      if (req.isAuthenticated()) {
+        res.render('index', {title: title, date: date, auth: true, data: data.rows})
+      } else {
+        res.render('index', {title: title, date: date, auth: false, data: data.rows})
+      }
     }
   })
 }
@@ -100,7 +113,7 @@ function restaurant(req, res, next) {
 }
 
 function register(req, res, next) {
-  res.render('register', {title: 'Look4Makan'});
+  res.render('register', {title: 'Look4Makan', auth: false});
 }
 
 function registerUser(req, res, next) {
@@ -115,7 +128,17 @@ function registerUser(req, res, next) {
       res.redirect('/register?reg=fail')
     } else {
       req.login({
-
+        username: username,
+        passwordHash: password,
+        firstname: firstName,
+        lastname: lastName
+      }, function(err) {
+        if (err)  {
+          console.log(err)
+          return res.redirect('/register?reg=fail')
+        } else {
+          return res.redirect('/')
+        }
       })
     }
   })
@@ -124,7 +147,13 @@ function registerUser(req, res, next) {
 }
 
 function login(req, res, next) {
-  res.render('signin', {title: 'Look4Makan'});
+  res.render('signin', {title: 'Look4Makan', loginPage: true});
+}
+
+function logout(req, res, next) {
+  req.session.destroy()
+  req.logout()
+  res.redirect('/')
 }
 
 module.exports = initRouter;

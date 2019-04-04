@@ -26,9 +26,15 @@
                         <input class="form-control " type="text" placeholder="Type Restaurant name..." aria-label="Search" name="restaurant">
                     </form>
                 </li>
+                <% if (typeof loginPage === 'undefined' || !loginPage) { %>
                 <li class="nav-item">
+                    <% if(auth) { %>
+                    <a class="btn btn-primary" href="/logout">Log Out</a>
+                    <% } else { %>
                     <a class="btn btn-primary" href="/signin">Sign In</a>
+                    <% } %>
                 </li>
+                <% } %>
             </ul>
         </div>
 </nav>

@@ -29,10 +29,10 @@
     </tbody>
 </table>
 <div>
-    <form action = "/booking/confirmation">
-        <input type="rname" value = <%=rname%>>
-        <input type="reservationTime" value = <%=reservationTime%>>
-        <input type="paxNo" value = <%=paxNo%>>
+    <form method="get" action ="/booking/confirmation">
+        <input type="rname" name="rname" value = <%=rname%>>
+        <input type="reservationTime" name="reservationTime" value = <%=reservationTime%>>
+        <input type="paxNo" name="paxNo" value = <%=paxNo%>>
         <div class="col-12 col-md-3">
             <button type="submit" class="btn btn-block btn-lg btn-primary">Confirm Reservation</button>
         </div>

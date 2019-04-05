@@ -22,7 +22,7 @@ function initRouter(app) {
   app.get('/booking'             , booking          );
   app.get('/booking/confirmation', confirmation     );
 
-  /*  PROTECTED GET */
+    /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register)
   app.get('/signin', login   )
 
@@ -42,24 +42,30 @@ function initRouter(app) {
 function index(req, res, next) {
   let time = utils.getTime();
   let date = utils.getDateInStr();
-  let query = sql_query.allBranchWithStatus
   const title = 'Looking for places to eat?';
 
   // console.log(time, date)
   // console.log(query)
+    let sql_query= "select * from Locations;";
+    let sql_query1= "select * from CuisineTypes;";
+    let sql_query2= "select rname from Restaurants;";
 
-  pool.query(query, [time], (err, data) => {
+    pool.query(sql_query, (err, data) => {
     if (err) {
       console.error(err)
       error(err, res);
     } else {
-      if (req.isAuthenticated()) {
-        res.render('index', {title: title, date: date, auth: true, data: data.rows})
-      } else {
-        res.render('index', {title: title, date: date, auth: false, data: data.rows})
-      }
-    }
-  })
+        pool.query(sql_query1, (err1, data1) => {
+            pool.query(sql_query2, (err2, data2) => {
+                if (req.isAuthenticated()) {
+                    res.render('index', {title: title, date: date, auth: true, data: data.rows, data1: data1.rows, data2: data2.rows})
+                } else {
+                    console.log(data1);
+                    res.render('index', {title: title, date: date, auth: false, data: data.rows, data1: data1.rows, data2: data2.rows})
+                }
+            });
+        });
+    }});
 }
 
 function search (req, res, next) {
@@ -95,6 +101,11 @@ function search_restaurant(req, res, next) {
   let cuisineType = req.query.cuisineType;
   let reservationTime = req.query.reservationTime;
   let paxNo = req.query.paxNo;
+    console.log("rname: " + rname);
+    console.log("location: " + location);
+    console.log("cuisineType: " + cuisineType);
+    console.log("reservationTime: " + reservationTime);
+    console.log("paxNo: " + paxNo);
 
     if(rname !== '')  {
     rname = pad(rname);
@@ -134,6 +145,11 @@ function search_restaurant(req, res, next) {
   if(paxNo === '')  {
     paxNo = 2; //by default
   }
+    console.log("rname: " + rname);
+    console.log("location: " + location);
+    console.log("cuisineType: " + cuisineType);
+    console.log("reservationTime: " + reservationTime);
+    console.log("paxNo: " + paxNo);
 
   searchQuery = searchQuery.replace('$5', paxNo);
 

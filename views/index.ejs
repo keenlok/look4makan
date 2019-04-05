@@ -69,9 +69,12 @@
                         <div class="col-12 col-md-9 mb-2 mb-md-0">
                             <!--<input list="paxNo" name="paxNo" placeholder="No. of Diners" size="55">-->
                             <select id="paxNo" name="paxNo">
-                                <option value="2"> 2 </option>
-                                <% for (let i = 0; i < 15; i++) { %>
-                                    <option value="<%=i%>"><%= i %></option>
+                                <% for (let i = 1; i <= 15; i++) { %>
+                                    <%  if(i === 2) { %>
+                                        <option value="<%=i%>" selected ><%= i %></option>
+                                    <% } else { %>
+                                        <option value="<%=i%>" ><%= i %></option>
+                                    <% } %>
                                 <% } %>
                             </select>
                             <!--<input type="paxNo" class="form-control form-control-lg" placeholder="Any Pax" name="paxNo">-->

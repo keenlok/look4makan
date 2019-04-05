@@ -96,8 +96,7 @@ function search_restaurant(req, res, next) {
   let reservationTime = req.query.reservationTime;
   let paxNo = req.query.paxNo;
 
-  if(rname !== '')  {
-    //rname = '%' + rname + '%'
+    if(rname !== '')  {
     rname = pad(rname);
   }
   else {
@@ -126,25 +125,17 @@ function search_restaurant(req, res, next) {
 
   if(reservationTime !== '') {
     reservationTime = pad(reservationTime);
-
-    //show alert dont add!!!
   }
-  else {
-    reservationTime = "'11:00:00'";
-  }
-  searchQuery = searchQuery.replace('$4', reservationTime);
-  searchQuery = searchQuery.replace('$4', reservationTime);
-  searchQuery = searchQuery.replace('$4', reservationTime);
 
-
-  //show alert dont add!!!
+  searchQuery = searchQuery.replace('$4', reservationTime);
+  searchQuery = searchQuery.replace('$4', reservationTime);
+  searchQuery = searchQuery.replace('$4', reservationTime);
 
   if(paxNo === '')  {
     paxNo = 2; //by default
   }
 
   searchQuery = searchQuery.replace('$5', paxNo);
-
 
   pool.query(searchQuery, (err, data) => {
     if (err || !data.rows || data.rows.length === 0) {

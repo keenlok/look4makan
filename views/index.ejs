@@ -62,7 +62,13 @@
                             <!-- <input type="cuisineType" class="form-control form-control-lg" placeholder="Any Cuisine" name="cuisineType"> -->
                         </div>
                         <div class="col-12 col-md-9 mb-2 mb-md-0">
-                            <input type="paxNo" class="form-control form-control-lg" placeholder="Any Pax" name="paxNo">
+                            <input list="paxNo" placeholder="No. of Diners">
+                            <datalist id="paxNo">
+                                <option value="1">
+                                <option value="2">
+                                <option value="3">
+                            </datalist>
+                            <!--<input type="paxNo" class="form-control form-control-lg" placeholder="Any Pax" name="paxNo">-->
                         </div>
                         <div class="col-12 col-md-9 mb-2 mb-md-0">
                             <input type="time" min="08:00" max="22:00" step="900" class="form-control form-control-lg" placeholder="Any Time" name="reservationTime" required>

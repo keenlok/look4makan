@@ -37,19 +37,35 @@
                 <form action="/search/restaurants">
                     <div class="form-row">
                         <div class="col-12 col-md-9 mb-2 mb-md-0">
-                            <input type="rname" class="form-control form-control-lg" placeholder="Any Restaurant" name="rname">
+                            <input list="restaurants" placeholder="Any Restaurant">
+                            <datalist id="restaurants">
+                                <option value="Macdonalds">
+                                <option value="pussy cat dolls">
+                            </datalist>
+                            <!-- <input type="text" class="form-control form-control-lg" placeholder="Any Restaurant" name="rname" maxlength=40> -->
                         </div>
                         <div class="col-12 col-md-9 mb-2 mb-md-0">
-                            <input type="location" class="form-control form-control-lg" placeholder="Any Location" name="location">
+                            <input list="locations" placeholder="Any Location">
+                            <datalist id="locations">
+                                <option value="Vivo City">
+                                <option value="Centre Point">
+                            </datalist>
+                            <!-- //  <input type="text" class="form-control form-control-lg" placeholder="Any Location" name="location" maxlength=40> -->
                         </div>
                         <div class="col-12 col-md-9 mb-2 mb-md-0">
-                            <input type="cuisineType" class="form-control form-control-lg" placeholder="Any Cuisine" name="cuisineType">
+                            <input list="cuisines" placeholder="Any Cuisine">
+                            <datalist id="cuisines">
+                                <option value="Western">
+                                <option value="Chinese">
+                                <option value="Italian">
+                            </datalist>
+                            <!-- <input type="cuisineType" class="form-control form-control-lg" placeholder="Any Cuisine" name="cuisineType"> -->
                         </div>
                         <div class="col-12 col-md-9 mb-2 mb-md-0">
                             <input type="paxNo" class="form-control form-control-lg" placeholder="Any Pax" name="paxNo">
                         </div>
                         <div class="col-12 col-md-9 mb-2 mb-md-0">
-                            <input type="time" min="08:00" max="22:00" step="900" class="form-control form-control-lg" placeholder="Any Time" name="reservationTime">
+                            <input type="time" min="08:00" max="22:00" step="900" class="form-control form-control-lg" placeholder="Any Time" name="reservationTime" required>
                         </div>
                         <div class="col-12 col-md-3">
                             <button type="submit" class="btn btn-block btn-lg btn-primary">Search!</button>
@@ -60,6 +76,8 @@
         </div>
     </div>
 </header>
+
+
     
 <!--<div id="content-wrapper">-->
 <!--<h2>Or take a look at the list of available Restaurants Here</h2>-->

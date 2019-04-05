@@ -280,12 +280,6 @@ function registerUser(req, res, next) {
      let rname = req.query.rname;
      let reservationTime = req.query.reservationTime;
      let paxNo = req.query.paxNo;
-     // let rname = 'Me';
-     // let reservationTime = '11:00:00';
-     // let paxNo = '3';
-     console.log('before');
-     console.log(rname);
-     console.log('after');
 
      if(req.isAuthenticated()) {
          res.render('confirmation', { page: "Confirmation", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth: true});

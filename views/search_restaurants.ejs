@@ -46,6 +46,7 @@
     <% } %>
     </tbody>
 </table>
+<<<<<<< HEAD
 <script>
   $("td").click(function(){
     let rnameElement = $(this).parent().children().get(0)
@@ -59,6 +60,22 @@
       $('form').submit();
     }
   })
+=======
+
+<script>
+    $("td").click(function(){
+
+        // var column = $(this).parent().children().index(this);
+        // var row = $(this).parent().parent().children().index(this.parentNode);
+        let rnameElement = $(this).parent().children().get(0);
+        let rname = $(rnameElement).text();
+        $('input#restaurant').val(rname);
+        if($('input#restaurant').val() != '') {
+            console.log("tobe input", $('input#restaurant').val());
+            $('form').submit();
+        }
+    })
+>>>>>>> d1b9ce0a2c39422f61b0e4236a1ab05ef0b9e72c
 </script>
 </body>
 </html>

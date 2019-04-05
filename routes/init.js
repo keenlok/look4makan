@@ -96,8 +96,7 @@ function search_restaurant(req, res, next) {
   let reservationTime = req.query.reservationTime;
   let paxNo = req.query.paxNo;
 
-  if(rname !== '')  {
-    //rname = '%' + rname + '%'
+    if(rname !== '')  {
     rname = pad(rname);
   }
   else {
@@ -126,25 +125,17 @@ function search_restaurant(req, res, next) {
 
   if(reservationTime !== '') {
     reservationTime = pad(reservationTime);
-
-    //show alert dont add!!!
   }
-  else {
-    reservationTime = "'11:00:00'";
-  }
-  searchQuery = searchQuery.replace('$4', reservationTime);
-  searchQuery = searchQuery.replace('$4', reservationTime);
-  searchQuery = searchQuery.replace('$4', reservationTime);
 
-
-  //show alert dont add!!!
+  searchQuery = searchQuery.replace('$4', reservationTime);
+  searchQuery = searchQuery.replace('$4', reservationTime);
+  searchQuery = searchQuery.replace('$4', reservationTime);
 
   if(paxNo === '')  {
     paxNo = 2; //by default
   }
 
   searchQuery = searchQuery.replace('$5', paxNo);
-
 
   pool.query(searchQuery, (err, data) => {
     if (err || !data.rows || data.rows.length === 0) {
@@ -292,19 +283,20 @@ function booking(req, res, next) {
    let rname = req.query.rname;
    let reservationTime = req.query.time;
    let paxNo = req.query.pax;
-   // let rname = 'Me';
-   // let reservationTime = '11:00:00';
-   // let paxNo = '3';
-   console.log('before');
-   console.log(rname);
-   console.log('after');
 
-   if(req.isAuthenticated()) {
-     res.render('confirmation', { page: "Confirmation", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth: true});
-   }
-   else {
-     res.render('confirmation', { page: "Confirmation", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth : false});
-   }
+   let sql_query = 'INSERT INTO test VALUES (' + rname + ", " + reservationTime + ", " + paxNo + ");";
+
+
+     // pool.query(sql_query, (err, data) => {
+     // if(!err) {
+         if(req.isAuthenticated()) {
+             res.render('confirmation', { page: "Confirmation", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth: true});
+         }
+         else {
+             res.render('confirmation', { page: "Confirmation", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth : false});
+         }
+   //   }
+   // });
  }
 
 function login(req, res, next) {

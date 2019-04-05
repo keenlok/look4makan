@@ -292,19 +292,20 @@ function booking(req, res, next) {
    let rname = req.query.rname;
    let reservationTime = req.query.time;
    let paxNo = req.query.pax;
-   // let rname = 'Me';
-   // let reservationTime = '11:00:00';
-   // let paxNo = '3';
-   console.log('before');
-   console.log(rname);
-   console.log('after');
 
-   if(req.isAuthenticated()) {
-     res.render('confirmation', { page: "Confirmation", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth: true});
-   }
-   else {
-     res.render('confirmation', { page: "Confirmation", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth : false});
-   }
+   let sql_query = 'INSERT INTO test VALUES (' + rname + ", " + reservationTime + ", " + paxNo + ");";
+
+
+     // pool.query(sql_query, (err, data) => {
+     // if(!err) {
+         if(req.isAuthenticated()) {
+             res.render('confirmation', { page: "Confirmation", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth: true});
+         }
+         else {
+             res.render('confirmation', { page: "Confirmation", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth : false});
+         }
+   //   }
+   // });
  }
 
 function login(req, res, next) {

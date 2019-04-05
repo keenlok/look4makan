@@ -5,6 +5,7 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
+    <script src="/stylesheets/vendor/jquery/jquery.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 </head>
@@ -29,15 +30,20 @@
     </tbody>
 </table>
 <div>
-    <form action = "/booking/confirmation">
-        <input type="rname" value = <%=rname%>>
-        <input type="reservationTime" value = <%=reservationTime%>>
-        <input type="paxNo" value = <%=paxNo%>>
+    <form action = "/booking/confirmation" method="get">
+        <input id="rname" value ="<%=rname%>" name="rname">
+        <input id="reservationTime" value ="<%=reservationTime%>" name="time">
+        <input id="paxNo" value="<%=paxNo%>" name="pax">
         <div class="col-12 col-md-3">
             <button type="submit" class="btn btn-block btn-lg btn-primary">Confirm Reservation</button>
         </div>
     </form>
 </div>
+<script>
+    console.log($('input#rname').val())
+    console.log($('input#reservationTime').val())
+    console.log($('input#paxNo').val())
+</script>
 </body>
 </html>
 

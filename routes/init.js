@@ -22,7 +22,7 @@ function initRouter(app) {
   app.get('/booking'             , booking          );
   app.get('/booking/confirmation', confirmation     );
 
-  /*  PROTECTED GET */
+    /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register)
   app.get('/signin', login   )
 
@@ -41,25 +41,33 @@ function initRouter(app) {
 
 function index(req, res, next) {
   let time = utils.getTime();
-  let date = utils.getDateInStr();
-  let query = sql_query.allBranchWithStatus
+  let dateInStr = utils.getDateInStr();
   const title = 'Looking for places to eat?';
-
-  // console.log(time, date)
+   // console.log(time, date)
+    console.log("DAMN IT")
+    console.log(utils.getDate());
   // console.log(query)
+    let date = utils.getDate();
+    let query = sql_query.getAllLocations;
+    let query1= sql_query.getAllCuisines;
+    let query2= sql_query.getAllRestaurantName;
 
-  pool.query(query, [time], (err, data) => {
+    pool.query(query, (err, data) => {
     if (err) {
       console.error(err)
       error(err, res);
     } else {
-      if (req.isAuthenticated()) {
-        res.render('index', {title: title, date: date, auth: true, data: data.rows})
-      } else {
-        res.render('index', {title: title, date: date, auth: false, data: data.rows})
-      }
-    }
-  })
+        pool.query(query1, (err1, data1) => {
+            pool.query(query2, (err2, data2) => {
+                if (req.isAuthenticated()) {
+                    res.render('index', {title: title, dateInStr : dateInStr, date : date, auth: true, data: data.rows, data1: data1.rows, data2: data2.rows})
+                } else {
+                    console.log(data1);
+                    res.render('index', {title: title, dateInStr : dateInStr, date : date, auth: false, data: data.rows, data1: data1.rows, data2: data2.rows})
+                }
+            });
+        });
+    }});
 }
 
 function search (req, res, next) {
@@ -95,6 +103,12 @@ function search_restaurant(req, res, next) {
   let cuisineType = req.query.cuisineType;
   let reservationTime = req.query.reservationTime;
   let paxNo = req.query.paxNo;
+  let date = req.query.reservationDate;
+  // console.log("rname: " + rname);
+  // console.log("location: " + location);
+  // console.log("cuisineType: " + cuisineType);
+  // console.log("reservationTime: " + reservationTime);
+  // console.log("paxNo: " + paxNo);
 
     if(rname !== '')  {
     rname = pad(rname);
@@ -134,10 +148,22 @@ function search_restaurant(req, res, next) {
   if(paxNo === '')  {
     paxNo = 2; //by default
   }
+    // console.log("rname: " + rname);
+    // console.log("location: " + location);
+    // console.log("cuisineType: " + cuisineType);
+    // console.log("reservationTime: " + reservationTime);
+    // console.log("paxNo: " + paxNo);
 
   searchQuery = searchQuery.replace('$5', paxNo);
 
-  pool.query(searchQuery, (err, data) => {
+    if(date !== '') {
+        date = pad(date);
+    }
+
+    searchQuery = searchQuery.replace('$6', date);
+
+    console.log("SEARCH QUERY IS ... " + searchQuery);
+    pool.query(searchQuery, (err, data) => {
     if (err || !data.rows || data.rows.length === 0) {
       ctx = 0
       table = []
@@ -153,7 +179,7 @@ function search_restaurant(req, res, next) {
       page: 'Search Results',
       table: table,
       ctx: ctx,
-      time: reservationTime,
+      reservationTime: reservationTime,
       pax: paxNo,
       auth: auth
     });
@@ -165,7 +191,6 @@ function restaurant(req, res, next) {
   const time = utils.getTime()
   // console.log(time, req.query)
   let query = sql_query.getRestaurant
-
   pool.query(query, [rname, time], (err, data) => {
     let table, count, auth
     let date = utils.getDateInStr()
@@ -258,42 +283,93 @@ function registerUser(req, res, next) {
 }
 
 function booking(req, res, next) {
-  console.log(req.query)
-  let rname = req.query.rname
-  let reservationTime = req.query.time
-  let paxNo = req.query.pax
-  let cuisine_type = req.query.cuisinetype
+  let rname = req.query.rname;
+  let bid = req.query.bid;
+  let location = req.query.location;
+  let reservationTime = req.query.reservationTime;
+  let paxNo = req.query.pax;
+  let query = sql_query.findMinMaxHourOfABranch;
+  // let cuisine_type = req.query.cuisinetype
 
-  // let rname = req.query.rname;
-  // let reservationTime = req.query.reservationTime;
-  // let paxNo = req.query.paxNo;
-  // let rname = 'Me';
-  // let reservationTime = '11:00:00';
-  // let paxNo = '3';
-  if(req.isAuthenticated()) {
-    res.render('booking', { page: "Bookings", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth: true});
-  }
-  else {
-    res.render('booking', { page: "Bookings", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth : false});
-  }
+    query = query.replace("$0", pad(rname));
+    pool.query(query, [bid], (err, data) => {
+
+        // Get menu items for this restaurant
+        let subquery = sql_query.getMenuItems
+        subquery = subquery.replace("$1", pad(rname));
+        pool.query(subquery, (err1, data1) => {
+            let menu, menuCount
+
+            if (err1) {
+                console.error("CANNOT GET MENU items")
+            }
+            else if (!data1.rows || data1.rows.length === 0) {
+                menuCount = 0
+                menu = []
+            } else {
+                menu = data1.rows
+                let getMenuCount = (menu) => {
+                    let count = 0
+                    for (let i = 0; i < menu.length; i++) {
+                        if (i === 0) {
+                            count++;
+                        } else if (menu[i].menuname !== menu[i - 1].menuname) {
+                            count++
+                        }
+                    }
+                    return count
+                }
+                menuCount = getMenuCount(menu)
+                menu = utils.separateData(menu, menuCount)
+                console.log("The menu count is: ", menuCount);
+            }
+
+            if (req.isAuthenticated()) {
+                res.render('booking', {
+                    page: "Bookings",
+                    rname: rname,
+                    reservationTime: reservationTime,
+                    paxNo: paxNo,
+                    location: location,
+                    data: data.rows,
+                    menu : menu,
+                    menuCount : menuCount,
+                    auth: true
+                });
+            }
+            else {
+                res.render('booking', {
+                    page: "Bookings",
+                    rname: rname,
+                    reservationTime: reservationTime,
+                    paxNo: paxNo,
+                    location: location,
+                    data: data.rows,
+                    menu : menu,
+                    menuCount : menuCount,
+                    auth: false
+                });
+            }
+        });
+    });
 }
 
  function confirmation(req, res, next) {
   console.log(req.query)
    let rname = req.query.rname;
-   let reservationTime = req.query.time;
+   let location = req.query.location;
+   let reservationTime = req.query.reservationTime;
    let paxNo = req.query.pax;
 
    let sql_query = 'INSERT INTO test VALUES (' + rname + ", " + reservationTime + ", " + paxNo + ");";
 
-
      // pool.query(sql_query, (err, data) => {
      // if(!err) {
          if(req.isAuthenticated()) {
-             res.render('confirmation', { page: "Confirmation", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth: true});
+             res.render('confirmation', { page: "Confirmation", rname : rname, location : location, reservationTime : reservationTime, paxNo : paxNo, auth: true});
          }
          else {
-             res.render('confirmation', { page: "Confirmation", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth : false});
+             res.render('confirmation', { page: "Confirmation", rname : rname, location : location,  reservationTime : reservationTime, paxNo : paxNo, auth : false});
          }
    //   }
    // });

@@ -19,19 +19,23 @@
 <h2><%= ctx %> Results found!</h2>
 <% } %>
 <form type="hidden" method="get" action="/booking">
-    <input type="hidden" id="pax" name="pax" value="<%=pax%>">
-    <% if (typeof cuisineType === "undefined") { %>
-    <input type="hidden" id="cusine_type" name="cuisinetype" value="ANY">
-    <% } else { %>
-    <input type="hidden" id="cusine_type" name="cuisinetype" value="<%= cuisineType%>">
-    <% } %>
-    <input type="hidden" id="time" name="time" value="<%= time %>">
     <input type="hidden" id="rname" name="rname">
+    <input type="hidden" id="bid" name="bid">
+    <input type="hidden" id="location" name="location">
+    <input type="hidden" id="reservationTime" name="reservationTime" value="<%=reservationTime%>">
+    <input type="hidden" id="pax" name="pax" value="<%=pax%>">
+
+    <!--<% if (typeof cuisineType === "undefined") { %>-->
+    <!--<input type="hidden" id="cusine_type" name="cuisinetype" value="ANY">-->
+    <!--<% } else { %>-->
+    <!--<input type="hidden" id="cusine_type" name="cuisinetype" value="<%= cuisineType%>">-->
+    <!--<% } %>-->
 </form>
 <table class="table table-hover">
     <thead>
     <tr>
         <th scope="col">Restaurant</th>
+        <th scope="col">BID</th>
         <th scope="col">Opening Hours</th>
         <th scope="col">Location</th>
     </tr>
@@ -40,6 +44,7 @@
     <% for(var i=0; i<table.length; i++) { %>
     <tr>
         <td><%= table[i].rname%></td>
+        <td><%= table[i].bid%></td>
         <td><%= table[i].openinghours%></td>
         <td><%= table[i].location%></td>
     </tr>
@@ -48,14 +53,25 @@
 </table>
 <script>
   $("td").click(function() {
-    let rnameElement = $(this).parent().children().get(0)
-    let rname = $(rnameElement).text()
-    $('input#rname').val(rname)
-    if($('input#rname').val() != '') {
-      console.log("rname", $('input#rname').val())
-      console.log("time", $('input#time').val())
-      console.log("paxNo", $('input#pax').val())
-      console.log("cuisineType", $('input#cusine_type').val())
+    let rnameElement = $(this).parent().children().get(0);
+    let rname = $(rnameElement).text();
+    $('input#rname').val(rname);
+
+    let bidElement = $(this).parent().children().get(1);
+    let bid = $(bidElement).text();
+    $('input#bid').val(bid);
+
+    let locationElement = $(this).parent().children().get(3);
+    let location = $(locationElement).text();
+    $('input#location').val(location);
+
+      if($('input#rname').val() != '') {
+      console.log("rname", $('input#rname').val());
+      console.log("time", $('input#time').val());
+      console.log("paxNo", $('input#pax').val());
+      console.log("LOCATION", $('input#location').val());
+
+          // console.log("cuisineType", $('input#cusine_type').val())
       $('form').submit();
     }
   })

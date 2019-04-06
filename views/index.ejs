@@ -21,7 +21,7 @@
 </header>
 <body>
 <div class="align-content-md-start">
-<p><%= date %></p>
+<p><%= dateInStr %></p>
 </div>
 
 <h1><%= title %></h1>
@@ -36,42 +36,56 @@
             <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
                 <form action="/search/restaurants">
                     <div class="form-row">
-                        <div class="col-12 col-md-9 mb-2 mb-md-0">
-                            <input list="restaurants"  name="rname" placeholder="Any Restaurant" size="55">
-                            <datalist id="restaurants">
-                                <option value="Macdonalds">
-                                <option value="pussy cat dolls">
-                            </datalist>
-                            <!-- <input type="text" class="form-control form-control-lg" placeholder="Any Restaurant" name="rname" maxlength=40> -->
+                        <div>
+                        <!--<div class="col-12 col-md-9 mb-2 mb-md-0">-->
+                            <!--<input list="restaurants"  name="rname" size="55">-->
+                            <select id="restaurants" name="rname">
+                                <option value=""> Any Restaurant </option>
+                                <% for (let i = 0; i < data2.length; i++) { %>
+                                    <option value="<%=data2[i].rname%>"><%= data2[i].rname %></option>
+                                <% } %>
+                            </select>
                         </div>
-                        <div class="col-12 col-md-9 mb-2 mb-md-0">
-                            <input list="locations" name="location" placeholder="Any Location" size="55">
-                            <datalist id="locations">
-                                <option value="Vivo City">
-                                <option value="Centre Point">
-                            </datalist>
-                            <!-- //  <input type="text" class="form-control form-control-lg" placeholder="Any Location" name="location" maxlength=40> -->
+                        <div>
+                        <!--<div class="col-12 col-md-9 mb-2 mb-md-0">-->
+                            <!--<input list="locations" name="location" placeholder="Any Location" size="55">-->
+                            <select id="locations" name="location">
+                                <option value=""> Any Location </option>
+                                <% for (let i = 0; i < data.length; i++) { %>
+                                <option value="<%= data[i].locname %>"><%= data[i].locname %> </option>
+                                <% } %>
+                            </select>
                         </div>
-                        <div class="col-12 col-md-9 mb-2 mb-md-0">
-                            <input list="cuisines" name="cuisineType" placeholder="Any Cuisine" size="55">
-                            <datalist id="cuisines">
-                                <option value="Western">
-                                <option value="Chinese">
-                                <option value="Italian">
-                            </datalist>
+                        <div>
+                        <!--<div class="col-12 col-md-9 mb-2 mb-md-0">-->
+                            <!--<input list="cuisines" name="cuisineType" placeholder="Any Cuisine" size="55">-->
+                            <select id="cuisines" name="cuisineType">
+                                <option value=""> Any Cuisine </option>
+                                <% for (let i = 0; i < data1.length; i++) { %>
+                                <option value="<%= data1[i].cuisinename%>"><%= data1[i].cuisinename %> </option>
+                                <% } %>
+                            </select>
                             <!-- <input type="cuisineType" class="form-control form-control-lg" placeholder="Any Cuisine" name="cuisineType"> -->
                         </div>
-                        <div class="col-12 col-md-9 mb-2 mb-md-0">
-                            <input list="paxNo" name="paxNo" placeholder="No. of Diners" size="55">
-                            <datalist id="paxNo">
-                                <option value="1">
-                                <option value="2">
-                                <option value="3">
-                            </datalist>
+                        <div>
+                        <!--<div class="col-12 col-md-9 mb-2 mb-md-0">-->
+                            <!--<input list="paxNo" name="paxNo" placeholder="No. of Diners" size="55">-->
+                            <select id="paxNo" name="paxNo">
+                                <% for (let i = 1; i <= 15; i++) { %>
+                                    <%  if(i === 2) { %>
+                                        <option value="<%=i%>" selected ><%= i %></option>
+                                    <% } else { %>
+                                        <option value="<%=i%>" ><%= i %></option>
+                                    <% } %>
+                                <% } %>
+                            </select>
                             <!--<input type="paxNo" class="form-control form-control-lg" placeholder="Any Pax" name="paxNo">-->
                         </div>
                         <div class="col-12 col-md-9 mb-2 mb-md-0">
-                            <input type="time" min="08:00" max="22:00" step="900" class="form-control form-control-lg" placeholder="Any Time" name="reservationTime" required>
+                            <input type="time" min="08:00" max="22:00" step="900" class="form-control form-control-lg" name="reservationTime" required>
+                        </div>
+                        <div class="col-12 col-md-9 mb-2 mb-md-0">
+                            <input type="date"  value="<%=date%>" min="<%=date%>" class="form-control form-control-lg" name="reservationDate" required>
                         </div>
                         <div class="col-12 col-md-3">
                             <button type="submit" class="btn btn-block btn-lg btn-primary">Search!</button>
@@ -86,26 +100,6 @@
     </div>
 </header>
 
-<!--<div id="content-wrapper">-->
-<!--<h2>Or take a look at the list of available Restaurants Here</h2>-->
-        <!--<table class="table">-->
-            <!--<thead>-->
-            <!--<tr>-->
-                <!--<th scope="col">Restaurant</th>-->
-                <!--<th scope="col">Location</th>-->
-                <!--<th scope="col">Status</th>-->
-            <!--</tr>-->
-            <!--</thead>-->
-            <!--<tbody>-->
-            <!--<% for(var i=0; i<data.length; i++) { %>-->
-            <!--<tr>-->
-                <!--<td><%= data[i].rname%></td>-->
-                <!--<td><%= data[i].location%></td>-->
-                <!--<td><%= data[i].status%></td>-->
-            <!--</tr>-->
-            <!--<% } %>-->
-            <!--</tbody>-->
-        <!--</table>-->
-<!--</div>-->
+
 </body>
 </html>

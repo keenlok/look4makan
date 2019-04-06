@@ -41,12 +41,13 @@ function initRouter(app) {
 
 function index(req, res, next) {
   let time = utils.getTime();
-  let date = utils.getDateInStr();
+  let dateInStr = utils.getDateInStr();
   const title = 'Looking for places to eat?';
-
-  // console.log(time, date)
+   // console.log(time, date)
+    console.log("DAMN IT")
+    console.log(utils.getDate());
   // console.log(query)
-
+    let date = utils.getDate();
     let query = sql_query.getAllLocations;
     let query1= sql_query.getAllCuisines;
     let query2= sql_query.getAllRestaurantName;
@@ -59,10 +60,10 @@ function index(req, res, next) {
         pool.query(query1, (err1, data1) => {
             pool.query(query2, (err2, data2) => {
                 if (req.isAuthenticated()) {
-                    res.render('index', {title: title, date: date, auth: true, data: data.rows, data1: data1.rows, data2: data2.rows})
+                    res.render('index', {title: title, dateInStr : dateInStr, date : date, auth: true, data: data.rows, data1: data1.rows, data2: data2.rows})
                 } else {
                     console.log(data1);
-                    res.render('index', {title: title, date: date, auth: false, data: data.rows, data1: data1.rows, data2: data2.rows})
+                    res.render('index', {title: title, dateInStr : dateInStr, date : date, auth: false, data: data.rows, data1: data1.rows, data2: data2.rows})
                 }
             });
         });
@@ -281,9 +282,7 @@ function booking(req, res, next) {
   let paxNo = req.query.pax;
   let query = sql_query.findMinMaxHourOfABranch;
   // let cuisine_type = req.query.cuisinetype
-    console.log("RNAME : " + rname);
-    console.log("PAD(RNAME) : " + pad(rname));
-    console.log("bid : " +bid);
+
     query = query.replace("$0", pad(rname));
     pool.query(query, [bid], (err, data) => {
 
@@ -299,7 +298,6 @@ function booking(req, res, next) {
             else if (!data1.rows || data1.rows.length === 0) {
                 menuCount = 0
                 menu = []
-                console.log("ZERO??")
             } else {
                 menu = data1.rows
                 let getMenuCount = (menu) => {
@@ -357,7 +355,6 @@ function booking(req, res, next) {
 
    let sql_query = 'INSERT INTO test VALUES (' + rname + ", " + reservationTime + ", " + paxNo + ");";
 
-   console.log("WTF.. " + rname);
      // pool.query(sql_query, (err, data) => {
      // if(!err) {
          if(req.isAuthenticated()) {

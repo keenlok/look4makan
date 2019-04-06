@@ -80,13 +80,28 @@ function getDateInStr(today) {
         today = new Date();
     }
     const dayStr = convertDayToStr(today.getDay());
-    const monthStr = convertMonthToStr(today.getMonth());
+    const monthStr = convertMonthToStr(today.getMonth() + 1);
     const date = dayStr + ' ' + today.getDate() + ' ' + monthStr + ' ' + today.getFullYear();
+    return date;
+}
+
+function getDate(today) {
+    if (typeof today === 'undefined') {
+        today = new Date();
+    }
+    let year = today.getFullYear();
+    let month = today.getMonth() + 1;
+    let day = today.getDate();
+    month = month < 10 ? "0" + month : month;
+    day = day < 10 ? "0" + day : day;
+
+    const date = year + "-" + month + "-" + day;
     return date;
 }
 module.exports.convertDayToStr = convertDayToStr;
 module.exports.convertMonthToStr = convertMonthToStr;
 module.exports.getDateInStr = getDateInStr;
+module.exports.getDate = getDate;
 
 function checkAndExtend(val) {
     if (val < 10) {
@@ -99,6 +114,7 @@ function getTime(today) {
     if (typeof today === 'undefined') {
         today = new Date();
     }
+
     let hours = checkAndExtend(today.getHours());
     let minutes = checkAndExtend(today.getMinutes());
     let seconds = checkAndExtend(today.getSeconds());

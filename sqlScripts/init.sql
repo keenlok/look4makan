@@ -18,8 +18,6 @@ drop table if exists menuItems  cascade;
 drop table if exists Sells  cascade;
 drop table if exists CuisineTypes cascade;
 drop table if exists Locations cascade;
-drop table if exists test cascade;
-
 
 create table Diners (
 userName varchar(20) primary key,
@@ -50,13 +48,6 @@ bid integer,
 primary key (userName, rname, bid)
 );
 
-create table test (
-rname varchar(40),
-reservationTime varchar(40),
-paxNo integer,
-primary key(rname, reservationTime, paxNo)
-);
-
 create table UserPreferences (
 userName varchar(20),
 preferredLoc varchar(40),
@@ -83,7 +74,8 @@ bid integer,
 tid integer,
 pax integer,
 availableSince time,
-primary key (rname, bid, tid, availableSince)
+availableDate date,
+primary key (rname, bid, tid, availableSince, availableDate)
 );
 
 create table Books (

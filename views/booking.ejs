@@ -43,10 +43,8 @@
 <div>
     <form action = "/booking/confirmation" method="get">
         <label>Restaurant</label> <br>
-        <%console.log("HERE... " + rname)%>
         <input id="rname" value ="<%=rname%>" name="rname" readonly> <br><br>
         <label>Location</label> <br>
-        <%console.log("HERE... LOCA " + location)%>
         <input id="location" value ="<%=location%>" name="location" readonly> <br><br>
         <label>Reservation Time</label> <br>
         <%reservationTime = reservationTime.slice(1,reservationTime.length-1)%>

@@ -20,7 +20,10 @@
         <label>Restaurant</label> <br>
         <input id="rname" value ="<%=rname%>" name="rname" disabled> <br><br>
         <label>Reservation Time</label> <br>
-        <input id="reservationTime" value ="<%=reservationTime%>" name="time"> <br><br>
+        <%reservationTime = reservationTime.slice(1,reservationTime.length-1)%>
+        <%console.log("RESERVATION TIME IS " + reservationTime) %>
+        <input type="time" min="08:00" max="22:00" step="900" class="form-control form-control-lg" value="<%=reservationTime%>" name="time" required> <br><br>
+        <!--<input id="reservationTime" value ="<%=reservationTime%>" name="time"> <br><br>-->
         <label>Pax No</label> <br>
         <input id="paxNo" value="<%=paxNo%>" name="pax"> <br><br>
         <div class="col-12 col-md-3">

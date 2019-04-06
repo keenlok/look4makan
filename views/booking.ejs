@@ -19,6 +19,8 @@
     <form action = "/booking/confirmation" method="get">
         <label>Restaurant</label> <br>
         <input id="rname" value ="<%=rname%>" name="rname" disabled> <br><br>
+        <label>Location</label> <br>
+        <input id="location" value ="<%=location%>" name="location" disabled> <br><br>
         <label>Reservation Time</label> <br>
         <%reservationTime = reservationTime.slice(1,reservationTime.length-1)%>
         <%console.log("RESERVATION TIME IS " + reservationTime) %>

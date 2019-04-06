@@ -20,7 +20,8 @@
 <% } %>
 <form type="hidden" method="get" action="/booking">
     <input type="hidden" id="rname" name="rname">
-    <input type="hidden" id="time" name="time" value="<%= time %>">
+    <input type="hidden" id="location" name="location">
+    <input type="hidden" id="reservationTime" name="reservationTime" value="<%=reservationTime%>">
     <input type="hidden" id="pax" name="pax" value="<%=pax%>">
 
     <!--<% if (typeof cuisineType === "undefined") { %>-->
@@ -49,14 +50,21 @@
 </table>
 <script>
   $("td").click(function() {
-    let rnameElement = $(this).parent().children().get(0)
-    let rname = $(rnameElement).text()
-    $('input#rname').val(rname)
-    if($('input#rname').val() != '') {
-      console.log("rname", $('input#rname').val())
-      console.log("time", $('input#time').val())
-      console.log("paxNo", $('input#pax').val())
-      // console.log("cuisineType", $('input#cusine_type').val())
+    let rnameElement = $(this).parent().children().get(0);
+    let rname = $(rnameElement).text();
+    $('input#rname').val(rname);
+
+    let locationElement = $(this).parent().children().get(2);
+    let location = $(locationElement).text();
+    $('input#location').val(location);
+
+      if($('input#rname').val() != '') {
+      console.log("rname", $('input#rname').val());
+      console.log("time", $('input#time').val());
+      console.log("paxNo", $('input#pax').val());
+      console.log("LOCATION", $('input#location').val());
+
+          // console.log("cuisineType", $('input#cusine_type').val())
       $('form').submit();
     }
   })

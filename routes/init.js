@@ -170,7 +170,7 @@ function search_restaurant(req, res, next) {
       page: 'Search Results',
       table: table,
       ctx: ctx,
-      time: reservationTime,
+      reservationTime: reservationTime,
       pax: paxNo,
       auth: auth
     });
@@ -276,22 +276,17 @@ function registerUser(req, res, next) {
 
 function booking(req, res, next) {
   console.log(req.query)
-  let rname = req.query.rname
-  let reservationTime = req.query.time
-  let paxNo = req.query.pax
-  let cuisine_type = req.query.cuisinetype
+  let rname = req.query.rname;
+  let location = req.query.location;
+  let reservationTime = req.query.reservationTime;
+  let paxNo = req.query.pax;
+  // let cuisine_type = req.query.cuisinetype
 
-  // let rname = req.query.rname;
-  // let reservationTime = req.query.reservationTime;
-  // let paxNo = req.query.paxNo;
-  // let rname = 'Me';
-  // let reservationTime = '11:00:00';
-  // let paxNo = '3';
   if(req.isAuthenticated()) {
-    res.render('booking', { page: "Bookings", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth: true});
+    res.render('booking', { page: "Bookings", rname : rname, reservationTime : reservationTime, paxNo : paxNo, location : location, auth: true});
   }
   else {
-    res.render('booking', { page: "Bookings", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth : false});
+    res.render('booking', { page: "Bookings", rname : rname, reservationTime : reservationTime, paxNo : paxNo, location : location, auth : false});
   }
 }
 
@@ -302,7 +297,6 @@ function booking(req, res, next) {
    let paxNo = req.query.pax;
 
    let sql_query = 'INSERT INTO test VALUES (' + rname + ", " + reservationTime + ", " + paxNo + ");";
-
 
      // pool.query(sql_query, (err, data) => {
      // if(!err) {

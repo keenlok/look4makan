@@ -46,17 +46,18 @@ function index(req, res, next) {
 
   // console.log(time, date)
   // console.log(query)
-    let sql_query= "select * from Locations;";
-    let sql_query1= "select * from CuisineTypes;";
-    let sql_query2= "select rname from Restaurants;";
 
-    pool.query(sql_query, (err, data) => {
+    let query = sql_query.getAllLocations;
+    let query1= sql_query.getAllCuisines;
+    let query2= sql_query.getAllRestaurantName;
+
+    pool.query(query, (err, data) => {
     if (err) {
       console.error(err)
       error(err, res);
     } else {
-        pool.query(sql_query1, (err1, data1) => {
-            pool.query(sql_query2, (err2, data2) => {
+        pool.query(query1, (err1, data1) => {
+            pool.query(query2, (err2, data2) => {
                 if (req.isAuthenticated()) {
                     res.render('index', {title: title, date: date, auth: true, data: data.rows, data1: data1.rows, data2: data2.rows})
                 } else {

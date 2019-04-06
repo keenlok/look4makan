@@ -12,10 +12,16 @@ const find_postal_code = 'WITH restaurantStatus AS ( SELECT rname, bid, COUNT(ti
 const add_user = 'INSERT INTO diners (userName, password, firstName, lastName, isAdmin) VALUES ($1, $2, $3, $4, FALSE);'
 
 const find_user_preference = 'SELECT distinct rname, openingHours, location FROM branches B natural JOIN freeTables F WHERE B.rname in ($1) and B.location in ($2) and cuisineType in ($3) and B.openTime <= $4 and B.closeTime >= $4 and F.pax >= $5 and F.availableSince <= $4;'
+
 const userpass = 'SELECT * FROM diners WHERE username = $1'
 
 const get_menu_items = 'SELECT DISTINCT menuname, foodname, price FROM menu M NATURAL JOIN menuitems F NATURAL JOIN sells S WHERE S.rname = $1 ORDER BY menuname;'
 
+const all_locations = "select * from Locations;";
+
+const all_cuisines = "select * from CuisineTypes;";
+
+const all_rname= "select rname from Restaurants;";
 
 const queries = {
   findAllAvailableRestaurants: available_restaurants,
@@ -26,7 +32,10 @@ const queries = {
   findWithUserPreference: find_user_preference,
   add_user: add_user,
   userpass: userpass,
-  getMenuItems: get_menu_items
+  getMenuItems: get_menu_items,
+  getAllLocations : all_locations,
+  getAllCuisines : all_cuisines,
+  getAllRestaurantName : all_rname
 }
 
 module.exports = queries

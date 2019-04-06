@@ -20,13 +20,15 @@ function initRouter(app) {
   app.get('/search/restaurants'  , search_restaurant);
   app.get('/restaurant'          , restaurant       );
   app.get('/booking'             , booking          );
-  app.get('/booking/confirmation', confirmation     );
+//  app.get('/booking/confirmation', confirmation     );
 
     /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register)
   app.get('/signin', login   )
+  app.get('/booking/confirmation', passport.authMiddleware(), confirmation);
 
-  /*  PROTECTED POST */
+
+    /*  PROTECTED POST */
   app.post('/reg_user', passport.antiMiddleware(), registerUser)
 
   app.post('/authenticate', passport.authenticate('local', {

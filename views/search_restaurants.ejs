@@ -19,14 +19,15 @@
 <h2><%= ctx %> Results found!</h2>
 <% } %>
 <form type="hidden" method="get" action="/booking">
-    <input type="hidden" id="pax" name="pax" value="<%=pax%>">
-    <% if (typeof cuisineType === "undefined") { %>
-    <input type="hidden" id="cusine_type" name="cuisinetype" value="ANY">
-    <% } else { %>
-    <input type="hidden" id="cusine_type" name="cuisinetype" value="<%= cuisineType%>">
-    <% } %>
-    <input type="hidden" id="time" name="time" value="<%= time %>">
     <input type="hidden" id="rname" name="rname">
+    <input type="hidden" id="time" name="time" value="<%= time %>">
+    <input type="hidden" id="pax" name="pax" value="<%=pax%>">
+
+    <!--<% if (typeof cuisineType === "undefined") { %>-->
+    <!--<input type="hidden" id="cusine_type" name="cuisinetype" value="ANY">-->
+    <!--<% } else { %>-->
+    <!--<input type="hidden" id="cusine_type" name="cuisinetype" value="<%= cuisineType%>">-->
+    <!--<% } %>-->
 </form>
 <table class="table table-hover">
     <thead>
@@ -55,7 +56,7 @@
       console.log("rname", $('input#rname').val())
       console.log("time", $('input#time').val())
       console.log("paxNo", $('input#pax').val())
-      console.log("cuisineType", $('input#cusine_type').val())
+      // console.log("cuisineType", $('input#cusine_type').val())
       $('form').submit();
     }
   })

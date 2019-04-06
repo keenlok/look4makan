@@ -13,29 +13,18 @@
     <% include ./partials/header %>
 </header>
 <body>
-<table class="table">
-    <thead>
-    <tr>
-        <th scope="col">Branch Location</th>
-        <th scope="col">Reservation Time</th>
-        <th scope="col">No of People</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td><%= rname%></td>
-        <td><%= reservationTime%></td>
-        <td><%= paxNo %></td>
-    </tr>
-    </tbody>
-</table>
+<br>
+<br>
 <div>
     <form action = "/booking/confirmation" method="get">
-        <input id="rname" value ="<%=rname%>" name="rname">
-        <input id="reservationTime" value ="<%=reservationTime%>" name="time">
-        <input id="paxNo" value="<%=paxNo%>" name="pax">
+        <label>Restaurant</label> <br>
+        <input id="rname" value ="<%=rname%>" name="rname" > <br><br>
+        <label>Reservation Time</label> <br>
+        <input id="reservationTime" value ="<%=reservationTime%>" name="time"> <br><br>
+        <label>Pax No</label> <br>
+        <input id="paxNo" value="<%=paxNo%>" name="pax"> <br><br>
         <div class="col-12 col-md-3">
-            <button type="submit" class="btn btn-block btn-lg btn-primary">Confirm Reservation</button>
+            <button type="submit" class="btn btn-block btn btn-primary">Confirm Reservation</button>
         </div>
     </form>
 </div>
@@ -46,4 +35,3 @@
 </script>
 </body>
 </html>
->

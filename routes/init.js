@@ -102,11 +102,11 @@ function search_restaurant(req, res, next) {
   let cuisineType = req.query.cuisineType;
   let reservationTime = req.query.reservationTime;
   let paxNo = req.query.paxNo;
-    console.log("rname: " + rname);
-    console.log("location: " + location);
-    console.log("cuisineType: " + cuisineType);
-    console.log("reservationTime: " + reservationTime);
-    console.log("paxNo: " + paxNo);
+    // console.log("rname: " + rname);
+    // console.log("location: " + location);
+    // console.log("cuisineType: " + cuisineType);
+    // console.log("reservationTime: " + reservationTime);
+    // console.log("paxNo: " + paxNo);
 
     if(rname !== '')  {
     rname = pad(rname);
@@ -146,11 +146,11 @@ function search_restaurant(req, res, next) {
   if(paxNo === '')  {
     paxNo = 2; //by default
   }
-    console.log("rname: " + rname);
-    console.log("location: " + location);
-    console.log("cuisineType: " + cuisineType);
-    console.log("reservationTime: " + reservationTime);
-    console.log("paxNo: " + paxNo);
+    // console.log("rname: " + rname);
+    // console.log("location: " + location);
+    // console.log("cuisineType: " + cuisineType);
+    // console.log("reservationTime: " + reservationTime);
+    // console.log("paxNo: " + paxNo);
 
   searchQuery = searchQuery.replace('$5', paxNo);
 

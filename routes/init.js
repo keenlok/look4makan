@@ -274,7 +274,6 @@ function registerUser(req, res, next) {
 }
 
 function booking(req, res, next) {
-   //console.log(req.query)
   let rname = req.query.rname;
   let bid = req.query.bid;
   let location = req.query.location;
@@ -282,53 +281,90 @@ function booking(req, res, next) {
   let paxNo = req.query.pax;
   let query = sql_query.findMinMaxHourOfABranch;
   // let cuisine_type = req.query.cuisinetype
-    rname = pad(rname);
-    console.log("RNAME : " +rname);
+    console.log("RNAME : " + rname);
+    console.log("PAD(RNAME) : " + pad(rname));
     console.log("bid : " +bid);
-    query = query.replace("$0", rname);
-
+    query = query.replace("$0", pad(rname));
     pool.query(query, [bid], (err, data) => {
 
-        if (req.isAuthenticated()) {
-          res.render('booking', {
-              page: "Bookings",
-              rname: rname,
-              reservationTime: reservationTime,
-              paxNo: paxNo,
-              location: location,
-              data : data.rows,
-              auth: true
-          });
-      }
-      else {
-          res.render('booking', {
-              page: "Bookings",
-              rname: rname,
-              reservationTime: reservationTime,
-              paxNo: paxNo,
-              location: location,
-              data : data.rows,
-              auth: false
-          });
-      }
-  });
+        // Get menu items for this restaurant
+        let subquery = sql_query.getMenuItems
+        subquery = subquery.replace("$1", pad(rname));
+        pool.query(subquery, (err1, data1) => {
+            let menu, menuCount
+
+            if (err1) {
+                console.error("CANNOT GET MENU items")
+            }
+            else if (!data1.rows || data1.rows.length === 0) {
+                menuCount = 0
+                menu = []
+                console.log("ZERO??")
+            } else {
+                menu = data1.rows
+                let getMenuCount = (menu) => {
+                    let count = 0
+                    for (let i = 0; i < menu.length; i++) {
+                        if (i === 0) {
+                            count++;
+                        } else if (menu[i].menuname !== menu[i - 1].menuname) {
+                            count++
+                        }
+                    }
+                    return count
+                }
+                menuCount = getMenuCount(menu)
+                menu = utils.separateData(menu, menuCount)
+                console.log("The menu count is: ", menuCount);
+            }
+
+            if (req.isAuthenticated()) {
+                res.render('booking', {
+                    page: "Bookings",
+                    rname: rname,
+                    reservationTime: reservationTime,
+                    paxNo: paxNo,
+                    location: location,
+                    data: data.rows,
+                    menu : menu,
+                    menuCount : menuCount,
+                    auth: true
+                });
+            }
+            else {
+                res.render('booking', {
+                    page: "Bookings",
+                    rname: rname,
+                    reservationTime: reservationTime,
+                    paxNo: paxNo,
+                    location: location,
+                    data: data.rows,
+                    menu : menu,
+                    menuCount : menuCount,
+                    auth: false
+                });
+            }
+        });
+    });
 }
 
  function confirmation(req, res, next) {
   console.log(req.query)
    let rname = req.query.rname;
-   let reservationTime = req.query.time;
+   let location = req.query.location;
+   let reservationTime = req.query.reservationTime;
    let paxNo = req.query.pax;
 
    let sql_query = 'INSERT INTO test VALUES (' + rname + ", " + reservationTime + ", " + paxNo + ");";
 
+   console.log("WTF.. " + rname);
      // pool.query(sql_query, (err, data) => {
      // if(!err) {
          if(req.isAuthenticated()) {
-             res.render('confirmation', { page: "Confirmation", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth: true});
+             res.render('confirmation', { page: "Confirmation", rname : rname, location : location, reservationTime : reservationTime, paxNo : paxNo, auth: true});
          }
          else {
-             res.render('confirmation', { page: "Confirmation", rname : rname, reservationTime : reservationTime, paxNo : paxNo, auth : false});
+             res.render('confirmation', { page: "Confirmation", rname : rname, location : location,  reservationTime : reservationTime, paxNo : paxNo, auth : false});
          }
    //   }
    // });

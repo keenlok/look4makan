@@ -13,17 +13,44 @@
     <% include ./partials/header %>
 </header>
 <body>
+</div>
+<h2> Menu for <%= rname %> </h2>
+<table class="table table-bordered">
+    <thead class="thead-light">
+    <tr>
+        <th scope="col">Menu Name</th>
+        <th scope="col">Menu Item</th>
+        <th scope="col">Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% for(var i=0; i<menuCount; i++) {
+        var flag = true;
+    for(var j=0; j<menu[i].length; j++) { %>
+    <tr>
+        <% if(flag) { %>
+        <td rowspan="<%= menu[i].length%>" class="align-middle"><%= menu[i][j].menuname%></td>
+        <% flag = false; %>
+        <% } %>
+        <td><%= menu[i][j].foodname %></td>
+        <td><%= menu[i][j].price %></td>
+    </tr>
+    <% }} %>
+    </tbody>
+</table>
 <br>
 <br>
 <div>
     <form action = "/booking/confirmation" method="get">
         <label>Restaurant</label> <br>
-        <input id="rname" value ="<%=rname%>" name="rname" disabled> <br><br>
+        <%console.log("HERE... " + rname)%>
+        <input id="rname" value ="<%=rname%>" name="rname" readonly> <br><br>
         <label>Location</label> <br>
-        <input id="location" value ="<%=location%>" name="location" disabled> <br><br>
+        <%console.log("HERE... LOCA " + location)%>
+        <input id="location" value ="<%=location%>" name="location" readonly> <br><br>
         <label>Reservation Time</label> <br>
         <%reservationTime = reservationTime.slice(1,reservationTime.length-1)%>
-        <input type="time" min="<%=data[0].opentime%>" max="<%=data[0].closetime%>" step="900" class="form-control form-control-lg" value="<%=reservationTime%>" name="time" required> <br><br>
+        <input type="time" min="<%=data[0].opentime%>" max="<%=data[0].closetime%>" step="900" class="form-control form-control-lg" value="<%=reservationTime%>" name="reservationTime" required> <br>
         <!--<input id="reservationTime" value ="<%=reservationTime%>" name="time"> <br><br>-->
         <label>Pax No</label> <br>
         <input id="paxNo" value="<%=paxNo%>" name="pax"> <br><br>

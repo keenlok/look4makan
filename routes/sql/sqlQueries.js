@@ -11,7 +11,7 @@ const find_postal_code = 'WITH restaurantStatus AS ( SELECT rname, bid, COUNT(ti
 
 const add_user = 'INSERT INTO diners (userName, password, firstName, lastName, isAdmin) VALUES ($1, $2, $3, $4, FALSE);'
 
-const find_user_preference = 'SELECT distinct rname, openingHours, location FROM branches B natural JOIN freeTables F WHERE B.rname in ($1) and B.location in ($2) and cuisineType in ($3) and B.openTime <= $4 and B.closeTime >= $4 and F.pax >= $5 and F.availableSince <= $4;'
+const find_user_preference = 'SELECT distinct rname, bid, openingHours, location FROM branches B natural JOIN freeTables F WHERE B.rname in ($1) and B.location in ($2) and cuisineType in ($3) and B.openTime <= $4 and B.closeTime >= $4 and F.pax >= $5 and F.availableSince <= $4;'
 
 const userpass = 'SELECT * FROM diners WHERE username = $1'
 
@@ -23,19 +23,22 @@ const all_cuisines = "select * from CuisineTypes;";
 
 const all_rname= "select rname from Restaurants;";
 
+const min_max_hour_of_a_branch = "SELECT openTime, closeTime FROM Branches B WHERE B.rname = $0 AND B.bid = $1;";
+
 const queries = {
-  findAllAvailableRestaurants: available_restaurants,
-  allBranchWithStatus: branch_w_status,
-  findRestaurant: find_restaurant,
-  getRestaurant: get_restaurant,
-  findWithPostCode: find_postal_code,
-  findWithUserPreference: find_user_preference,
-  add_user: add_user,
-  userpass: userpass,
-  getMenuItems: get_menu_items,
+  findAllAvailableRestaurants : available_restaurants,
+  allBranchWithStatus : branch_w_status,
+  findRestaurant : find_restaurant,
+  getRestaurant : get_restaurant,
+  findWithPostCode : find_postal_code,
+  findWithUserPreference : find_user_preference,
+  add_user : add_user,
+  userpass : userpass,
+  getMenuItems : get_menu_items,
   getAllLocations : all_locations,
   getAllCuisines : all_cuisines,
-  getAllRestaurantName : all_rname
+  getAllRestaurantName : all_rname,
+  findMinMaxHourOfABranch : min_max_hour_of_a_branch
 }
 
 module.exports = queries

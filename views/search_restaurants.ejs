@@ -20,6 +20,7 @@
 <% } %>
 <form type="hidden" method="get" action="/booking">
     <input type="hidden" id="rname" name="rname">
+    <input type="hidden" id="bid" name="bid">
     <input type="hidden" id="location" name="location">
     <input type="hidden" id="reservationTime" name="reservationTime" value="<%=reservationTime%>">
     <input type="hidden" id="pax" name="pax" value="<%=pax%>">
@@ -34,6 +35,7 @@
     <thead>
     <tr>
         <th scope="col">Restaurant</th>
+        <th scope="col">BID</th>
         <th scope="col">Opening Hours</th>
         <th scope="col">Location</th>
     </tr>
@@ -42,6 +44,7 @@
     <% for(var i=0; i<table.length; i++) { %>
     <tr>
         <td><%= table[i].rname%></td>
+        <td><%= table[i].bid%></td>
         <td><%= table[i].openinghours%></td>
         <td><%= table[i].location%></td>
     </tr>
@@ -54,7 +57,11 @@
     let rname = $(rnameElement).text();
     $('input#rname').val(rname);
 
-    let locationElement = $(this).parent().children().get(2);
+    let bidElement = $(this).parent().children().get(1);
+    let bid = $(bidElement).text();
+    $('input#bid').val(bid);
+
+    let locationElement = $(this).parent().children().get(3);
     let location = $(locationElement).text();
     $('input#location').val(location);
 

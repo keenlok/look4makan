@@ -290,3 +290,5 @@ insert into Sells (menuname, rname, bid) values
 ('Crystal Jade Main Menu', 'Crystal Jade', 1)
 ;
 
+SELECT openTime, closeTime FROM Branches B WHERE B.rname = 'BurgerKing' AND B.bid = 3;
+

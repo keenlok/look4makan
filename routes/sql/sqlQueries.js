@@ -11,7 +11,9 @@ const find_postal_code = 'WITH restaurantStatus AS ( SELECT rname, bid, COUNT(ti
 
 const add_user = 'INSERT INTO diners (userName, password, firstName, lastName, isAdmin) VALUES ($1, $2, $3, $4, FALSE);'
 
-const find_user_preference = 'SELECT distinct rname, bid, openingHours, location FROM branches B natural JOIN freeTables F WHERE B.rname in ($1) and B.location in ($2) and cuisineType in ($3) and B.openTime <= $4 and B.closeTime >= $4 and F.pax >= $5 and F.availableSince <= $4;'
+
+//should change to F.availableDate = $6 but dont do so cause will cause result to fail to show up at the moment
+const find_user_preference = 'SELECT distinct rname, bid, openingHours, location FROM branches B natural JOIN freeTables F WHERE B.rname in ($1) and B.location in ($2) and cuisineType in ($3) and B.openTime <= $4 and B.closeTime >= $4 and F.pax >= $5 and F.availableSince <= $4 and F.availableDate <= $6;'
 
 const userpass = 'SELECT * FROM diners WHERE username = $1'
 

@@ -103,6 +103,7 @@ function search_restaurant(req, res, next) {
   let cuisineType = req.query.cuisineType;
   let reservationTime = req.query.reservationTime;
   let paxNo = req.query.paxNo;
+  let date = req.query.reservationDate;
   // console.log("rname: " + rname);
   // console.log("location: " + location);
   // console.log("cuisineType: " + cuisineType);
@@ -155,7 +156,14 @@ function search_restaurant(req, res, next) {
 
   searchQuery = searchQuery.replace('$5', paxNo);
 
-  pool.query(searchQuery, (err, data) => {
+    if(date !== '') {
+        date = pad(date);
+    }
+
+    searchQuery = searchQuery.replace('$6', date);
+
+    console.log("SEARCH QUERY IS ... " + searchQuery);
+    pool.query(searchQuery, (err, data) => {
     if (err || !data.rows || data.rows.length === 0) {
       ctx = 0
       table = []

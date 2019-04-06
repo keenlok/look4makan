@@ -74,7 +74,7 @@ bid integer,
 tid integer,
 pax integer,
 availableSince time,
-availableDate date,
+availableDate date default '2019-04-01',
 primary key (rname, bid, tid, availableSince, availableDate)
 );
 
@@ -208,7 +208,7 @@ insert into advertises (rname, bid) values
 ('BurgerKing', 5),
 ('Crystal Jade', 1);
 
-
+--need add availableDate attribute values
 insert into freetables (rname, bid, tid, pax, availablesince) values
 ('MacDonalds', 1, 1, 4, '10:00:00'),
 ('MacDonalds', 1, 2, 4, '10:00:00'),
@@ -281,5 +281,6 @@ insert into Sells (menuname, rname, bid) values
 ('BurgerKing Breakfast Menu', 'BurgerKing', 5),
 ('Crystal Jade Main Menu', 'Crystal Jade', 1)
 ;
+
 
 

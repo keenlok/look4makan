@@ -19,6 +19,7 @@ function initRouter(app) {
   app.get('/search'              , search           );
   app.get('/search/restaurants'  , search_restaurant);
   app.get('/restaurant'          , restaurant       );
+  // app.get('/restaurants'         , list_restaurants )
   app.get('/booking'             , booking          );
   app.get('/booking/confirmation', confirmation     );
 

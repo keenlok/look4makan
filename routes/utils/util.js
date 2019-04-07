@@ -98,10 +98,19 @@ function getDate(today) {
     const date = year + "-" + month + "-" + day;
     return date;
 }
+
+//date = yyyy-mm-dd
+function convertDateToStr(date) {
+    let components = date.split("-");
+
+    return convertDayToStr(parseInt(components[2])) + ", " + parseInt(components[2]) + " "  + convertMonthToStr(parseInt(components[1])) + " "  + components[0];
+}
+
 module.exports.convertDayToStr = convertDayToStr;
 module.exports.convertMonthToStr = convertMonthToStr;
 module.exports.getDateInStr = getDateInStr;
 module.exports.getDate = getDate;
+module.exports.convertDateToStr = convertDateToStr;
 
 function checkAndExtend(val) {
     if (val < 10) {

@@ -16,18 +16,20 @@ const salt  = bcrypt.genSaltSync(round);
 
 function initRouter(app) {
   app.get('/'                    , index            );
-  app.get('/search'              , search           );
+  //app.get('/search'              , search           );
   app.get('/search/restaurants'  , search_restaurant);
   app.get('/restaurant'          , restaurant       );
   // app.get('/restaurants'         , list_restaurants )
   app.get('/booking'             , booking          );
-  app.get('/booking/confirmation', confirmation     );
+//  app.get('/booking/confirmation', confirmation     );
 
     /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register)
   app.get('/signin', login   )
+  app.get('/booking/confirmation', passport.authMiddleware(), confirmation);
 
-  /*  PROTECTED POST */
+
+    /*  PROTECTED POST */
   app.post('/reg_user', passport.antiMiddleware(), registerUser)
 
   app.post('/authenticate', passport.authenticate('local', {
@@ -163,7 +165,7 @@ function search_restaurant(req, res, next) {
 
     searchQuery = searchQuery.replace('$6', date);
 
-    console.log("SEARCH QUERY IS ... " + searchQuery);
+    // console.log("SEARCH QUERY IS ... " + searchQuery);
     pool.query(searchQuery, (err, data) => {
     if (err || !data.rows || data.rows.length === 0) {
       ctx = 0
@@ -181,6 +183,7 @@ function search_restaurant(req, res, next) {
       table: table,
       ctx: ctx,
       reservationTime: reservationTime,
+      reservationDate : date,
       pax: paxNo,
       auth: auth
     });
@@ -288,6 +291,7 @@ function booking(req, res, next) {
   let bid = req.query.bid;
   let location = req.query.location;
   let reservationTime = req.query.reservationTime;
+  let reservationDate = req.query.reservationDate;
   let paxNo = req.query.pax;
   let query = sql_query.findMinMaxHourOfABranch;
   // let cuisine_type = req.query.cuisinetype
@@ -298,6 +302,10 @@ function booking(req, res, next) {
         // Get menu items for this restaurant
         let subquery = sql_query.getMenuItems
         subquery = subquery.replace("$1", pad(rname));
+        // console.log("IN BOOKINGS");
+        // console.log("reservationTime " + reservationTime);
+        // console.log("reservationDate " + reservationDate);
+
         pool.query(subquery, (err1, data1) => {
             let menu, menuCount
 
@@ -330,6 +338,7 @@ function booking(req, res, next) {
                     page: "Bookings",
                     rname: rname,
                     reservationTime: reservationTime,
+                    reservationDate : reservationDate,
                     paxNo: paxNo,
                     location: location,
                     data: data.rows,
@@ -343,6 +352,7 @@ function booking(req, res, next) {
                     page: "Bookings",
                     rname: rname,
                     reservationTime: reservationTime,
+                    reservationDate : reservationDate,
                     paxNo: paxNo,
                     location: location,
                     data: data.rows,
@@ -360,6 +370,8 @@ function booking(req, res, next) {
    let rname = req.query.rname;
    let location = req.query.location;
    let reservationTime = req.query.reservationTime;
+   let reservationDate = utils.convertDateToStr(req.query.reservationDate);
+   console.log("ASDJADSDAJ : " + reservationDate);
    let paxNo = req.query.pax;
 
    let sql_query = 'INSERT INTO test VALUES (' + rname + ", " + reservationTime + ", " + paxNo + ");";
@@ -367,10 +379,10 @@ function booking(req, res, next) {
      // pool.query(sql_query, (err, data) => {
      // if(!err) {
          if(req.isAuthenticated()) {
-             res.render('confirmation', { page: "Confirmation", rname : rname, location : location, reservationTime : reservationTime, paxNo : paxNo, auth: true});
+             res.render('confirmation', { page: "Confirmation", rname : rname, location : location, reservationTime : reservationTime,  reservationDate : reservationDate, paxNo : paxNo, auth: true});
          }
          else {
-             res.render('confirmation', { page: "Confirmation", rname : rname, location : location,  reservationTime : reservationTime, paxNo : paxNo, auth : false});
+             res.render('confirmation', { page: "Confirmation", rname : rname, location : location,  reservationTime : reservationTime, reservationDate : reservationDate, paxNo : paxNo, auth : false});
          }
    //   }
    // });

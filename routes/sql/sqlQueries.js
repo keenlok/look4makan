@@ -13,7 +13,7 @@ const add_user = 'INSERT INTO diners (userName, password, firstName, lastName, i
 
 
 //should change to F.availableDate = $6 but dont do so cause will cause result to fail to show up at the moment
-const find_user_preference = 'SELECT distinct rname, bid, openingHours, location FROM branches B natural JOIN freeTables F WHERE B.rname in ($1) and B.location in ($2) and cuisineType in ($3) and B.openTime <= $4 and B.closeTime >= $4 and F.pax >= $5 and F.availableSince <= $4 and F.availableDate <= $6;'
+const find_user_preference = 'SELECT distinct rname, bid, openingHours, location FROM branches B NATURAL JOIN branchTables BT WHERE B.rname IN ($1) AND B.location IN ($2) AND cuisineType IN ($3) AND B.openTime <= $4 AND B.closeTime >= $4 AND BT.capacity >= $5 AND NOT EXISTS (SELECT 1 FROM bookedtables BKT WHERE BKT.bid = BT.bid AND BT.rname = BKT.rname AND BT.tid = BKT.tid);';
 
 const userpass = 'SELECT * FROM diners WHERE username = $1'
 

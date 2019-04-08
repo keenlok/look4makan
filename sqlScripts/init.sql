@@ -177,24 +177,15 @@ insert into diners (username, firstname, lastname, password, isAdmin) values
 ('earon', 'Aaron', 'Seah', '$2b$10$QFg3/z/fXRaHlIWfftdGkOr1LuGDfi8irDCzxHG0E6npc7IQk0eh2', true),
 ('alexis', 'Yuan', 'Hui', '$2b$10$QFg3/z/fXRaHlIWfftdGkOpzpCIFiBdzjDTOvq4XfbAeve/END7iW', true), 
 ('nicpang', 'Nicholas', 'Pang', '$2b$10$QFg3/z/fXRaHlIWfftdGkOYmPwxzSrR/iCAyVatgCSJBd/7eBNfC.', true),
-('johnsmith', 'John', 'Smith', '$2b$10$QFg3/z/fXRaHlIWfftdGkOq65CEDoKVRVuBT6.JGrxSXriQSJyNPe', false), 
-('madScientist', 'Morty', 'Rick', '$2b$10$QFg3/z/fXRaHlIWfftdGkOCwam0wCdfW9yfA7u93IsWL2DVSul.Ue', false), 
-('adventuretime', 'dog', 'boy', '$2b$10$QFg3/z/fXRaHlIWfftdGkO4/vf5fa7PtL2pxp.BvgcvGPi6O3KU.C', false), 
-('gravitykat', 'Kat', 'Amnesiac', '$2b$10$QFg3/z/fXRaHlIWfftdGkOzyZOS/pPrZVVY59Zftes1XDzinKuB8a', false), 
-('lionhead', 'Thomas', 'Edison', '$2b$10$QFg3/z/fXRaHlIWfftdGkOfZRUL7RBlKJVvRT7pqFQix9Fu99o0R.', false), 
-('tubercolosis', 'okita', 'souji', '$2b$10$sodyCV.zilXizJLpJfcnguPdwA2AMbgA133/vGpEvJEr7uhhsShVe', false);
+('madScientist', 'Morty', 'Rick', '$2b$10$QFg3/z/fXRaHlIWfftdGkOCwam0wCdfW9yfA7u93IsWL2DVSul.Ue', false);
 
 insert into awards (username, awardpoints) values
-('lokeen', 100), 
-('earon', 10000),
-('alexis', 100), 
-('nicpang', 100),
-('johnsmith', 100), 
-('madScientist', 100), 
-('adventuretime', 100), 
-('gravitykat', 100), 
-('lionhead', 100), 
-('tubercolosis', 100);
+('lokeen', 0),
+('earon', 0),
+('alexis', 0),
+('nicpang', 0),
+('madScientist', 0);
+
 
 insert into menu (name) values
 ('MacDonalds Breakfast Menu'),
@@ -211,7 +202,7 @@ insert into menu (name) values
 ('Exquisite Menu'),
 ('Thai Lunch Menu'),
 ('Yumyum Menu');
-;
+
 
 insert into menuitems (menuname, foodname, price) values
 ('MacDonalds Breakfast Menu', 'Big Breakfast', 5),
@@ -227,8 +218,7 @@ insert into menuitems (menuname, foodname, price) values
 ('Crystal Jade Promotion Menu', 'Siew Mai', 2),
 ('Crystal Jade Promotion Menu', 'Ha Kau', 2),
 ('Crystal Jade Main Menu', 'Mango Prawn Roll', 5),
-('Crystal Jade Main Menu', 'Wasabi Prawn Roll', 5)
-;
+('Crystal Jade Main Menu', 'Wasabi Prawn Roll', 5);
 
 
 insert into Time (timeSlot) values 
@@ -262,8 +252,7 @@ insert into restaurants (rname) values
 ('Sushi Express'),
 ('Forlino'),
 ('Ristorante Da Valentino'),
-('The Chinese Kitchen'),
-('Thai Tantric Authentic Thai Cuisine'),
+\('Thai Tantric Authentic Thai Cuisine'),
 ('NamNam');
 
 
@@ -286,7 +275,7 @@ insert into Locations (locName) values
 
 
 insert into CuisineTypes (cuisineName) values
-('Chinese'), ('Western'), ('Japanese'), ('Korean'), ('Fast Food'),
+('Chinese'), ('Western'), ('Japanese'), ('Korean'),
 ('Italian'), ('French'), ('Indian'), ('Straits'), ('Malay'), ('Thai'), ('Vietnamese');
 
 

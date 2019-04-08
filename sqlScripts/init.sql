@@ -163,7 +163,7 @@ delete from advertises cascade;
 delete from restaurants cascade;
 delete from Sells cascade;
 delete from branches cascade;
-delete from freetables cascade;
+delete from bookedtables cascade;
 delete from CuisineTypes cascade;
 delete from menuitems cascade;
 delete from menu cascade;
@@ -197,7 +197,25 @@ insert into Time (timeSlot) values
 insert into restaurants (rname) values
 ('MacDonalds'),
 ('BurgerKing'),
-('Crystal Jade');
+('Crystal Jade'),
+('Astons'),
+('KFC'),
+('Sakae Sushi'),
+('Sushi Express'),
+('Pizza Hut'),
+('Fish and Co'),
+('Forlino'),
+('Ristorante Da Valentino'),
+('Majestic Bay'),
+('Mui Kee Congee'),
+('The Chinese Kitchen'),
+('Fat Boys'),
+('Thai Tantric Authentic Thai Cuisine'),
+('Korat Thai Cafe'),
+('NamNam');
+
+
+
 
 insert into Locations (locName) values
 ('Jurong Point'),
@@ -211,7 +229,8 @@ insert into Locations (locName) values
 ('100am Mall'),
 ('Orchard Central'),
 ('Shaw Plaza'),
-('Lucky Plaza');
+('Lucky Plaza'),
+('Buona Vista');
 
 
 
@@ -231,7 +250,37 @@ insert into branches (rname, bid, location, openinghours, opentime, closetime, c
 ('BurgerKing', 3, 'Causeway Point', '7am - 7pm', '07:00:00', '19:00:00', 'Western', 707605),
 ('BurgerKing', 4, 'Centre Point', '10am - 10pm', '10:00:00', '22:00:00', 'Western', 203193),
 ('BurgerKing', 5, 'Kent Ridge Mall', '11am - 7pm', '11:00:00', '19:00:00', 'Western', 439013),
-('Crystal Jade', 1, 'Vivo City', '10am - 10pm', '10:00:00', '22:00:00', 'Chinese', 403132);
+('Crystal Jade', 1, 'Vivo City', '10am - 10pm', '10:00:00', '22:00:00', 'Chinese', 403132),
+--vary locations from here onwards
+('Astons', 1, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Western', 653741),
+('Astons', 2, 'Plaza Singapura', '8am - 8pm', '08:00:00', '20:00:00', 'Western', 458351),
+('Astons', 3, 'Causeway Point', '7am - 7pm', '07:00:00', '19:00:00', 'Western', 707605),
+('Astons', 4, 'Centre Point', '10am - 10pm', '10:00:00', '22:00:00', 'Western', 203193),
+
+
+('Sakae Sushi', 1, 'Orchard Scape', '11am - 9.30pm', '11:00:00', '21:30:00', 'Western', 653741),
+('Sakae Sushi', 2, 'Plaza Singapura', '12pm - 7.30pm', '12:00:00', '19:30:00', 'Western', 458351),
+
+('Sushi Express', 1, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Western', 653741),
+('Sushi Express', 2, 'Buona Vista', '12pm - 7.30pm', '12:00:00', '19:30:00', 'Western', 458351),
+
+('Forlino', 1, 'Orchard Scape', '1pm - 10pm', '13:00:00', '10:00:00', 'French', 653741),
+('Forlino', 2, 'Buona Vista', '2pm - 7.30pm', '14:00:00', '19:30:00', 'French', 458351),
+
+('Ristorante Da Valentino', 1, 'Orchard Scape', '1pm - 6.30pm', '13:00:00', '18:30:00', 'French', 653741),
+
+('Majestic Bay', 1, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Chinese', 653741),
+('Majestic Bay', 2, 'Buona Vista', '12pm - 7.30pm', '10:00:00', '19:30:00', 'Chinese', 458351),
+
+('Thai Tantric Authentic Thai Cuisine', 1, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Thai', 653741),
+('Thai Tantric Authentic Thai Cuisine', 2, 'Buona Vista', '12pm - 7.30pm', '10:00:00', '19:30:00', 'Thai', 458351),
+
+('Korat Thai Cafe', 1, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Thai', 653741),
+('Korat Thai Cafe', 2, 'Buona Vista', '12pm - 7.30pm', '10:00:00', '19:30:00', 'Thai', 458351),
+
+('NamNam', 1, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Vietnamese', 653741);
+
+
 
 
 insert into advertises (rname, bid) values
@@ -245,10 +294,56 @@ insert into advertises (rname, bid) values
 ('BurgerKing', 3),
 ('BurgerKing', 4),
 ('BurgerKing', 5),
-('Crystal Jade', 1);
+('Crystal Jade', 1),
+('Astons', 1),
+('Astons', 2),
+('KFC', 1),
+('Sakae Sushi', 1),
+('Sakae Sushi', 2),
+('Sushi Express', 1),
+('Sushi Express', 2),
+('Forlino', 1),
+('Forlino', 2),
+('Ristorante Da Valentino', 1),
+('Majestic Bay', 1),
+('Thai Tantric Authentic Thai Cuisine', 1),
+('Korat Thai Cafe', 1),
+('NamNam', 1);
+
+
+insert into BranchTables (rname, bid, tid, capacity) values 
+('MacDonalds', 1, 1, 4),
+('MacDonalds', 1, 3, 4),
+('MacDonalds', 1, 4, 5),
+('MacDonalds', 2, 1, 4),
+('MacDonalds', 3, 1, 4),
+('BurgerKing', 1, 1, 2),
+('BurgerKing', 5, 2, 3),
+('Crystal Jade', 1, 1, 10),
+('Astons', 1, 1, 3),
+('Astons', 2, 1, 5),
+('KFC', 1, 1, 4),
+('Sakae Sushi', 1, 1, 10),
+('Sushi Express', 1, 1, 4),
+('Sushi Express', 2, 2, 2),
+('Forlino', 1, 1, 2),
+('Forlino', 2, 1, 2),
+('Forlino', 2, 2, 2),
+('Ristorante Da Valentino', 1, 1, 1),
+('Majestic Bay', 1, 1, 4),
+('Thai Tantric Authentic Thai Cuisine', 1, 1, 4),
+('Korat Thai Cafe', 1, 1, 4),
+('NamNam', 1, 1, 3);
+
+
+insert into BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) values
+('MacDonalds', 1, 1, '10:00:00', '2019-04-31');
+
+
 
 --need add availableDate attribute values
-insert into freetables (rname, bid, tid, pax, availablesince) values
+/*
+insert into BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) values
 ('MacDonalds', 1, 1, 4, '10:00:00'),
 ('MacDonalds', 1, 2, 4, '10:00:00'),
 ('MacDonalds', 1, 3, 4, '10:00:00'),
@@ -270,6 +365,7 @@ insert into freetables (rname, bid, tid, pax, availablesince) values
 ('BurgerKing', 3, 1, 4, '10:00:00'),
 ('Crystal Jade', 1, 1, 25, '10:00:00')
 ;
+*/
 
 insert into menu (name) values
 ('MacDonalds Breakfast Menu'),

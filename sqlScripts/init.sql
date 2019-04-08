@@ -401,8 +401,6 @@ insert into Sells (menuname, rname, bid) values
 ('BurgerKing Breakfast Menu', 'BurgerKing', 1),
 ('BurgerKing Breakfast Menu', 'BurgerKing', 2),
 ('BurgerKing Breakfast Menu', 'BurgerKing', 3),
-('BurgerKing Breakfast Menu', 'BurgerKing', 4),
-('BurgerKing Breakfast Menu', 'BurgerKing', 5),
 ('Crystal Jade Main Menu', 'Crystal Jade', 1),
 
 ('Astons Western Menu', 'Astons', 1),

@@ -163,7 +163,7 @@ delete from advertises cascade;
 delete from restaurants cascade;
 delete from Sells cascade;
 delete from branches cascade;
-delete from freetables cascade;
+delete from branchtables cascade;
 delete from CuisineTypes cascade;
 delete from menuitems cascade;
 delete from menu cascade;
@@ -248,7 +248,7 @@ insert into advertises (rname, bid) values
 ('Crystal Jade', 1);
 
 --need add availableDate attribute values
-insert into freetables (rname, bid, tid, pax, availablesince) values
+insert into branchtables (rname, bid, tid, pax, availablesince) values
 ('MacDonalds', 1, 1, 4, '10:00:00'),
 ('MacDonalds', 1, 2, 4, '10:00:00'),
 ('MacDonalds', 1, 3, 4, '10:00:00'),

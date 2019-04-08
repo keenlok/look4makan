@@ -37,14 +37,17 @@ create table Locations (
 locName varchar(40) primary key
 );
 
-
-create table Awards(
-userName varchar(20) primary key,
-awardPoints integer
+create table Restaurants (
+rname varchar(40) primary key
 );
 
 create table CuisineTypes (
 cuisineName varchar(10) primary key
+);
+
+create table Awards(
+userName varchar(20) primary key,
+awardPoints integer
 );
 
 create table ConfirmedBookings (
@@ -69,19 +72,20 @@ create table BranchTables (
 rname varchar(40),
 bid integer,
 tid integer,
-pax integer,
+capacity integer,
 primary key (rname, bid, tid)
 );
 
 
-create table freeTables (
+create table BookedTables (
 rname varchar(40),
 bid integer,
 tid integer,
-pax integer,
-availableSince time,
-availableDate date default '2019-04-01',
-primary key (rname, bid, tid, availableSince, availableDate)
+capacity integer,
+bookedTimeslot time,
+bookedDate date,
+foreign key (rname, bid, tid) references BranchTable,
+primary key (rname, bid, tid, bookedTimeslot, bookedDate)
 );
 
 create table Books (
@@ -89,12 +93,14 @@ rname varchar(40),
 bid integer,
 tid integer,
 pax integer,
-freeTime time,
+reservationTime time,
 userName varchar(20),
 preferredLoc varchar(40) references Locations,
 preferredDate date,
 preferredTime time,
-primary key (userName, preferredLoc,preferredDate,preferredTime, rname, bid, tid,freeTime)
+foreign key (rname, bid, tid) references BranchTables,
+foreign key (userName, preferredLoc,preferredDate,preferredTime) references userpreferences,
+primary key (userName, preferredLoc,preferredDate,preferredTime, rname, bid, tid)
 );
 
 create table Ratings (
@@ -117,9 +123,14 @@ cuisineType varchar(10) references CuisineTypes,
 primary key (rname, bid)
 );
 
-create table Restaurants (
-rname varchar(40) primary key
+create table Sells (
+menuName varchar(50) references Menu,
+rname varchar(40),
+bid integer,
+primary key (menuName, rname, bid),
+foreign key (rname,bid) references Branches
 );
+
 
 create table Advertises (
 rname varchar(40)references Restaurants,
@@ -127,6 +138,7 @@ bid integer,
 primary key (rname,bid),
 foreign key (rname,bid) references Branches
 );
+
 
 create table Menu (
 name varchar(50) primary key
@@ -136,16 +148,9 @@ create table menuItems (
 menuName varchar(50) references Menu,
 foodName varchar(50),
 price integer,
-primary key (menuName,foodName)
+primary key (menuName,foodName, price)
 );
 
-create table Sells (
-menuName varchar(50) references Menu,
-rname varchar(40),
-bid integer,
-primary key (menuName, rname, bid),
-foreign key (rname,bid) references Branches
-);
 
 -------------------------------------------------
 --INSERT VALUES

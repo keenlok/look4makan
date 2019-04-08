@@ -376,8 +376,9 @@ insert into BranchTables (rname, bid, tid, capacity) values
 ('NamNam', 1, 1, 3);
 
 
-insert into BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) values
-('MacDonalds', 1, 1, '10:00:00', '2019-04-11');
+insert into BookedTables (rname, bid, tid, capacity, bookedTimeslot, bookedDate) values
+('Crystal Jade', 1, 1, 0, '23:00:00', '2019-05-16'),
+('MacDonalds', 1, 1, 50, '10:00:00', '2019-04-11');
 
 
 

@@ -415,8 +415,6 @@ insert into Sells (menuname, rname, bid) values
 
 ('Yumyum Menu', 'NamNam', 1);
 
-;
-
 
 
 

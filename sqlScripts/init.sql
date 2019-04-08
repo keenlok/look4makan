@@ -19,6 +19,7 @@ drop table if exists Sells  cascade;
 drop table if exists CuisineTypes cascade;
 drop table if exists Locations cascade;
 drop table if exists Time cascade;
+drop table if exists BookedTables cascade;
 
 
 create table Time (
@@ -84,7 +85,7 @@ tid integer,
 capacity integer,
 bookedTimeslot time,
 bookedDate date,
-foreign key (rname, bid, tid) references BranchTable,
+foreign key (rname, bid, tid) references BranchTables,
 primary key (rname, bid, tid, bookedTimeslot, bookedDate)
 );
 
@@ -123,6 +124,10 @@ cuisineType varchar(10) references CuisineTypes,
 primary key (rname, bid)
 );
 
+create table Menu (
+name varchar(50) primary key
+);
+
 create table Sells (
 menuName varchar(50) references Menu,
 rname varchar(40),
@@ -140,9 +145,7 @@ foreign key (rname,bid) references Branches
 );
 
 
-create table Menu (
-name varchar(50) primary key
-);
+
 
 create table menuItems (
 menuName varchar(50) references Menu,

@@ -165,11 +165,7 @@ delete from advertises cascade;
 delete from restaurants cascade;
 delete from Sells cascade;
 delete from branches cascade;
-<<<<<<< HEAD
 delete from bookedtables cascade;
-=======
-delete from branchtables cascade;
->>>>>>> 8f57d1a2c3ba92b2950d9100719075c1027a8543
 delete from CuisineTypes cascade;
 delete from menuitems cascade;
 delete from menu cascade;
@@ -290,11 +286,9 @@ insert into Locations (locName) values
 ('Buona Vista');
 
 
-
-
 insert into CuisineTypes (cuisineName) values
-('Chinese'),
-('Western');
+('Chinese'), ('Western'), ('Japanese'), ('Korean'), ('Fast Food'),
+('Italian'), ('French'), ('Indian'), ('Straits'), ('Malay'), ('Thai'), ('Vietnamese');
 
 insert into branches (rname, bid, location, openinghours, opentime, closetime, cuisinetype, postalCode) values
 ('MacDonalds', 1, 'Jurong Point', '10am - 10pm', '10:00:00', '22:00:00', 'Western', 648886),
@@ -314,12 +308,11 @@ insert into branches (rname, bid, location, openinghours, opentime, closetime, c
 ('Astons', 3, 'Causeway Point', '7am - 7pm', '07:00:00', '19:00:00', 'Western', 707605),
 ('Astons', 4, 'Centre Point', '10am - 10pm', '10:00:00', '22:00:00', 'Western', 203193),
 
+('Sakae Sushi', 1, 'Orchard Scape', '11am - 9.30pm', '11:00:00', '21:30:00', 'Japanese', 653741),
+('Sakae Sushi', 2, 'Plaza Singapura', '12pm - 7.30pm', '12:00:00', '19:30:00', 'Japanese', 458351),
 
-('Sakae Sushi', 1, 'Orchard Scape', '11am - 9.30pm', '11:00:00', '21:30:00', 'Western', 653741),
-('Sakae Sushi', 2, 'Plaza Singapura', '12pm - 7.30pm', '12:00:00', '19:30:00', 'Western', 458351),
-
-('Sushi Express', 1, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Western', 653741),
-('Sushi Express', 2, 'Buona Vista', '12pm - 7.30pm', '12:00:00', '19:30:00', 'Western', 458351),
+('Sushi Express', 1, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Japanese', 653741),
+('Sushi Express', 2, 'Buona Vista', '12pm - 7.30pm', '12:00:00', '19:30:00', 'Japanese', 458351),
 
 ('Forlino', 1, 'Orchard Scape', '1pm - 10pm', '13:00:00', '10:00:00', 'French', 653741),
 ('Forlino', 2, 'Buona Vista', '2pm - 7.30pm', '14:00:00', '19:30:00', 'French', 458351),

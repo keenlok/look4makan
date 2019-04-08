@@ -28,9 +28,9 @@ function findUser (username, callback) {
 			return callback(null, {
 				username    : data.rows[0].username,
 				passwordHash: data.rows[0].password,
-				firstname   : data.rows[0].first_name,
-				lastname    : data.rows[0].last_name,
-                isAdmin     : data.rows[0].isAdmin
+				firstname   : data.rows[0].firstname,
+				lastname    : data.rows[0].lastname,
+        isAdmin     : data.rows[0].isadmin
 			});
 		} else {
 			console.error("More than one user?");

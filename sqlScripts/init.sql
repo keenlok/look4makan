@@ -159,16 +159,73 @@ primary key (menuName,foodName, price)
 --INSERT VALUES
 -------------------------------------------------
 
+delete from diners cascade;
+delete from awards cascade;
 delete from advertises cascade;
 delete from restaurants cascade;
 delete from Sells cascade;
 delete from branches cascade;
+<<<<<<< HEAD
 delete from bookedtables cascade;
+=======
+delete from branchtables cascade;
+>>>>>>> 8f57d1a2c3ba92b2950d9100719075c1027a8543
 delete from CuisineTypes cascade;
 delete from menuitems cascade;
 delete from menu cascade;
 delete from Locations cascade;
 delete from Time cascade;
+
+
+insert into diners (username, firstname, lastname, password, isAdmin) values
+('lokeen', 'Lok', 'Keen', '$2b$10$QFg3/z/fXRaHlIWfftdGkOzw/AG7oDHnP8GeYSMbfzwFmW64mzGta', true), 
+('earon', 'Aaron', 'Seah', '$2b$10$QFg3/z/fXRaHlIWfftdGkOr1LuGDfi8irDCzxHG0E6npc7IQk0eh2', true),
+('alexis', 'Yuan', 'Hui', '$2b$10$QFg3/z/fXRaHlIWfftdGkOpzpCIFiBdzjDTOvq4XfbAeve/END7iW', true), 
+('nicpang', 'Nicholas', 'Pang', '$2b$10$QFg3/z/fXRaHlIWfftdGkOYmPwxzSrR/iCAyVatgCSJBd/7eBNfC.', true),
+('johnsmith', 'John', 'Smith', '$2b$10$QFg3/z/fXRaHlIWfftdGkOq65CEDoKVRVuBT6.JGrxSXriQSJyNPe', false), 
+('madScientist', 'Morty', 'Rick', '$2b$10$QFg3/z/fXRaHlIWfftdGkOCwam0wCdfW9yfA7u93IsWL2DVSul.Ue', false), 
+('adventuretime', 'dog', 'boy', '$2b$10$QFg3/z/fXRaHlIWfftdGkO4/vf5fa7PtL2pxp.BvgcvGPi6O3KU.C', false), 
+('gravitykat', 'Kat', 'Amnesiac', '$2b$10$QFg3/z/fXRaHlIWfftdGkOzyZOS/pPrZVVY59Zftes1XDzinKuB8a', false), 
+('lionhead', 'Thomas', 'Edison', '$2b$10$QFg3/z/fXRaHlIWfftdGkOfZRUL7RBlKJVvRT7pqFQix9Fu99o0R.', false), 
+('tubercolosis', 'okita', 'souji', '$2b$10$sodyCV.zilXizJLpJfcnguPdwA2AMbgA133/vGpEvJEr7uhhsShVe', false);
+
+insert into awards (username, awardpoints) values
+('lokeen', 100), 
+('earon', 10000),
+('alexis', 100), 
+('nicpang', 100),
+('johnsmith', 100), 
+('madScientist', 100), 
+('adventuretime', 100), 
+('gravitykat', 100), 
+('lionhead', 100), 
+('tubercolosis', 100);
+
+insert into menu (name) values
+('MacDonalds Breakfast Menu'),
+('MacDonalds Lunch Menu'),
+('BurgerKing Breakfast Menu'),
+('BurgerKing Lunch Menu'),
+('Crystal Jade Main Menu'),
+('Crystal Jade Promotion Menu')
+;
+
+insert into menuitems (menuname, foodname, price) values
+('MacDonalds Breakfast Menu', 'Big Breakfast', 5),
+('MacDonalds Breakfast Menu', 'McMuffin' ,5),
+('MacDonalds Breakfast Menu', 'Deluxe Breakfast', 7),
+('MacDonalds Lunch Menu', 'McSpicy', 5),
+('MacDonalds Lunch Menu', 'McChicken', 2),
+('MacDonalds Lunch Menu', 'Fillet-o-Fish', 3),
+('BurgerKing Breakfast Menu', 'Hot Milo', 2),
+('BurgerKing Breakfast Menu', 'Hot Coffee', 2),
+('BurgerKing Lunch Menu', 'Zinger Burger', 5),
+('BurgerKing Lunch Menu', 'Cheese Fries', 3),
+('Crystal Jade Promotion Menu', 'Siew Mai', 2),
+('Crystal Jade Promotion Menu', 'Ha Kau', 2),
+('Crystal Jade Main Menu', 'Mango Prawn Roll', 5),
+('Crystal Jade Main Menu', 'Wasabi Prawn Roll', 5)
+;
 
 
 insert into Time (timeSlot) values 
@@ -341,57 +398,8 @@ insert into BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) values
 
 
 
---need add availableDate attribute values
-/*
-insert into BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) values
-('MacDonalds', 1, 1, 4, '10:00:00'),
-('MacDonalds', 1, 2, 4, '10:00:00'),
-('MacDonalds', 1, 3, 4, '10:00:00'),
-('MacDonalds', 1, 4, 4, '10:00:00'),
-('MacDonalds', 1, 5, 4, '10:00:00'),
-('MacDonalds', 1, 6, 4, '10:00:00'),
-('MacDonalds', 2, 1, 4, '10:00:00'),
-('MacDonalds', 2, 2, 4, '10:00:00'),
-('MacDonalds', 2, 3, 4, '10:00:00'),
-('MacDonalds', 2, 4, 4, '10:00:00'),
-('MacDonalds', 2, 5, 4, '10:00:00'),
-('MacDonalds', 2, 6, 4, '10:00:00'),
-('BurgerKing', 1, 1, 4, '10:00:00'),
-('BurgerKing', 1, 2, 4, '10:00:00'),
-('BurgerKing', 1, 3, 4, '10:00:00'),
-('BurgerKing', 1, 4, 4, '10:00:00'),
-('BurgerKing', 1, 5, 4, '10:00:00'),
-('BurgerKing', 1, 6, 4, '10:00:00'),
-('BurgerKing', 3, 1, 4, '10:00:00'),
-('Crystal Jade', 1, 1, 25, '10:00:00')
-;
-*/
 
-insert into menu (name) values
-('MacDonalds Breakfast Menu'),
-('MacDonalds Lunch Menu'),
-('BurgerKing Breakfast Menu'),
-('BurgerKing Lunch Menu'),
-('Crystal Jade Main Menu'),
-('Crystal Jade Promotion Menu')
-;
 
-insert into menuitems (menuname, foodname, price) values
-('MacDonalds Breakfast Menu', 'Big Breakfast', 5),
-('MacDonalds Breakfast Menu', 'McMuffin' ,5),
-('MacDonalds Breakfast Menu', 'Deluxe Breakfast', 7),
-('MacDonalds Lunch Menu', 'McSpicy', 5),
-('MacDonalds Lunch Menu', 'McChicken', 2),
-('MacDonalds Lunch Menu', 'Fillet-o-Fish', 3),
-('BurgerKing Breakfast Menu', 'Hot Milo', 2),
-('BurgerKing Breakfast Menu', 'Hot Coffee', 2),
-('BurgerKing Lunch Menu', 'Zinger Burger', 5),
-('BurgerKing Lunch Menu', 'Cheese Fries', 3),
-('Crystal Jade Promotion Menu', 'Siew Mai', 2),
-('Crystal Jade Promotion Menu', 'Ha Kau', 2),
-('Crystal Jade Main Menu', 'Mango Prawn Roll', 5),
-('Crystal Jade Main Menu', 'Wasabi Prawn Roll', 5)
-;
 
 insert into Sells (menuname, rname, bid) values
 ('MacDonalds Breakfast Menu', 'MacDonalds', 1),

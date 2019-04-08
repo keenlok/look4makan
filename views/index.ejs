@@ -39,7 +39,7 @@
                         <div>
                         <!--<div class="col-12 col-md-9 mb-2 mb-md-0">-->
                             <!--<input list="restaurants"  name="rname" size="55">-->
-                            <select id="npm srestaurants" name="rname">
+                            <select id="restaurants" name="rname">
                                 <option value=""> Any Restaurant </option>
                                 <% for (let i = 0; i < data2.length; i++) { %>
                                     <option value="<%=data2[i].rname%>"><%= data2[i].rname %></option>
@@ -81,9 +81,21 @@
                             </select>
                             <!--<input type="paxNo" class="form-control form-control-lg" placeholder="Any Pax" name="paxNo">-->
                         </div>
-                        <div class="col-12 col-md-9 mb-2 mb-md-0">
-                            <input type="time" min="08:00" max="22:00" step="900" class="form-control form-control-lg" name="reservationTime" required>
+                        <div>
+
+                            <select id="time" name="reservationTime">
+                                <% for (let i = 0; i < data3.length; i++) { %>
+                                    <% if(data3[i].timeslot >= time && i - 1 >= 0 && data3[i-1].timeslot < time) { %>
+                                        <option value="<%= data3[i].timeslot%>" selected ><%= data3[i].timeslotstr %></option>
+                                    <% } else { %>
+                                        <option value="<%= data3[i].timeslot%>"><%= data3[i].timeslotstr %></option>
+                                    <% } %>
+                                <% } %>
+                            </select>
                         </div>
+                        <!--<div class="col-12 col-md-9 mb-2 mb-md-0">-->
+                            <!--<input type="time" min="08:00" max="22:00" step="900" class="form-control form-control-lg" name="reservationTime" required>-->
+                        <!--</div>-->
                         <div class="col-12 col-md-9 mb-2 mb-md-0">
                             <input type="date"  value="<%=date%>" min="<%=date%>" class="form-control form-control-lg" name="reservationDate" required>
                         </div>

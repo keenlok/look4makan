@@ -47,6 +47,8 @@ function index(req, res, next) {
   let dateInStr = utils.getDateInStr();
   const title = 'Looking for places to eat?';
    // console.log(time, date)
+
+    console.log("TIME " + time);
     console.log("DAMN IT")
     console.log(utils.getDate());
   // console.log(query)
@@ -54,6 +56,7 @@ function index(req, res, next) {
     let query = sql_query.getAllLocations;
     let query1= sql_query.getAllCuisines;
     let query2= sql_query.getAllRestaurantName;
+    let query3= sql_query.getAllTimeSlots;
 
     pool.query(query, (err, data) => {
     if (err) {
@@ -62,12 +65,14 @@ function index(req, res, next) {
     } else {
         pool.query(query1, (err1, data1) => {
             pool.query(query2, (err2, data2) => {
-                if (req.isAuthenticated()) {
-                    res.render('index', {title: title, dateInStr : dateInStr, date : date, auth: true, data: data.rows, data1: data1.rows, data2: data2.rows})
-                } else {
-                    console.log(data1);
-                    res.render('index', {title: title, dateInStr : dateInStr, date : date, auth: false, data: data.rows, data1: data1.rows, data2: data2.rows})
-                }
+                pool.query(query3, (err3, data3) => {
+                    if (req.isAuthenticated()) {
+                        res.render('index', {title: title, dateInStr : dateInStr, date : date, time : time, auth: true, data: data.rows, data1: data1.rows, data2: data2.rows, data3: data3.rows})
+                    } else {
+                        console.log(data1);
+                        res.render('index', {title: title, dateInStr : dateInStr, date : date, time : time, auth: false, data: data.rows, data1: data1.rows, data2: data2.rows, data3: data3.rows})
+                    }
+                });
             });
         });
     }});

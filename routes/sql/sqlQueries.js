@@ -25,6 +25,8 @@ const all_cuisines = "select * from CuisineTypes;";
 
 const all_rname= "select rname from Restaurants;";
 
+const all_timeSlots= "select * from Time;";
+
 const min_max_hour_of_a_branch = "SELECT openTime, closeTime FROM Branches B WHERE B.rname = $0 AND B.bid = $1;";
 
 const queries = {
@@ -40,6 +42,7 @@ const queries = {
   getAllLocations : all_locations,
   getAllCuisines : all_cuisines,
   getAllRestaurantName : all_rname,
+  getAllTimeSlots : all_timeSlots,
   findMinMaxHourOfABranch : min_max_hour_of_a_branch
 }
 

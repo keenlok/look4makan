@@ -30,7 +30,8 @@ create or replace function checkoverload()
 returns trigger as $$
 begin if 
 	new.capacity < 0
-then return null;
+then raise notice 'restaurant is too full';
+return null;
 else return new;
 end if;
 end; $$ language plpgsql;
@@ -46,3 +47,7 @@ set capacity = capacity - 1
 where rname = 'Crystal Jade' and bid = 1 and tid = 1 and bookedtimeslot = '23:00:00' and bookeddate = '2019-05-16';
 
 select * from BookedTables
+
+-----------------------------------------------
+--Trigger to capacity of a branch to go to negative
+-----------------------------------------------

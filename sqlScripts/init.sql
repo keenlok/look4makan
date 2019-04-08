@@ -202,7 +202,15 @@ insert into menu (name) values
 ('BurgerKing Breakfast Menu'),
 ('BurgerKing Lunch Menu'),
 ('Crystal Jade Main Menu'),
-('Crystal Jade Promotion Menu')
+('Crystal Jade Promotion Menu'),
+
+('Astons Western Menu'),
+('Sakae Lunch Menu'),
+('Sushi Express Menu'),
+('Forlino Menu'),
+('Exquisite Menu'),
+('Thai Lunch Menu'),
+('Yumyum Menu');
 ;
 
 insert into menuitems (menuname, foodname, price) values
@@ -395,7 +403,30 @@ insert into Sells (menuname, rname, bid) values
 ('BurgerKing Breakfast Menu', 'BurgerKing', 3),
 ('BurgerKing Breakfast Menu', 'BurgerKing', 4),
 ('BurgerKing Breakfast Menu', 'BurgerKing', 5),
-('Crystal Jade Main Menu', 'Crystal Jade', 1)
+('Crystal Jade Main Menu', 'Crystal Jade', 1),
+
+('Astons Western Menu', 'Astons', 1),
+('Astons Western Menu', 'Astons', 2),
+('Astons Western Menu', 'Astons', 3),
+('Astons Western Menu', 'Astons', 4),
+
+('Sakae Lunch Menu', 'Sakae Sushi', 1),
+('Sakae Lunch Menu', 'Sakae Sushi', 2),
+
+
+('Sushi Express Menu', 'Sushi Express', 1),
+('Sushi Express Menu', 'Sushi Express', 2),
+
+('Forlino Menu', 'Forlino', 1),
+('Forlino Menu', 'Forlino', 2),
+
+('Exquisite Menu', 'Ristorante Da Valentino', 1),
+
+('Thai Lunch Menu', 'Thai Tantric Authentic Thai Cuisine', 1),
+('Thai Lunch Menu', 'Thai Tantric Authentic Thai Cuisine', 2),
+
+('Yumyum Menu', 'NamNam', 1);
+
 ;
 
 

@@ -16,3 +16,5 @@ execute procedure cannotChng();
 update diners
 set "password" = 0
 where username = 'lokeen';
+
+select * from diners

@@ -372,8 +372,7 @@ function booking(req, res, next) {
   let query = sql_query.findMinMaxHourOfABranch;
   // let cuisine_type = req.query.cuisinetype
 
-    query = query.replace("$0", pad(rname));
-    pool.query(query, [bid], (err, data) => {
+    pool.query(query, [rname, bid], (err, data) => {
 
         // Get menu items for this restaurant
         let subquery = sql_query.getMenuItems

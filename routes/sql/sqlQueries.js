@@ -27,7 +27,7 @@ const all_rname= "select rname from Restaurants;";
 
 const all_timeSlots= "select * from Time;";
 
-const min_max_hour_of_a_branch = "SELECT openTime, closeTime FROM Branches B WHERE B.rname = $0 AND B.bid = $1;";
+const min_max_hour_of_a_branch = "SELECT openTime, closeTime FROM Branches B WHERE B.rname = $1 AND B.bid = $2;";
 
 const insertUserPreference =  "INSERT INTO UserPreferences (userName, preferredRname, preferredLoc, preferredDate, preferredTime, cuisineType, paxNum) VALUES ($1, $2, $3, $4, $5, $6, $7);";
 

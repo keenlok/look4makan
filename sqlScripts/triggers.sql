@@ -58,7 +58,7 @@ drop trigger if exists notTooShort on diners;
 
 create or replace function idk()
 returns trigger as $$
-begin if length(NEW.username) < 9 then
+begin if not new.isAdmin and length(NEW.username) < 9 then
 	raise notice 'cannot';
 	return null;
 else return new;

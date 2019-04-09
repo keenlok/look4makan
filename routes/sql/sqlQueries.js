@@ -40,7 +40,7 @@ const find_tid_given_bid_rname = "SELECT tid from BranchTables BT WHERE BT.rname
 const insertBooks =  "INSERT INTO Books (userName, rname, bid, tid , pax, reservationTime, reservationDate) VALUES ($1, $2, $3, $4, $5, $6, $7);";
 
 const createAward = "INSERT INTO Awards (username, awardPoints) VALUES ($1, 0);";
-const delete_old_entries = 'DELETE FROM books WHERE reservationtime + \'1:00:00\' <= $1 AND reservationdate <= $2;';
+const delete_old_entries = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'1:00:00\' <= $1 AND bookedDate <= $2;';
 
 const queries = {
   findRestaurant : find_restaurant,

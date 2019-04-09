@@ -87,7 +87,7 @@ function convertMonthToStr (month) {
 }
 
 function getDateInStr(today) {
-    console.log("TYPEOF  " + typeof  today);
+    // console.log("TYPEOF  " + typeof  today);
     if (typeof today === 'undefined') {
         today = new Date();
     }
@@ -171,11 +171,11 @@ function separateData(data, menuCount) {
   }
   // console.log("initialised array", separatedData, separatedData[0], separatedData[1]);
   for (let i = 0, j = 0; i < data.length && j < menuCount; i++) {
-    console.log(data[i])
+    // console.log(data[i])
     if (i=== 0 || separatedData[j][0].menuname == data[i].menuname) {
       separatedData[j].push(data[i])
     } else {
-      console.log(j, separatedData[j][0].menuname, data[i].menuname);
+      // console.log(j, separatedData[j][0].menuname, data[i].menuname);
       separatedData[++j].push(data[i])
     }
   }

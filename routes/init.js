@@ -17,20 +17,20 @@ const salt  = bcrypt.genSaltSync(round);
 function initRouter(app) {
   app.get('/'                    , index            );
   app.get('/search'              , search           );
-  app.get('/search/restaurants'  , search_restaurant);
+  app.get('/search/restaurants'  , insertIntoUserPreference, search_restaurant);
   app.get('/restaurant'          , restaurant       );
   // app.get('/restaurants'         , list_restaurants )
   app.get('/booking'             , booking          );
   app.get('/booking/confirmation', confirmation     );
 
     /*  PROTECTED GET */
-  app.get('/register', passport.antiMiddleware(), register)
-  app.get('/signin', login   )
+  app.get('/register', passport.antiMiddleware(), register);
+  app.get('/signin', login   );
   // app.get('/booking/confirmation', passport.authMiddleware(), confirmation);
 
 
     /*  PROTECTED POST */
-  app.post('/reg_user', passport.antiMiddleware(), registerUser)
+  app.post('/reg_user', passport.antiMiddleware(), registerUser, index);
 
   app.post('/authenticate', passport.authenticate('local', {
     successRedirect: '/',
@@ -43,14 +43,15 @@ function initRouter(app) {
 }
 
 function index(req, res, next) {
+
+    //use req.user to get user info
+    console.log(req.user);
   let time = utils.getTime();
   let dateInStr = utils.getDateInStr();
   const title = 'Looking for places to eat?';
    // console.log(time, date)
 
-    console.log("TIME " + time);
-    console.log("DAMN IT")
-    console.log(utils.getDate());
+    //console.log(utils.getDate());
   // console.log(query)
     let date = utils.getDate();
     let query = sql_query.getAllLocations;
@@ -69,7 +70,7 @@ function index(req, res, next) {
                     if (req.isAuthenticated()) {
                         res.render('index', {title: title, dateInStr : dateInStr, date : date, time : time, auth: true, data: data.rows, data1: data1.rows, data2: data2.rows, data3: data3.rows})
                     } else {
-                        console.log(data1);
+                        // console.log(data1);
                         res.render('index', {title: title, dateInStr : dateInStr, date : date, time : time, auth: false, data: data.rows, data1: data1.rows, data2: data2.rows, data3: data3.rows})
                     }
                 });
@@ -102,6 +103,76 @@ function search (req, res, next) {
 }
 
 const pad = utils.pad;
+
+
+function insertIntoUserPreference (req, res, next) {
+    let insertQuery = sql_query.insertUserPreference;
+    let rname = req.query.rname;
+    let location = req.query.location;
+    let cuisineType = req.query.cuisineType;
+    let reservationTime = req.query.reservationTime;
+    let paxNo = req.query.paxNo;
+    let date = req.query.reservationDate;
+
+    if(req.user  === undefined) {
+        return next();
+    }
+
+    insertQuery = insertQuery.replace('$1', pad(req.user.username))
+    // (userName, preferredRname, preferredLoc, preferredDate, preferredTime, cuisineType, paxNum)
+
+    if(rname !== '')  {
+        rname = pad(rname);
+    }
+    else {
+        rname = null;
+    }
+    insertQuery = insertQuery.replace('$2', rname);
+
+    if(location !== '')   {
+        location = pad(location);
+    }
+    else {
+        location = null;
+    }
+    insertQuery = insertQuery.replace('$3', location);
+
+    if(date !== '') {
+        date = pad(date);
+    }
+    insertQuery = insertQuery.replace('$4', date);
+
+    if(reservationTime !== '') {
+        reservationTime = pad(reservationTime);
+    }
+    insertQuery = insertQuery.replace('$5', reservationTime);
+
+
+    if(cuisineType !== '')  {
+        cuisineType = pad(cuisineType);
+    }
+    else {
+        cuisineType = null;
+    }
+    insertQuery = insertQuery.replace('$6', cuisineType);
+
+    if(paxNo === '')  {
+        paxNo = 2; //by default
+    }
+    // console.log("rname: " + rname);
+
+    insertQuery = insertQuery.replace('$7', paxNo);
+
+    console.log("INSERT QUERY :" + insertQuery);
+    pool.query(insertQuery, (err, data) => {
+        if(!err) {
+            console.log("successful insertion into UserPreferences Table");
+        }
+        else
+            console.log("failed insertion into UserPreferences Table");
+    })
+    next();
+}3
 
 function search_restaurant(req, res, next) {
   let ctx = 0, avg = 0, table
@@ -175,7 +246,7 @@ function search_restaurant(req, res, next) {
     if (err || !data.rows || data.rows.length === 0) {
       ctx = 0
       table = []
-      console.log("PROBLEM", err);
+      // console.log("PROBLEM", err);
     } else {
       ctx = data.rows.length
       table = data.rows
@@ -264,14 +335,14 @@ function register(req, res, next) {
 }
 
 function registerUser(req, res, next) {
-  let username = req.body.username
-  let password = bcrypt.hashSync(req.body.password, salt)
-  let firstName = req.body.firstname
-  let lastName = req.body.lastname
+  let username = req.body.username;
+  let password = bcrypt.hashSync(req.body.password, salt);
+  let firstName = req.body.firstname;
+  let lastName = req.body.lastname;
 
   pool.query(sql_query.add_user, [username, password, firstName, lastName], (err, data) => {
     if (err) {
-      console.error("error in adding user", err)
+      console.error("error in adding user", err);
       res.redirect('/register?reg=fail')
     } else {
       req.login({
@@ -281,10 +352,10 @@ function registerUser(req, res, next) {
         lastname: lastName
       }, function(err) {
         if (err)  {
-          console.error(err)
-          return res.redirect('/register?reg=fail')
+          // console.error(err);
+          return res.redirect('/register?reg=fail');
         } else {
-          return res.redirect('/')
+            return res.redirect('/', {});
         }
       })
     }
@@ -335,7 +406,7 @@ function booking(req, res, next) {
                 }
                 menuCount = getMenuCount(menu)
                 menu = utils.separateData(menu, menuCount)
-                console.log("The menu count is: ", menuCount);
+                // console.log("The menu count is: ", menuCount);
             }
 
             if (req.isAuthenticated()) {
@@ -371,13 +442,13 @@ function booking(req, res, next) {
 }
 
  function confirmation(req, res, next) {
-  console.log(req.query)
+  // console.log(req.query)
    let rname = req.query.rname;
    let location = req.query.location;
    let reservationTime = req.query.reservationTime;
-   console.log(req.query);
+   // console.log(req.query);
    let reservationDate = utils.getDateInStr((req.query.reservationDate));
-   console.log("ASDJADSDAJ : " + reservationDate);
+   // console.log("ASDJADSDAJ : " + reservationDate);
    let paxNo = req.query.pax;
 
    let sql_query = 'INSERT INTO test VALUES (' + rname + ", " + reservationTime + ", " + paxNo + ");";
@@ -411,4 +482,3 @@ function error(err, res) {
 
 
 module.exports = initRouter;
-

@@ -29,6 +29,8 @@ const all_timeSlots= "select * from Time;";
 
 const min_max_hour_of_a_branch = "SELECT openTime, closeTime FROM Branches B WHERE B.rname = $0 AND B.bid = $1;";
 
+const insertUserPreference =  "INSERT INTO UserPreferences (userName, preferredRname, preferredLoc, preferredDate, preferredTime, cuisineType, paxNum) VALUES ($1, $2, $3, $4, $5, $6, $7);";
+
 const queries = {
   findAllAvailableRestaurants : available_restaurants,
   allBranchWithStatus : branch_w_status,
@@ -43,7 +45,8 @@ const queries = {
   getAllCuisines : all_cuisines,
   getAllRestaurantName : all_rname,
   getAllTimeSlots : all_timeSlots,
-  findMinMaxHourOfABranch : min_max_hour_of_a_branch
+  findMinMaxHourOfABranch : min_max_hour_of_a_branch,
+  insertUserPreference : insertUserPreference,
 }
 
 module.exports = queries

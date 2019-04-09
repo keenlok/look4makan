@@ -29,7 +29,7 @@ function convertDayToStr (day) {
             dayStr = 'Saturday';
             break;
         default:
-            dayStr = "Error can't get valid day " + day;
+            dayStr = "Error Day out of range! Please use a value from 0 to 6: " + day;
             break;
     }
     return dayStr;

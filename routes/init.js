@@ -16,17 +16,17 @@ const salt  = bcrypt.genSaltSync(round);
 
 function initRouter(app) {
   app.get('/'                    , index            );
-  app.get('/search'              , search           );
-  app.get('/search/restaurants'  , insertIntoUserPreference, search_restaurant);
+  app.post('/search'              , search           );
+  app.post('/search/restaurants'  , insertIntoUserPreference, search_restaurant);
   app.get('/restaurant'          , restaurant       );
   // app.get('/restaurants'         , list_restaurants )
-  app.get('/booking'             , booking          );
+  app.post('/booking'             , booking          );
   // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
 
     /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register);
   app.get('/signin', login   );
-  app.get('/booking/confirmation', passport.authMiddleware(), insertIntoConfirmedBooking, insertIntoBooks, updateAward, confirmation);
+  app.post('/booking/confirmation', passport.authMiddleware(), insertIntoConfirmedBooking, insertIntoBooks, updateAward, confirmation);
 
 
     /*  PROTECTED POST */
@@ -87,19 +87,19 @@ function index(req, res, next) {
 }
 
 function search (req, res, next) {
-  let ctx = 0, avg = 0, table
-  let queryStr = req.query.restaurant;
-  let rname = '%' + queryStr.toLowerCase() + '%'
-  let searchQuery = sql_query.findRestaurant
+  let ctx = 0, avg = 0, table;
+  let queryStr = req.body.restaurant;
+  let rname = '%' + queryStr.toLowerCase() + '%';
+  let searchQuery = sql_query.findRestaurant;
   let time = utils.getTime();
 
   pool.query(searchQuery, [rname, time], (err, data) => {
     if (err || !data.rows || data.rows.length === 0) {
-      ctx = 0
-      table = []
+      ctx = 0;
+      table = [];
       console.log("Error in search", err)
     } else {
-      ctx = data.rows.length
+      ctx = data.rows.length;
       table = data.rows
     }
     if (req.isAuthenticated()) {
@@ -115,12 +115,12 @@ const pad = utils.pad;
 
 function insertIntoUserPreference (req, res, next) {
   let insertQuery = sql_query.insertUserPreference;
-  let rname = req.query.rname;
-  let location = req.query.location;
-  let cuisineType = req.query.cuisineType;
-  let reservationTime = req.query.reservationTime;
-  let paxNo = req.query.paxNo;
-  let date = req.query.reservationDate;
+  let rname = req.body.rname;
+  let location = req.body.location;
+  let cuisineType = req.body.cuisineType;
+  let reservationTime = req.body.reservationTime;
+  let paxNo = req.body.paxNo;
+  let date = req.body.reservationDate;
 
   if(req.user  === undefined) {
     return next();
@@ -168,12 +168,12 @@ function insertIntoUserPreference (req, res, next) {
 function search_restaurant(req, res, next) {
   let ctx = 0, avg = 0, table
   let searchQuery = sql_query.findWithUserPreference;
-  let rname = req.query.rname;
-  let location = req.query.location;
-  let cuisineType = req.query.cuisineType;
-  let reservationTime = req.query.reservationTime;
-  let paxNo = req.query.paxNo;
-  let date = req.query.reservationDate;
+  let rname = req.body.rname;
+  let location = req.body.location;
+  let cuisineType = req.body.cuisineType;
+  let reservationTime = req.body.reservationTime;
+  let paxNo = req.body.paxNo;
+  let date = req.body.reservationDate;
 
     if(rname !== '')  {
     rname = pad(rname);
@@ -345,12 +345,12 @@ function registerUser(req, res, next) {
 }
 
 function booking(req, res, next) {
-  let rname = req.query.rname;
-  let bid = req.query.bid;
-  let location = req.query.location;
-  let reservationTime = req.query.reservationTime;
-  let reservationDate = req.query.reservationDate;
-  let paxNo = req.query.pax;
+  let rname = req.body.rname;
+  let bid = req.body.bid;
+  let location = req.body.location;
+  let reservationTime = req.body.reservationTime;
+  let reservationDate = req.body.reservationDate;
+  let paxNo = req.body.pax;
   let query = sql_query.findMinMaxHourOfABranch;
   // let cuisine_type = req.query.cuisinetype
 
@@ -407,8 +407,8 @@ function booking(req, res, next) {
 }
 
 function insertIntoConfirmedBooking (req, res, next) {
-  let rname = req.query.rname;
-  let bid = req.query.bid;
+  let rname = req.body.rname;
+  let bid = req.body.bid;
   let insertQuery = sql_query.insertConfirmedBooking;
   if(req.user === undefined) {
     return next();
@@ -434,11 +434,11 @@ function insertIntoConfirmedBooking (req, res, next) {
 }
 
 function insertIntoBooks (req, res, next) {
-    let rname = req.query.rname;
-    let bid = req.query.bid;
-    let pax = req.query.pax;
-    let reservationTime = req.query.reservationTime;
-    let reservationDate = req.query.reservationDate;
+    let rname = req.body.rname;
+    let bid = req.body.bid;
+    let pax = req.body.pax;
+    let reservationTime = req.body.reservationTime;
+    let reservationDate = req.body.reservationDate;
 
     let insertQuery = sql_query.insertBooks;
 
@@ -490,11 +490,11 @@ function insertIntoBooks (req, res, next) {
 
  function confirmation(req, res, next) {
 
-   let rname = req.query.rname;
-   let location = req.query.location;
-   let reservationTime = req.query.reservationTime;
+   let rname = req.body.rname;
+   let location = req.body.location;
+   let reservationTime = req.body.reservationTime;
    let reservationDate = utils.getDateInStr((req.query.reservationDate));
-   let paxNo = req.query.pax;
+   let paxNo = req.body.pax;
 
    if(req.isAuthenticated()) {
        res.render('confirmation', { page: "Confirmation", rname : rname, location : location, reservationTime : reservationTime,  reservationDate : reservationDate, paxNo : paxNo, auth: true});

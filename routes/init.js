@@ -376,7 +376,7 @@ function booking(req, res, next) {
    let location = req.query.location;
    let reservationTime = req.query.reservationTime;
    console.log(req.query);
-   let reservationDate = utils.convertDateToStr(req.query.reservationDate);
+   let reservationDate = utils.getDateInStr((req.query.reservationDate));
    console.log("ASDJADSDAJ : " + reservationDate);
    let paxNo = req.query.pax;
 

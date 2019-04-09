@@ -76,12 +76,17 @@ function convertMonthToStr (month) {
 }
 
 function getDateInStr(today) {
+    console.log("TYPEOF  " + typeof  today);
     if (typeof today === 'undefined') {
         today = new Date();
     }
+    else if (typeof today === 'string') {
+        today = new Date(today);
+    }
+
     const dayStr = convertDayToStr(today.getDay());
     const monthStr = convertMonthToStr(today.getMonth() + 1);
-    const date = dayStr + ' ' + today.getDate() + ' ' + monthStr + ' ' + today.getFullYear();
+    const date = dayStr + ', ' + today.getDate() + ' ' + monthStr + ' ' + today.getFullYear();
     return date;
 }
 
@@ -99,22 +104,20 @@ function getDate(today) {
     return date;
 }
 
-//date = yyyy-mm-dd
-function convertDateToStr(date) {
-    console.log(date)
-    let components = date.split("-");
-    console.log(components)
-    let newdate = new Date(date)
-    console.log(newdate.getDate())
-
-    return convertDayToStr(newdate.getDay()) + ", " + parseInt(components[2]) + " "  + convertMonthToStr(parseInt(components[1])) + " "  + components[0];
-}
+// //date = yyyy-mm-dd
+// function convertDateToStr(date) {
+//     date = "'" + date + "'";let components = date.split("-");
+//     console.log(components)
+//     let newdate = new Date(date)
+//     console.log(newdate.getDate())
+//     return convertDayToStr(newdate.getDay()) + ", " + parseInt(components[2]) + " "  + convertMonthToStr(parseInt(components[1])) + " "  + components[0];
+// }
 
 module.exports.convertDayToStr = convertDayToStr;
 module.exports.convertMonthToStr = convertMonthToStr;
 module.exports.getDateInStr = getDateInStr;
 module.exports.getDate = getDate;
-module.exports.convertDateToStr = convertDateToStr;
+// module.exports.convertDateToStr = convertDateToStr;
 
 function checkAndExtend(val) {
     if (val < 10) {

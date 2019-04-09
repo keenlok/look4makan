@@ -90,6 +90,7 @@ function search (req, res, next) {
     if (err || !data.rows || data.rows.length === 0) {
       ctx = 0
       table = []
+      console.log("Error in search", err)
     } else {
       ctx = data.rows.length
       table = data.rows

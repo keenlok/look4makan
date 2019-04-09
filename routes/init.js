@@ -30,7 +30,7 @@ function initRouter(app) {
 
 
     /*  PROTECTED POST */
-  app.post('/reg_user', passport.antiMiddleware(), registerUser, index);
+  app.post('/reg_user', passport.antiMiddleware(), registerUser, createAward);
 
   app.post('/authenticate', passport.authenticate('local', {
     successRedirect: '/',
@@ -336,11 +336,25 @@ function registerUser(req, res, next) {
           // console.error(err);
           return res.redirect('/register?reg=fail');
         } else {
-            return res.redirect('/', {});
+            return next();
         }
-      })
+      });
     }
-  })
+  });
+}
+
+function createAward (req, res, next) {
+    let insertQuery = sql_query.createAward;
+
+    pool.query(insertQuery, [req.user.username], (err, data) => {
+        if(!err) {
+            console.log("Successfully inserted base reward points");
+        }
+        else {
+            console.error("Fail to insert base reward points", err);
+        }
+    });
+    return res.redirect("/");
 }
 
 function booking(req, res, next) {

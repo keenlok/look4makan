@@ -1,15 +1,15 @@
-
-const available_restaurants = 'SELECT R.rname, location FROM ((advertises  natural join restaurants) natural join branches) R WHERE EXISTS ( SELECT 1 FROM freetables F WHERE F.rname = R.rname AND F.bid = R.bid AND F.availableSince < $1);';
-
-const branch_w_status = 'WITH restaurantStatus AS ( SELECT rname, bid, COUNT(tid) AS num FROM freetables GROUP BY rname, bid ) SELECT R.rname, location, CASE WHEN (opentime > $1 OR closeTime < $1) THEN \'CLOSED\' WHEN num > 0 THEN \'AVAILABLE\' WHEN num = 0 THEN \'FULL\' WHEN num = NULL THEN \'UNAVAILABLE\' END AS status FROM (advertises NATURAL JOIN restaurants NATURAL JOIN branches) R LEFT JOIN restaurantStatus S ON R.rname = S.rname AND R.bid = S.bid;';
-
-const get_restaurant = 'WITH restaurantStatus AS ( SELECT rname, bid, COUNT(tid) AS num FROM freetables GROUP BY rname, bid ) SELECT distinct R.rname, openinghours, location, CASE WHEN (opentime > $2 OR closeTime < $2) THEN \'CLOSED\' WHEN num > 0 THEN \'AVAILABLE\' WHEN num = 0 THEN \'FULL\' WHEN num IS NULL THEN \'UNAVAILABLE\' END AS status FROM (restaurants NATURAL JOIN branches) R LEFT JOIN restaurantStatus S ON R.rname = S.rname AND R.bid = S.bid WHERE R.rname = $1;'
-
-const find_restaurant = 'WITH restaurantStatus AS ( SELECT rname, bid, COUNT(tid) AS num FROM freetables GROUP BY rname, bid ) SELECT distinct R.rname, openinghours, location, CASE WHEN (opentime > $2 OR closeTime < $2) THEN \'CLOSED\' WHEN num > 0 THEN \'AVAILABLE\' WHEN num = 0 THEN \'FULL\' WHEN num IS NULL THEN \'UNAVAILABLE\' END AS status FROM (restaurants NATURAL JOIN branches) R LEFT JOIN restaurantStatus S ON R.rname = S.rname AND R.bid = S.bid WHERE LOWER(R.rname) LIKE $1;'
-
-const find_postal_code = 'WITH restaurantStatus AS ( SELECT rname, bid, COUNT(tid) AS num FROM freetables GROUP BY rname, bid ) SELECT DISTINCT R.rname, openinghours, location, CASE WHEN (opentime > $1 OR closeTime < $1) THEN \'CLOSED\' WHEN num > 0 THEN \'AVAILABLE\' WHEN num = 0 THEN \'FULL\' END AS status FROM (restaurants R LEFT JOIN branches B ON R.rname = B.rname) LEFT JOIN restaurantStatus S ON R.rname = S.rname WHERE ABS(B.postalCode - $2) <= 9999;'
-
-const add_user = 'INSERT INTO diners (userName, password, firstName, lastName, isAdmin) VALUES ($1, $2, $3, $4, FALSE);'
+//
+// const available_restaurants = 'SELECT R.rname, location FROM ((advertises  natural join restaurants) natural join branches) R WHERE EXISTS ( SELECT 1 FROM freetables F WHERE F.rname = R.rname AND F.bid = R.bid AND F.availableSince < $1);';
+//
+// const branch_w_status = 'WITH restaurantStatus AS ( SELECT rname, bid, COUNT(tid) AS num FROM freetables GROUP BY rname, bid ) SELECT R.rname, location, CASE WHEN (opentime > $1 OR closeTime < $1) THEN \'CLOSED\' WHEN num > 0 THEN \'AVAILABLE\' WHEN num = 0 THEN \'FULL\' WHEN num = NULL THEN \'UNAVAILABLE\' END AS status FROM (advertises NATURAL JOIN restaurants NATURAL JOIN branches) R LEFT JOIN restaurantStatus S ON R.rname = S.rname AND R.bid = S.bid;';
+//
+// const get_restaurant = 'WITH restaurantStatus AS ( SELECT rname, bid, COUNT(tid) AS num FROM freetables GROUP BY rname, bid ) SELECT distinct R.rname, openinghours, location, CASE WHEN (opentime > $2 OR closeTime < $2) THEN \'CLOSED\' WHEN num > 0 THEN \'AVAILABLE\' WHEN num = 0 THEN \'FULL\' WHEN num IS NULL THEN \'UNAVAILABLE\' END AS status FROM (restaurants NATURAL JOIN branches) R LEFT JOIN restaurantStatus S ON R.rname = S.rname AND R.bid = S.bid WHERE R.rname = $1;'
+//
+// const find_restaurant = 'WITH restaurantStatus AS ( SELECT rname, bid, COUNT(tid) AS num FROM freetables GROUP BY rname, bid ) SELECT distinct R.rname, openinghours, location, CASE WHEN (opentime > $2 OR closeTime < $2) THEN \'CLOSED\' WHEN num > 0 THEN \'AVAILABLE\' WHEN num = 0 THEN \'FULL\' WHEN num IS NULL THEN \'UNAVAILABLE\' END AS status FROM (restaurants NATURAL JOIN branches) R LEFT JOIN restaurantStatus S ON R.rname = S.rname AND R.bid = S.bid WHERE LOWER(R.rname) LIKE $1;'
+//
+// const find_postal_code = 'WITH restaurantStatus AS ( SELECT rname, bid, COUNT(tid) AS num FROM freetables GROUP BY rname, bid ) SELECT DISTINCT R.rname, openinghours, location, CASE WHEN (opentime > $1 OR closeTime < $1) THEN \'CLOSED\' WHEN num > 0 THEN \'AVAILABLE\' WHEN num = 0 THEN \'FULL\' END AS status FROM (restaurants R LEFT JOIN branches B ON R.rname = B.rname) LEFT JOIN restaurantStatus S ON R.rname = S.rname WHERE ABS(B.postalCode - $2) <= 9999;'
+//
+  const add_user = 'INSERT INTO diners (userName, password, firstName, lastName, isAdmin) VALUES ($1, $2, $3, $4, FALSE);'
 
 
 //should change to F.availableDate = $6 but dont do so cause will cause result to fail to show up at the moment
@@ -31,12 +31,18 @@ const min_max_hour_of_a_branch = "SELECT openTime, closeTime FROM Branches B WHE
 
 const insertUserPreference =  "INSERT INTO UserPreferences (userName, preferredRname, preferredLoc, preferredDate, preferredTime, cuisineType, paxNum) VALUES ($1, $2, $3, $4, $5, $6, $7);";
 
+const insertConfirmedBooking =  "INSERT INTO ConfirmedBookings (userName, rname, bid) VALUES ($1, $2, $3);";
+
+const find_tid_given_bid_rname = "SELECT tid from BranchTables BT WHERE BT.rname = $1 AND BT.bid = $2 AND BT.capacity >= $3 ORDER BY capacity limit 1;";
+
+const insertBooks =  "INSERT INTO Books (userName, rname, bid, tid , pax, reservationTime, reservationDate) VALUES ($1, $2, $3, $4, $5, $6, $7);";
+
 const queries = {
-  findAllAvailableRestaurants : available_restaurants,
-  allBranchWithStatus : branch_w_status,
-  findRestaurant : find_restaurant,
-  getRestaurant : get_restaurant,
-  findWithPostCode : find_postal_code,
+  // findAllAvailableRestaurants : available_restaurants,
+  // allBranchWithStatus : branch_w_status,
+  // findRestaurant : find_restaurant,
+  // getRestaurant : get_restaurant,
+  // findWithPostCode : find_postal_code,
   findWithUserPreference : find_user_preference,
   add_user : add_user,
   userpass : userpass,
@@ -47,6 +53,9 @@ const queries = {
   getAllTimeSlots : all_timeSlots,
   findMinMaxHourOfABranch : min_max_hour_of_a_branch,
   insertUserPreference : insertUserPreference,
+  insertConfirmedBooking : insertConfirmedBooking,
+  insertBooks : insertBooks,
+  find_tid : find_tid_given_bid_rname
 }
 
 module.exports = queries

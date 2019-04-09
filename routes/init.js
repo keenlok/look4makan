@@ -21,12 +21,12 @@ function initRouter(app) {
   app.get('/restaurant'          , restaurant       );
   // app.get('/restaurants'         , list_restaurants )
   app.get('/booking'             , booking          );
-  app.get('/booking/confirmation', confirmation     );
+  // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
 
     /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register);
   app.get('/signin', login   );
-  // app.get('/booking/confirmation', passport.authMiddleware(), confirmation);
+  app.get('/booking/confirmation', passport.authMiddleware(), insertIntoConfirmedBooking, insertIntoBooks, confirmation);
 
 
     /*  PROTECTED POST */
@@ -413,6 +413,7 @@ function booking(req, res, next) {
                 res.render('booking', {
                     page: "Bookings",
                     rname: rname,
+                    bid : bid,
                     reservationTime: reservationTime,
                     reservationDate : reservationDate,
                     paxNo: paxNo,
@@ -427,6 +428,7 @@ function booking(req, res, next) {
                 res.render('booking', {
                     page: "Bookings",
                     rname: rname,
+                    bid : bid,
                     reservationTime: reservationTime,
                     reservationDate : reservationDate,
                     paxNo: paxNo,
@@ -439,6 +441,74 @@ function booking(req, res, next) {
             }
         });
     });
+}
+
+function insertIntoConfirmedBooking (req, res, next) {
+    let rname = req.query.rname;
+    let bid = req.query.bid;
+    let insertQuery = sql_query.insertConfirmedBooking;
+    if(req.user === undefined) {
+        return next();
+    }
+    insertQuery = insertQuery.replace("$1", pad(req.user.username));
+    insertQuery = insertQuery.replace("$2", pad(rname));
+    insertQuery = insertQuery.replace("$3", bid);
+
+    console.log(insertQuery);
+    pool.query(insertQuery, (err, data) => {
+        if(!err) {
+            console.log("Successful insertion into ConfirmedBookings Table ")
+        }
+        else {
+            console.log("Failed insertion into ConfirmedBookings Table ")
+        }
+    })
+    return next();
+}
+function insertIntoBooks (req, res, next) {
+    // (userName, rname, bid, tid , pax, reservationTime, reservationDate)
+    let rname = req.query.rname;
+    let bid = req.query.bid;
+    let pax = req.query.pax;
+    let reservationTime = req.query.reservationTime;
+    let reservationDate = req.query.reservationDate;
+
+    let insertQuery = sql_query.insertBooks;
+
+    if(req.user === undefined) {
+        return next();
+    }
+
+    let selectQuery = sql_query.find_tid;
+
+    selectQuery = selectQuery.replace("$1", pad(rname));
+    selectQuery = selectQuery.replace("$2", bid);
+    selectQuery = selectQuery.replace("$3", pax);
+
+    console.log("SELECTQUERY: " + selectQuery);
+
+    pool.query(selectQuery, (err, data) => {
+        if(!err) {
+            insertQuery = insertQuery.replace("$1", pad(req.user.username));
+            insertQuery = insertQuery.replace("$2", pad(rname));
+            insertQuery = insertQuery.replace("$3", bid);
+            insertQuery = insertQuery.replace("$4", data.rows[0].tid);
+            insertQuery = insertQuery.replace("$5", pax);
+            insertQuery = insertQuery.replace("$6", pad(reservationTime));
+            insertQuery = insertQuery.replace("$7", pad(reservationDate));
+
+            console.log("INSERTQUERY: " + insertQuery);
+            pool.query(insertQuery, (err, data) => {
+                if(!err) {
+                    console.log("Successful insertion into Booking Table ")
+                }
+                else {
+                    console.log("Failed insertion into Books Table ")
+                }
+            })
+        }
+    })
+    return next();
 }
 
  function confirmation(req, res, next) {

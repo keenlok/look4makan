@@ -9,8 +9,6 @@ const get_restaurant = 'SELECT distinct R.rname, openinghours, location, CASE WH
 const find_restaurant = 'SELECT distinct R.rname, openinghours, location, CASE WHEN (opentime > $2 OR closeTime <' +
   ' $2) THEN \'CLOSED\'  END AS status FROM (restaurants NATURAL JOIN branches) R WHERE LOWER(R.rname) LIKE $1;'
 
-// const find_postal_code = 'WITH restaurantStatus AS ( SELECT rname, bid, COUNT(tid) AS num FROM freetables GROUP BY rname, bid ) SELECT DISTINCT R.rname, openinghours, location, CASE WHEN (opentime > $1 OR closeTime < $1) THEN \'CLOSED\' WHEN num > 0 THEN \'AVAILABLE\' WHEN num = 0 THEN \'FULL\' END AS status FROM (restaurants R LEFT JOIN branches B ON R.rname = B.rname) LEFT JOIN restaurantStatus S ON R.rname = S.rname WHERE ABS(B.postalCode - $2) <= 9999;'
-// //
   const add_user = 'INSERT INTO diners (userName, password, firstName, lastName, isAdmin) VALUES ($1, $2, $3, $4, FALSE);'
 
 
@@ -59,6 +57,6 @@ const queries = {
   insertBooks : insertBooks,
   find_tid : find_tid_given_bid_rname,
   delete_old_entries: delete_old_entries
-}
+};
 
-module.exports = queries
+module.exports = queries;

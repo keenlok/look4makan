@@ -101,9 +101,13 @@ function getDate(today) {
 
 //date = yyyy-mm-dd
 function convertDateToStr(date) {
+    console.log(date)
     let components = date.split("-");
+    console.log(components)
+    let newdate = new Date(date)
+    console.log(newdate.getDate())
 
-    return convertDayToStr(parseInt(components[2])) + ", " + parseInt(components[2]) + " "  + convertMonthToStr(parseInt(components[1])) + " "  + components[0];
+    return convertDayToStr(newdate.getDay()) + ", " + parseInt(components[2]) + " "  + convertMonthToStr(parseInt(components[1])) + " "  + components[0];
 }
 
 module.exports.convertDayToStr = convertDayToStr;

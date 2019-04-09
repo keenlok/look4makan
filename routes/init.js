@@ -131,20 +131,20 @@ function insertIntoUserPreference (req, res, next) {
   // insertQuery = insertQuery.replace('$1', pad(req.user.username))
   // (userName, preferredRname, preferredLoc, preferredDate, preferredTime, cuisineType, paxNum)
 
-  // if(rname !== '')  {
-  //   rname = pad(rname);
-  // }
-  // else {
-  //   rname = null;
-  // }
+  if(rname !== '')  {
+    rname = pad(rname);
+  }
+  else {
+    rname = null;
+  }
   // insertQuery = insertQuery.replace('$2', rname);
   //
-  // if(location !== '')   {
-  //   location = pad(location);
-  // }
-  // else {
-  //   location = null;
-  // }
+  if(location !== '')   {
+    location = pad(location);
+  }
+  else {
+    location = null;
+  }
   // insertQuery = insertQuery.replace('$3', location);
   //
   // if(date !== '') {
@@ -183,13 +183,13 @@ function insertIntoUserPreference (req, res, next) {
   ];
 
 
-   console.log("INSERT QUERY :" + insertQuery);
+   console.log("INSERT QUERY :", insertQuery, arguments);
   pool.query(insertQuery, arguments, (err, data) => {
     if(!err) {
       console.log("successful insertion into UserPreferences Table");
     }
     else
-      console.error("failed insertion into UserPreferences Table", err.detail);
+      console.error("failed insertion into UserPreferences Table", err);
   })
   next();
 }

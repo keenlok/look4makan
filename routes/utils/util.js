@@ -1,3 +1,9 @@
+/**
+ * Converts the day value from a Date object into days of week in English
+ * @param day The day value from the getDay method of a Date object
+ * @returns {string}
+ */
+
 function convertDayToStr (day) {
     let dayStr;
     switch (day) {
@@ -29,6 +35,11 @@ function convertDayToStr (day) {
     return dayStr;
 }
 
+/**
+ * Converts the month of a Date object into the English string
+ * @param month the return value from the getMonth method of a Date object
+ * @returns {string}
+ */
 function convertMonthToStr (month) {
     let monthStr;
     switch (month) {

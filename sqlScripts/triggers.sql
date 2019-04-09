@@ -1,6 +1,8 @@
 -----------------------------------------------
 --Trigger to prevent change of password
 -----------------------------------------------
+drop trigger if exists prevent_password_changes;
+
 create or replace function cannotChng()
 returns trigger as $$
  begin if NEW.password <> OLD.password then
@@ -25,6 +27,7 @@ select * from diners
 -----------------------------------------------
 --Trigger to capacity of a branch to go to negative
 -----------------------------------------------
+drop trigger if exists no_overload;
 
 create or replace function checkoverload()
 returns trigger as $$
@@ -49,5 +52,25 @@ where rname = 'Crystal Jade' and bid = 1 and tid = 1 and bookedtimeslot = '23:00
 select * from BookedTables
 
 -----------------------------------------------
---Trigger to capacity of a branch to go to negative
+--Trigger to prevent username to be less than 9 characters
 -----------------------------------------------
+drop trigger if exists notTooShort on diners;
+
+create or replace function idk()
+returns trigger as $$
+begin if length(NEW.username) < 9 then
+	raise notice 'cannot';
+	return null;
+else return new;
+end if; end; $$ language plpgsql;
+
+create trigger notTooShort
+before insert or update
+on diners
+for each row
+execute procedure idk();
+
+insert into diners  (username, firstname, lastname, password, isAdmin) values
+('333asd', 'test', 'Rick', '$2b$10$QFg3/z/fXRaHlIWfftdGkOCwam0wCdfW9yfA7u93IsWL2DVSul.Ue', false);
+
+select * from diners

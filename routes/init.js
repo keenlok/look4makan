@@ -45,7 +45,7 @@ function initRouter(app) {
 function index(req, res, next) {
 
   //use req.user to get user info
-  console.log(req.user);
+  let user = req.user;
   let time = utils.getTime();
   let dateInStr = utils.getDateInStr();
   const title = 'Looking for places to eat?';
@@ -67,12 +67,19 @@ function index(req, res, next) {
         pool.query(query1, (err1, data1) => {
             pool.query(query2, (err2, data2) => {
                 pool.query(query3, (err3, data3) => {
-                    if (req.isAuthenticated()) {
-                        res.render('index', {title: title, dateInStr : dateInStr, date : date, time : time, auth: true, data: data.rows, data1: data1.rows, data2: data2.rows, data3: data3.rows})
-                    } else {
-                        // console.log(data1);
-                        res.render('index', {title: title, dateInStr : dateInStr, date : date, time : time, auth: false, data: data.rows, data1: data1.rows, data2: data2.rows, data3: data3.rows})
-                    }
+                  let auth = !!req.isAuthenticated()
+                  res.render('index', {
+                    title: title,
+                    dateInStr : dateInStr,
+                    date : date,
+                    time : time,
+                    auth: auth,
+                    data: data.rows,
+                    data1: data1.rows,
+                    data2: data2.rows,
+                    data3: data3.rows,
+                    user: user
+                  })
                 });
             });
         });

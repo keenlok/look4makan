@@ -23,8 +23,8 @@ drop table if exists BookedTables cascade;
 
 
 create table Time (
-timeSlot time primary key
-timeSlotStr string
+timeSlot time primary key,
+timeSlotStr varchar(20)
 );
 
 create table Diners (
@@ -252,7 +252,7 @@ insert into restaurants (rname) values
 ('Sushi Express'),
 ('Forlino'),
 ('Ristorante Da Valentino'),
-\('Thai Tantric Authentic Thai Cuisine'),
+('Thai Tantric Authentic Thai Cuisine'),
 ('NamNam');
 
 

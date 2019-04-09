@@ -30,7 +30,7 @@ function initRouter(app) {
 
 
     /*  PROTECTED POST */
-  app.post('/reg_user', passport.antiMiddleware(), registerUser, createAward);
+  app.post('/reg_user', passport.antiMiddleware(), registerUser);
 
   app.post('/authenticate', passport.authenticate('local', {
     successRedirect: '/',
@@ -337,7 +337,7 @@ function registerUser(req, res, next) {
           return res.redirect('/register?reg=fail');
         } else {
           utils.setupUserAccount(pool, username);
-            return next();
+          return res.redirect('/');
         }
       });
     }

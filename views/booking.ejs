@@ -8,6 +8,7 @@
     <script src="/stylesheets/vendor/jquery/jquery.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+
 </head>
 <header>
     <% include ./partials/header %>
@@ -46,7 +47,8 @@
         <input id="rname" value ="<%=rname%>" name="rname" readonly> <br><br>
 
         <input id="bid" value ="<%=bid%>" name="bid" hidden>
-
+        <input id="user" value ="<%=user%>" name="user" hidden>
+        <% console.log(user === undefined)%>
         <label>Location</label> <br>
         <input id="location" value ="<%=location%>" name="location" readonly> <br><br>
         <label>Reservation Time</label> <br>
@@ -59,14 +61,17 @@
         <label>Pax No</label> <br>
         <input id="paxNo" value="<%=paxNo%>" name="pax"> <br><br>
         <div class="col-12 col-md-3">
-            <button type="submit" class="btn btn-block btn btn-primary">Confirm Reservation</button>
+            <button type="submit" class="btn btn-block btn btn-primary" onclick="show(user)">Confirm Reservation</button>
         </div>
     </form>
 </div>
 <script>
-    // console.log($('input#rname').val())
-    // console.log($('input#reservationTime').val())
-    // console.log($('input#paxNo').val())
+    function show(user) {
+        if(document.getElementById('user').value === '') {
+            alert("You need to sign in / create an account to make a reservation! \n\n " +
+                        "You will be directed to the home page to do so :-)");
+        }
+    }
 </script>
 </body>
 </html>

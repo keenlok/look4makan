@@ -387,7 +387,8 @@ function booking(req, res, next) {
         // console.log("The menu count is: ", menuCount);
       }
       let auth = !!req.isAuthenticated();
-      let user = req.user
+      let user = req.user;
+      console.log("USER? " + user);
       res.render('booking', {
         page: "Bookings",
         rname: rname,
@@ -495,6 +496,7 @@ function insertIntoBooks (req, res, next) {
    let reservationTime = req.body.reservationTime;
    let reservationDate = utils.getDateInStr((req.query.reservationDate));
    let paxNo = req.body.pax;
+
 
    if(req.isAuthenticated()) {
        res.render('confirmation', { page: "Confirmation", rname : rname, location : location, reservationTime : reservationTime,  reservationDate : reservationDate, paxNo : paxNo, auth: true});

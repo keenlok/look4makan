@@ -223,7 +223,7 @@ function updateSqlServer(pool) {
   })
 }
 
-module.exports.updateSqlServer = updateSqlServer
+module.exports.updateSqlServer = updateSqlServer;
 
 function setupUserAccount(pool, username) {
   if (typeof pool === 'undefined') {
@@ -235,7 +235,7 @@ function setupUserAccount(pool, username) {
     starting_pts
   ]
 
-  let query = sql_queries.setup_user_awards
+  let query = sql_queries.setup_user_awards;
   pool.query(query, queryArgs, (err, data) => {
     if (err) {
       console.error(err)

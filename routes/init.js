@@ -16,6 +16,7 @@ const salt  = bcrypt.genSaltSync(round);
 
 function initRouter(app) {
   app.get('/'                    , index            );
+  app.get('/contactUs'                    , contact            );
   app.post('/search'              , search           );
   app.post('/search/restaurants'  , insertIntoUserPreference, search_restaurant);
   app.get('/restaurant'          , restaurant       );
@@ -40,6 +41,11 @@ function initRouter(app) {
   /* LOGOUT */
   app.get('/logout', passport.authMiddleware(), logout);
 
+}
+
+function contact (req, res, next) {
+
+  res.render("contact", {auth : req.isAuthenticated()});
 }
 
 function index(req, res, next) {

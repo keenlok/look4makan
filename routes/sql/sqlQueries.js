@@ -13,6 +13,7 @@ const add_user = 'INSERT INTO diners (userName, password, firstName, lastName, i
 
 const setup_user_awards = 'INSERT INTO awards (username, awardpoints) VALUES ($1, $2);'
 
+//should change to F.availableDate = $6 but dont do so cause will cause result to fail to show up at the moment
 const find_user_preference = 'SELECT distinct rname, bid, openingHours, location FROM branches B NATURAL JOIN branchTables BT WHERE B.rname IN ($1) AND B.location IN ($2) AND cuisineType IN ($3) AND B.openTime <= $4 AND B.closeTime >= $4 AND BT.capacity >= $5 AND NOT EXISTS (SELECT 1 FROM bookedtables BKT WHERE BKT.bid = BT.bid AND BT.rname = BKT.rname AND BT.tid = BKT.tid);';
 
 const userpass = 'SELECT * FROM diners WHERE username = $1'
@@ -38,7 +39,7 @@ const find_tid_given_bid_rname = "SELECT tid from BranchTables BT WHERE BT.rname
 
 const insertBooks =  "INSERT INTO Books (userName, rname, bid, tid , pax, reservationTime, reservationDate) VALUES ($1, $2, $3, $4, $5, $6, $7);";
 
-const delete_old_entries = 'DELETE FROM books WHERE reservationtime + \'1:00:00\' <= $1 AND reservationdate <= $2;';
+const delete_old_entries = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'1:00:00\' <= $1 AND bookedDate <= $2;';
 
 const updateAward = "UPDATE Awards  SET awardpoints = awardpoints + $1 WHERE username = $2;";
 

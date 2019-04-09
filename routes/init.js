@@ -174,14 +174,16 @@ function insertIntoUserPreference (req, res, next) {
   // insertQuery = insertQuery.replace('$7', paxNo);
   let arguments = [
     username,         //$1
-    location,         //$2
-    date,             //$3
-    reservationTime,  //$4
-    cuisineType,      //$5
-    paxNo             //$6
-  ]
+    rname,            //$2
+    location,         //$3
+    date,             //$4
+    reservationTime,  //$5
+    cuisineType,      //$6
+    paxNo             //$7
+  ];
 
-  // console.log("INSERT QUERY :" + insertQuery);
+
+   console.log("INSERT QUERY :" + insertQuery);
   pool.query(insertQuery, arguments, (err, data) => {
     if(!err) {
       console.log("successful insertion into UserPreferences Table");

@@ -24,7 +24,7 @@ drop table if exists BookedTables cascade;
 
 create table Time (
 timeSlot time primary key,
-timeSlotStr varchar(20)
+timeSlotStr varchar(10)
 );
 
 create table Diners (
@@ -61,17 +61,18 @@ primary key (userName, rname, bid)
 
 create table UserPreferences (
 userName varchar(20),
-preferredLoc varchar(40),
+preferredRname varchar(40),
+preferredLoc varchar(40) references Locations,
 preferredDate date,
 preferredTime time,
 cuisineType varchar(10) references CuisineTypes,
 paxNum integer,
-budget integer,
-primary key (userName, preferredLoc,preferredDate,preferredTime)
+--budget integer,
+primary key (userName)
 );
 
 create table BranchTables (
-rname varchar(40),
+rname varchar(40) references Restaurants,
 bid integer,
 tid integer,
 capacity integer,
@@ -91,18 +92,18 @@ primary key (rname, bid, tid, bookedTimeslot, bookedDate)
 );
 
 create table Books (
+userName varchar(20),
 rname varchar(40),
 bid integer,
 tid integer,
 pax integer,
 reservationTime time,
-userName varchar(20),
-preferredLoc varchar(40) references Locations,
-preferredDate date,
-preferredTime time,
+reservationDate date,
+--preferredDate date,
+--preferredTime time,
 foreign key (rname, bid, tid) references BranchTables,
-foreign key (userName, preferredLoc,preferredDate,preferredTime) references userpreferences,
-primary key (userName, preferredLoc,preferredDate,preferredTime, rname, bid, tid)
+foreign key (userName) references userpreferences,
+primary key (userName, rname, bid, tid)
 );
 
 create table Ratings (
@@ -174,9 +175,9 @@ delete from Time cascade;
 
 
 insert into diners (username, firstname, lastname, password, isAdmin) values
-('lokeen', 'Lok', 'Keen', '$2b$10$QFg3/z/fXRaHlIWfftdGkOzw/AG7oDHnP8GeYSMbfzwFmW64mzGta', true), 
+('lokeen', 'Lok', 'Keen', '$2b$10$QFg3/z/fXRaHlIWfftdGkOzw/AG7oDHnP8GeYSMbfzwFmW64mzGta', true),
 ('earon', 'Aaron', 'Seah', '$2b$10$QFg3/z/fXRaHlIWfftdGkOr1LuGDfi8irDCzxHG0E6npc7IQk0eh2', true),
-('alexis', 'Yuan', 'Hui', '$2b$10$QFg3/z/fXRaHlIWfftdGkOpzpCIFiBdzjDTOvq4XfbAeve/END7iW', true), 
+('alexis', 'Yuan', 'Hui', '$2b$10$QFg3/z/fXRaHlIWfftdGkOpzpCIFiBdzjDTOvq4XfbAeve/END7iW', true),
 ('nicpang', 'Nicholas', 'Pang', '$2b$10$QFg3/z/fXRaHlIWfftdGkOYmPwxzSrR/iCAyVatgCSJBd/7eBNfC.', true),
 ('madScientist', 'Morty', 'Rick', '$2b$10$QFg3/z/fXRaHlIWfftdGkOCwam0wCdfW9yfA7u93IsWL2DVSul.Ue', false);
 
@@ -344,7 +345,7 @@ insert into advertises (rname, bid) values
 
 
 
-insert into BranchTables (rname, bid, tid, capacity) values 
+insert into BranchTables (rname, bid, tid, capacity) values
 ('MacDonalds', 1, 1, 4),
 ('MacDonalds', 1, 3, 4),
 ('MacDonalds', 1, 4, 5),
@@ -360,7 +361,6 @@ insert into BranchTables (rname, bid, tid, capacity) values
 ('Forlino', 2, 1, 2),
 ('Forlino', 2, 2, 2),
 ('Ristorante Da Valentino', 1, 1, 1),
-('The Chinese Kitchen', 1, 1, 4),
 ('Thai Tantric Authentic Thai Cuisine', 1, 1, 4),
 ('NamNam', 1, 1, 3);
 
@@ -414,7 +414,4 @@ insert into Sells (menuname, rname, bid) values
 ('Thai Lunch Menu', 'Thai Tantric Authentic Thai Cuisine', 2),
 
 ('Yumyum Menu', 'NamNam', 1);
-
-
-
 

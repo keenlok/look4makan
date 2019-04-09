@@ -177,7 +177,7 @@ function insertIntoUserPreference (req, res, next) {
             console.log("successful insertion into UserPreferences Table");
         }
         else
-            console.log("failed insertion into UserPreferences Table");
+            console.log("failed insertion into UserPreferences Table", err);
     })
     next();
 }3
@@ -269,7 +269,8 @@ function search_restaurant(req, res, next) {
       reservationTime: reservationTime,
       reservationDate : date,
       pax: paxNo,
-      auth: auth
+      auth: auth,
+      user: req.user
     });
   })
 }
@@ -331,7 +332,8 @@ function restaurant(req, res, next) {
         rname: rname,
         date: date,
         menu: menu,
-        menuCount: menuCount
+        menuCount: menuCount,
+        user: req.user
       })
     })
 
@@ -380,71 +382,56 @@ function booking(req, res, next) {
   let query = sql_query.findMinMaxHourOfABranch;
   // let cuisine_type = req.query.cuisinetype
 
-    pool.query(query, [rname, bid], (err, data) => {
+  pool.query(query, [rname, bid], (err, data) => {
 
-        // Get menu items for this restaurant
-        let subquery = sql_query.getMenuItems
-        // console.log("IN BOOKINGS");
-        // console.log("reservationTime " + reservationTime);
-        // console.log("reservationDate " + reservationDate);
+    // Get menu items for this restaurant
+    let subquery = sql_query.getMenuItems
+    // console.log("IN BOOKINGS");
+    // console.log("reservationTime " + reservationTime);
+    // console.log("reservationDate " + reservationDate);
 
-        pool.query(subquery, [rname], (err1, data1) => {
-            let menu, menuCount
+    pool.query(subquery, [rname], (err1, data1) => {
+      let menu, menuCount
 
-            if (err1) {
-                console.error("CANNOT GET MENU items")
+      if (err1) {
+        console.error("CANNOT GET MENU items")
+      }
+      else if (!data1.rows || data1.rows.length === 0) {
+        menuCount = 0
+        menu = []
+      } else {
+        menu = data1.rows
+        let getMenuCount = (menu) => {
+          let count = 0
+          for (let i = 0; i < menu.length; i++) {
+            if (i === 0) {
+              count++;
+            } else if (menu[i].menuname !== menu[i - 1].menuname) {
+              count++
             }
-            else if (!data1.rows || data1.rows.length === 0) {
-                menuCount = 0
-                menu = []
-            } else {
-                menu = data1.rows
-                let getMenuCount = (menu) => {
-                    let count = 0
-                    for (let i = 0; i < menu.length; i++) {
-                        if (i === 0) {
-                            count++;
-                        } else if (menu[i].menuname !== menu[i - 1].menuname) {
-                            count++
-                        }
-                    }
-                    return count
-                }
-                menuCount = getMenuCount(menu)
-                menu = utils.separateData(menu, menuCount)
-                // console.log("The menu count is: ", menuCount);
-            }
-
-            if (req.isAuthenticated()) {
-                res.render('booking', {
-                    page: "Bookings",
-                    rname: rname,
-                    bid : bid,
-                    reservationTime: reservationTime,
-                    reservationDate : reservationDate,
-                    paxNo: paxNo,
-                    location: location,
-                    data: data.rows,
-                    menu : menu,
-                    menuCount : menuCount,
-                    auth: true
-                });
-            }
-            else {
-                res.render('booking', {
-                    page: "Bookings",
-                    rname: rname,
-                    bid : bid,
-                    reservationTime: reservationTime,
-                    reservationDate : reservationDate,
-                    paxNo: paxNo,
-                    location: location,
-                    data: data.rows,
-                    menu : menu,
-                    menuCount : menuCount,
-                    auth: false
-                });
-            }
+          }
+          return count
+        }
+        menuCount = getMenuCount(menu)
+        menu = utils.separateData(menu, menuCount)
+        // console.log("The menu count is: ", menuCount);
+      }
+      let auth = !!req.isAuthenticated()
+      let user = req.user
+      res.render('booking', {
+        page: "Bookings",
+        rname: rname,
+        bid : bid,
+        reservationTime: reservationTime,
+        reservationDate : reservationDate,
+        paxNo: paxNo,
+        location: location,
+        data: data.rows,
+        menu : menu,
+        menuCount : menuCount,
+        auth: auth,
+        user: user
+      });
         });
     });
 }
@@ -509,7 +496,7 @@ function insertIntoBooks (req, res, next) {
                     console.log("Successful insertion into Booking Table ")
                 }
                 else {
-                    console.log("Failed insertion into Books Table ")
+                    console.log("Failed insertion into Books Table ", err)
                 }
             })
         }

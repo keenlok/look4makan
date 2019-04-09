@@ -21,12 +21,12 @@ function initRouter(app) {
   app.get('/restaurant'          , restaurant       );
   // app.get('/restaurants'         , list_restaurants )
   app.get('/booking'             , booking          );
-//  app.get('/booking/confirmation', confirmation     );
+  app.get('/booking/confirmation', confirmation     );
 
     /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register)
   app.get('/signin', login   )
-  app.get('/booking/confirmation', passport.authMiddleware(), confirmation);
+  // app.get('/booking/confirmation', passport.authMiddleware(), confirmation);
 
 
     /*  PROTECTED POST */

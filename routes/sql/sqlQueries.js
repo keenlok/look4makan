@@ -31,6 +31,8 @@ const min_max_hour_of_a_branch = "SELECT openTime, closeTime FROM Branches B WHE
 
 const insertUserPreference =  "INSERT INTO UserPreferences (userName, preferredRname, preferredLoc, preferredDate, preferredTime, cuisineType, paxNum) VALUES ($1, $2, $3, $4, $5, $6, $7);";
 
+const insertConfirmedBooking = '';
+
 const queries = {
   findAllAvailableRestaurants : available_restaurants,
   allBranchWithStatus : branch_w_status,

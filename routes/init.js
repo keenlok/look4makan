@@ -44,8 +44,8 @@ function initRouter(app) {
 
 function index(req, res, next) {
 
-    //use req.user to get user info
-    console.log(req.user);
+  //use req.user to get user info
+  console.log(req.user);
   let time = utils.getTime();
   let dateInStr = utils.getDateInStr();
   const title = 'Looking for places to eat?';
@@ -376,12 +376,11 @@ function booking(req, res, next) {
 
         // Get menu items for this restaurant
         let subquery = sql_query.getMenuItems
-        subquery = subquery.replace("$1", pad(rname));
         // console.log("IN BOOKINGS");
         // console.log("reservationTime " + reservationTime);
         // console.log("reservationDate " + reservationDate);
 
-        pool.query(subquery, (err1, data1) => {
+        pool.query(subquery, [rname], (err1, data1) => {
             let menu, menuCount
 
             if (err1) {

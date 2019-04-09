@@ -114,73 +114,83 @@ const pad = utils.pad;
 
 
 function insertIntoUserPreference (req, res, next) {
-    let insertQuery = sql_query.insertUserPreference;
-    let rname = req.query.rname;
-    let location = req.query.location;
-    let cuisineType = req.query.cuisineType;
-    let reservationTime = req.query.reservationTime;
-    let paxNo = req.query.paxNo;
-    let date = req.query.reservationDate;
+  let insertQuery = sql_query.insertUserPreference;
+  let rname = req.query.rname;
+  let location = req.query.location;
+  let cuisineType = req.query.cuisineType;
+  let reservationTime = req.query.reservationTime;
+  let paxNo = req.query.paxNo;
+  let date = req.query.reservationDate;
 
-    if(req.user  === undefined) {
-        return next();
+  if(req.user  === undefined) {
+    // console.log("what is next", next)
+    return next();
+  }
+
+  let username = req.user.username
+  // insertQuery = insertQuery.replace('$1', pad(req.user.username))
+  // (userName, preferredRname, preferredLoc, preferredDate, preferredTime, cuisineType, paxNum)
+
+  // if(rname !== '')  {
+  //   rname = pad(rname);
+  // }
+  // else {
+  //   rname = null;
+  // }
+  // insertQuery = insertQuery.replace('$2', rname);
+  //
+  // if(location !== '')   {
+  //   location = pad(location);
+  // }
+  // else {
+  //   location = null;
+  // }
+  // insertQuery = insertQuery.replace('$3', location);
+  //
+  // if(date !== '') {
+  //   date = pad(date);
+  // }
+  // insertQuery = insertQuery.replace('$4', date);
+  //
+  // if(reservationTime !== '') {
+  //   reservationTime = pad(reservationTime);
+  // }
+  // insertQuery = insertQuery.replace('$5', reservationTime);
+  //
+  //
+  if(cuisineType !== '')  {
+    cuisineType = pad(cuisineType);
+  }
+  else {
+    cuisineType = null;
+  }
+  // insertQuery = insertQuery.replace('$6', cuisineType);
+  //
+  if(paxNo === '')  {
+    paxNo = 2; //by default
+  }
+  // // console.log("rname: " + rname);
+  //
+  // insertQuery = insertQuery.replace('$7', paxNo);
+  let arguments = [
+    username,         //$1
+    location,         //$2
+    date,             //$3
+    reservationTime,  //$4
+    cuisineType,      //$5
+    paxNo             //$6
+  ]
+
+  // console.log("INSERT QUERY :" + insertQuery);
+  pool.query(insertQuery, arguments, (err, data) => {
+    if(!err) {
+      console.log("successful insertion into UserPreferences Table");
     }
-
-    insertQuery = insertQuery.replace('$1', pad(req.user.username))
-    // (userName, preferredRname, preferredLoc, preferredDate, preferredTime, cuisineType, paxNum)
-
-    if(rname !== '')  {
-        rname = pad(rname);
-    }
-    else {
-        rname = null;
-    }
-    insertQuery = insertQuery.replace('$2', rname);
-
-    if(location !== '')   {
-        location = pad(location);
-    }
-    else {
-        location = null;
-    }
-    insertQuery = insertQuery.replace('$3', location);
-
-    if(date !== '') {
-        date = pad(date);
-    }
-    insertQuery = insertQuery.replace('$4', date);
-
-    if(reservationTime !== '') {
-        reservationTime = pad(reservationTime);
-    }
-    insertQuery = insertQuery.replace('$5', reservationTime);
-
-
-    if(cuisineType !== '')  {
-        cuisineType = pad(cuisineType);
-    }
-    else {
-        cuisineType = null;
-    }
-    insertQuery = insertQuery.replace('$6', cuisineType);
-
-    if(paxNo === '')  {
-        paxNo = 2; //by default
-    }
-    // console.log("rname: " + rname);
-
-    insertQuery = insertQuery.replace('$7', paxNo);
-
-    console.log("INSERT QUERY :" + insertQuery);
-    pool.query(insertQuery, (err, data) => {
-        if(!err) {
-            console.log("successful insertion into UserPreferences Table");
-        }
-        else
-            console.log("failed insertion into UserPreferences Table", err);
-    })
-    next();
-}3
+    else
+      console.log("failed insertion into UserPreferences Table", err.details);
+  })
+  next();
+}
 
 function search_restaurant(req, res, next) {
   let ctx = 0, avg = 0, table

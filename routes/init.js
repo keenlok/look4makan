@@ -187,7 +187,7 @@ function insertIntoUserPreference (req, res, next) {
       console.log("successful insertion into UserPreferences Table");
     }
     else
-      console.log("failed insertion into UserPreferences Table", err.details);
+      console.error("failed insertion into UserPreferences Table", err.detail);
   })
   next();
 }
@@ -447,27 +447,35 @@ function booking(req, res, next) {
 }
 
 function insertIntoConfirmedBooking (req, res, next) {
-    let rname = req.query.rname;
-    let bid = req.query.bid;
-    let insertQuery = sql_query.insertConfirmedBooking;
-    if(req.user === undefined) {
-        return next();
-    }
-    insertQuery = insertQuery.replace("$1", pad(req.user.username));
-    insertQuery = insertQuery.replace("$2", pad(rname));
-    insertQuery = insertQuery.replace("$3", bid);
-
-    console.log(insertQuery);
-    pool.query(insertQuery, (err, data) => {
-        if(!err) {
-            console.log("Successful insertion into ConfirmedBookings Table ")
-        }
-        else {
-            console.log("Failed insertion into ConfirmedBookings Table ")
-        }
-    })
+  let rname = req.query.rname;
+  let bid = req.query.bid;
+  let insertQuery = sql_query.insertConfirmedBooking;
+  if(req.user === undefined) {
     return next();
+  }
+  // insertQuery = insertQuery.replace("$1", pad(req.user.username));
+  // insertQuery = insertQuery.replace("$2", pad(rname));
+  // insertQuery = insertQuery.replace("$3", bid);
+
+  let queryArgs = [
+    req.user.username,
+    rname,
+    bid
+  ]
+
+  console.log(insertQuery);
+  pool.query(insertQuery, queryArgs, (err, data) => {
+    if(!err) {
+      console.log("Successful insertion into ConfirmedBookings Table ")
+    }
+    else {
+      console.log("Failed insertion into ConfirmedBookings Table ")
+      console.error(err.detail)
+    }
+  })
+  return next();
 }
+
 function insertIntoBooks (req, res, next) {
     // (userName, rname, bid, tid , pax, reservationTime, reservationDate)
     let rname = req.query.rname;
@@ -506,7 +514,7 @@ function insertIntoBooks (req, res, next) {
                     console.log("Successful insertion into Booking Table ")
                 }
                 else {
-                    console.log("Failed insertion into Books Table ", err)
+                    console.log("Failed insertion into Books Table ", err.detail)
                 }
             })
         }

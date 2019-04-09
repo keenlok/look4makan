@@ -123,55 +123,26 @@ function insertIntoUserPreference (req, res, next) {
   let date = req.query.reservationDate;
 
   if(req.user  === undefined) {
-    // console.log("what is next", next)
     return next();
   }
 
-  let username = req.user.username
-  // insertQuery = insertQuery.replace('$1', pad(req.user.username))
-  // (userName, preferredRname, preferredLoc, preferredDate, preferredTime, cuisineType, paxNum)
+  let username = req.user.username;
 
-  if(rname !== '')  {
-    rname = pad(rname);
-  }
-  else {
+  if(rname === '')  {
     rname = null;
   }
-  // insertQuery = insertQuery.replace('$2', rname);
-  //
-  if(location !== '')   {
-    location = pad(location);
-  }
-  else {
+  if(location === '')   {
     location = null;
   }
-  // insertQuery = insertQuery.replace('$3', location);
-  //
-  // if(date !== '') {
-  //   date = pad(date);
-  // }
-  // insertQuery = insertQuery.replace('$4', date);
-  //
-  // if(reservationTime !== '') {
-  //   reservationTime = pad(reservationTime);
-  // }
-  // insertQuery = insertQuery.replace('$5', reservationTime);
-  //
-  //
-  if(cuisineType !== '')  {
-    cuisineType = pad(cuisineType);
-  }
-  else {
+
+  if(cuisineType === '')  {
     cuisineType = null;
   }
-  // insertQuery = insertQuery.replace('$6', cuisineType);
-  //
+
   if(paxNo === '')  {
     paxNo = 2; //by default
   }
-  // // console.log("rname: " + rname);
-  //
-  // insertQuery = insertQuery.replace('$7', paxNo);
+
   let arguments = [
     username,         //$1
     rname,            //$2
@@ -203,11 +174,6 @@ function search_restaurant(req, res, next) {
   let reservationTime = req.query.reservationTime;
   let paxNo = req.query.paxNo;
   let date = req.query.reservationDate;
-  // console.log("rname: " + rname);
-  // console.log("location: " + location);
-  // console.log("cuisineType: " + cuisineType);
-  // console.log("reservationTime: " + reservationTime);
-  // console.log("paxNo: " + paxNo);
 
     if(rname !== '')  {
     rname = pad(rname);
@@ -247,11 +213,6 @@ function search_restaurant(req, res, next) {
   if(paxNo === '')  {
     paxNo = 2; //by default
   }
-    // console.log("rname: " + rname);
-    // console.log("location: " + location);
-    // console.log("cuisineType: " + cuisineType);
-    // console.log("reservationTime: " + reservationTime);
-    // console.log("paxNo: " + paxNo);
 
   searchQuery = searchQuery.replace('$5', paxNo);
 
@@ -398,9 +359,7 @@ function booking(req, res, next) {
 
     // Get menu items for this restaurant
     let subquery = sql_query.getMenuItems
-    // console.log("IN BOOKINGS");
-    // console.log("reservationTime " + reservationTime);
-    // console.log("reservationDate " + reservationDate);
+
 
     pool.query(subquery, [rname], (err1, data1) => {
       let menu, menuCount
@@ -455,9 +414,6 @@ function insertIntoConfirmedBooking (req, res, next) {
   if(req.user === undefined) {
     return next();
   }
-  // insertQuery = insertQuery.replace("$1", pad(req.user.username));
-  // insertQuery = insertQuery.replace("$2", pad(rname));
-  // insertQuery = insertQuery.replace("$3", bid);
 
   let queryArgs = [
     req.user.username,
@@ -494,24 +450,35 @@ function insertIntoBooks (req, res, next) {
 
     let selectQuery = sql_query.find_tid;
 
-    selectQuery = selectQuery.replace("$1", pad(rname));
-    selectQuery = selectQuery.replace("$2", bid);
-    selectQuery = selectQuery.replace("$3", pax);
+    // selectQuery = selectQuery.replace("$1", pad(rname));
+    // selectQuery = selectQuery.replace("$2", bid);
+    // selectQuery = selectQuery.replace("$3", pax);
 
     console.log("SELECTQUERY: " + selectQuery);
 
-    pool.query(selectQuery, (err, data) => {
+    pool.query(selectQuery, [rname, bid, pax], (err, data) => {
         if(!err) {
-            insertQuery = insertQuery.replace("$1", pad(req.user.username));
-            insertQuery = insertQuery.replace("$2", pad(rname));
-            insertQuery = insertQuery.replace("$3", bid);
-            insertQuery = insertQuery.replace("$4", data.rows[0].tid);
-            insertQuery = insertQuery.replace("$5", pax);
-            insertQuery = insertQuery.replace("$6", pad(reservationTime));
-            insertQuery = insertQuery.replace("$7", pad(reservationDate));
+            // insertQuery = insertQuery.replace("$1", pad(req.user.username));
+            // insertQuery = insertQuery.replace("$2", pad(rname));
+            // insertQuery = insertQuery.replace("$3", bid);
+            // insertQuery = insertQuery.replace("$4", data.rows[0].tid);
+            // insertQuery = insertQuery.replace("$5", pax);
+            // insertQuery = insertQuery.replace("$6", pad(reservationTime));
+            // insertQuery = insertQuery.replace("$7", pad(reservationDate));
 
-            console.log("INSERTQUERY: " + insertQuery);
-            pool.query(insertQuery, (err, data) => {
+
+            let arguments = [
+                req.user.username,
+                rname,
+                bid,
+                data.rows[0].tid,
+                pax,
+                reservationTime,
+                reservationDate
+            ];
+
+            // console.log("INSERTQUERY: " + insertQuery);
+            pool.query(insertQuery, arguments, (err, data) => {
                 if(!err) {
                     console.log("Successful insertion into Booking Table ")
                 }

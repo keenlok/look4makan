@@ -8,6 +8,7 @@ drop table if exists ConfirmedBookings  cascade;
 drop table if exists UserPreferences  cascade;
 drop table if exists BranchTables  cascade;
 drop table if exists freeTables  cascade;
+
 drop table if exists Books  cascade;
 drop table if exists Ratings  cascade;
 drop table if exists Branches  cascade;
@@ -99,11 +100,10 @@ tid integer,
 pax integer,
 reservationTime time,
 reservationDate date,
---preferredDate date,
---preferredTime time,
-foreign key (rname, bid, tid) references BranchTables,
+foreign key (rname, bid, tid, reservationTime, reservationDate) references BookedTables
+on delete cascade,
 foreign key (userName) references userpreferences,
-primary key (userName, rname, bid, tid)
+primary key (userName, rname, bid, tid, reservationTime, reservationDate)
 );
 
 create table Ratings (
@@ -176,7 +176,7 @@ delete from Time cascade;
 
 insert into diners (username, firstname, lastname, password, isAdmin) values
 ('lokeen', 'Lok', 'Keen', '$2b$10$QFg3/z/fXRaHlIWfftdGkOzw/AG7oDHnP8GeYSMbfzwFmW64mzGta', true),
-('earon', 'Aaron', 'Seah', '$2b$10$QFg3/z/fXRaHlIWfftdGkOr1LuGDfi8irDCzxHG0E6npc7IQk0eh2', true),
+('Aaron', 'Aaron', 'Seah', '$2b$10$9XVUf1t7lALBLQEPInsmGuzjcO3yOapp0DAKDVVSiCDWLc70VxxTC', true),
 ('alexis', 'Yuan', 'Hui', '$2b$10$QFg3/z/fXRaHlIWfftdGkOpzpCIFiBdzjDTOvq4XfbAeve/END7iW', true),
 ('nicpang', 'Nicholas', 'Pang', '$2b$10$QFg3/z/fXRaHlIWfftdGkOYmPwxzSrR/iCAyVatgCSJBd/7eBNfC.', true),
 ('madScientist', 'Morty', 'Rick', '$2b$10$QFg3/z/fXRaHlIWfftdGkOCwam0wCdfW9yfA7u93IsWL2DVSul.Ue', false);
@@ -371,9 +371,6 @@ insert into BookedTables (rname, bid, tid, capacity, bookedTimeslot, bookedDate)
 
 
 
-
-
-
 insert into Sells (menuname, rname, bid) values
 ('MacDonalds Breakfast Menu', 'MacDonalds', 1),
 ('MacDonalds Breakfast Menu', 'MacDonalds', 2),
@@ -414,4 +411,7 @@ insert into Sells (menuname, rname, bid) values
 ('Thai Lunch Menu', 'Thai Tantric Authentic Thai Cuisine', 2),
 
 ('Yumyum Menu', 'NamNam', 1);
+
+
+
 

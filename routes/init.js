@@ -26,7 +26,7 @@ function initRouter(app) {
     /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register);
   app.get('/signin', login   );
-  app.get('/booking/confirmation', passport.authMiddleware(), insertIntoConfirmedBooking, insertIntoBooks, confirmation);
+  app.get('/booking/confirmation', passport.authMiddleware(), insertIntoConfirmedBooking, insertIntoBooks, updateAward, confirmation);
 
 
     /*  PROTECTED POST */
@@ -504,6 +504,23 @@ function insertIntoBooks (req, res, next) {
    }
  }
 
+ function updateAward(req, res, next) {
+    if(req.user === undefined) {
+      return next();
+    }
+    const awardPoint = 100;
+    let updateQuery = sql_query.updateAward;
+    pool.query(updateQuery, [awardPoint, req.user.username], (err, data) => {
+      if(!err) {
+        console.log("successful Updating of Rewards!");
+      }
+      else {
+        console.error("Failure to update rewards.. ", err);
+      }
+     });
+    next();
+
+ }
 function login(req, res, next) {
     res.render('signin', {title: 'Look4Makan', loginPage: true});
 }

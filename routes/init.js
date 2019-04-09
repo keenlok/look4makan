@@ -493,7 +493,7 @@ function insertIntoBooks (req, res, next) {
 
    let rname = req.body.rname;
    let location = req.body.location;
-   let reservationTime = req.body.reservationTime;
+   let reservationTime = utils.convert24to12Time(req.body.reservationTime);
    let reservationDate = utils.getDateInStr((req.query.reservationDate));
    let paxNo = req.body.pax;
 

@@ -336,7 +336,8 @@ function registerUser(req, res, next) {
           // console.error(err);
           return res.redirect('/register?reg=fail');
         } else {
-            return res.redirect('/', {});
+          utils.setupUserAccount(pool, username);
+          return res.redirect('/', {});
         }
       })
     }

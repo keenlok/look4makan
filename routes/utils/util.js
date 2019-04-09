@@ -1,3 +1,6 @@
+let sql_queries = require('../sql/sqlQueries')
+
+
 /**
  * Converts the day value from a Date object into days of week in English
  * @param day The day value from the getDay method of a Date object
@@ -185,15 +188,22 @@ function separateData(data, menuCount) {
 
 module.exports.separateData = separateData;
 
-function updateSqlServer() {
+function getPool(pool) {
   require('dotenv').config()
-  const { Pool } = require('pg')
+  const {Pool} = require('pg')
 
-  const pool = new Pool({
+  pool = new Pool({
     connectionString: process.env.DATABASE_URL,
   })
+  return pool
+}
 
-  let query = require('../sql/sqlQueries').delete_old_entries
+function updateSqlServer(pool) {
+  if (typeof pool === 'undefined') {
+    pool = getPool(pool)
+  }
+
+  let query = sql_queries.delete_old_entries
   let today = new Date()
   let time = getTime(today)
   let date = getDate(today)
@@ -214,3 +224,25 @@ function updateSqlServer() {
 }
 
 module.exports.updateSqlServer = updateSqlServer
+
+function setupUserAccount(pool, username) {
+  if (typeof pool === 'undefined') {
+    pool = getPool(pool)
+  }
+  const starting_pts = 0
+  const queryArgs = [
+    username,
+    starting_pts
+  ]
+
+  let query = sql_queries.setup_user_awards
+  pool.query(query, queryArgs, (err, data) => {
+    if (err) {
+      console.error(err)
+    } else {
+      console.log("successfully created user awards account!")
+    }
+  })
+}
+
+module.exports.setupUserAccount = setupUserAccount

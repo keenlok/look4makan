@@ -28,7 +28,6 @@ function initRouter(app) {
   app.get('/rateReservations'    , rateReservations);
   app.post('/rateReservations/ratings', ratings);
   app.post("/ratings/complete", insertIntoRatings);
-  app.get('/contactUs'           , contact            );
 
   //Change or Cancel Reservation Feature
   app.get('/editReservations', editReservations);
@@ -69,6 +68,8 @@ function initRouter(app) {
   /* LOGOUT */
   app.get('/logout', passport.authMiddleware(), logout);
 
+
+  app.get('/contactUs'           , contact            );
 }
 
 
@@ -207,6 +208,7 @@ function insertIntoRatings (req, res, next) {
     });
     res.redirect("/");
 }
+
 
 
 
@@ -531,6 +533,8 @@ function confirmation(req, res, next) {
         res.render('confirmation', { page: "Confirmation", rname : rname, location : location,  reservationTime : reservationTime, reservationDate : reservationDate, paxNo : paxNo, auth : false});
     }
 }
+
+
 
 
 function register(req, res, next) {

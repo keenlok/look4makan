@@ -24,10 +24,12 @@ function initRouter(app) {
   // app.get('/restaurants'         , list_restaurants )
   app.post('/booking'            , booking          );
   app.get('/rateReservations'    , rateReservations);
-  app.post('/Ratings'            , ratings);
+  app.post('/rateReservations/ratings', ratings);
   app.get('/editReservations', editReservations);
+  app.post('/editReservations/edit', editReservationMode);
 
-  // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
+
+    // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
 
   app.get('/edit'                 , adminDashboard   )
   /*  PROTECTED GET */
@@ -49,6 +51,21 @@ function initRouter(app) {
 
 }
 
+function editReservationMode (req, res, next) {
+    let rname = req.body.rname;
+    let bid = req.body.bid;
+    let pax = req.body.pax;
+    let reservationTime = req.body.reservationTime;
+    let reservationDate = req.body.reservationDate;
+
+    console.log("RECEIVED " + rname + " " + bid +  " " + pax + " " + reservationTime + " " + reservationDate); //leave for testing correctness
+
+    let auth = req.isAuthenticated();
+
+    res.render("editReservationMode", {rname : rname, rname: rname, bid : bid, pax : pax, reservationTime : reservationTime, reservationDate : reservationDate, auth: auth});
+
+}
+
 
 function editReservations (req, res, next) {
 
@@ -56,6 +73,12 @@ function editReservations (req, res, next) {
     let username = (req.user === undefined) ? '' : req.user.username;
     pool.query(selectQuery, [username], (err, data) => {
         if(!err) {
+            if(data.rows !== undefined) {
+              for (let i = 0; i < data.rows.length; i++) {
+                let date = new Date(data.rows[i].reservationdate);
+                data.rows[i].reservationdate = utils.getDate(date);
+              }
+            }
             let auth = req.isAuthenticated();
             res.render("editReservations", {data: data.rows, auth : auth, user: req.user});
         }
@@ -87,7 +110,7 @@ function insertIntoRatings (req, res, next) {
 function ratings (req, res, next) {
   let rname = req.body.rname;
   let bid = req.body.bid;
-  // console.log(req);
+
   if(req.user !== undefined) {
       let selectQuery = sql_query.findRatingsGivenUsernameRname;
       console.log("query : " + selectQuery);

@@ -22,7 +22,11 @@ function initRouter(app) {
   app.get('/restaurant'          , restaurant       );
   // app.get('/restaurants'         , list_restaurants )
   app.post('/booking'             , booking          );
-  // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
+    app.get('/rateReservations'                    , rateReservations);
+    app.post('/Ratings'             , ratings);
+
+
+    // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
 
     /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register);
@@ -41,6 +45,22 @@ function initRouter(app) {
   /* LOGOUT */
   app.get('/logout', passport.authMiddleware(), logout);
 
+}
+
+function ratings (req, res, next) {
+  // res.render("ratings");
+}
+
+function rateReservations (req, res, next) {
+
+  let selectQuery = sql_query.findAllUserBookings;
+  let username = (req.user === undefined) ? '' : req.user.username;
+  pool.query(selectQuery, [username], (err, data) => {
+    if(!err) {
+        let auth = req.isAuthenticated();
+        res.render("rateReservations", {data: data.rows, auth : auth});
+    }
+  });
 }
 
 function contact (req, res, next) {

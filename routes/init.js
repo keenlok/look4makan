@@ -34,9 +34,7 @@ function initRouter(app) {
   app.post('/editReservations/edit', editReservationMode);
   app.post('/edits/complete', updateDeleteReservation);
 
-
   app.get('/restaurant'          , restaurant       ); // for what? delete right
-
 
   /*  Admin privileges  */
   app.get('/edit'       , admin.adminDashboard   )
@@ -56,6 +54,7 @@ function initRouter(app) {
   /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register);
   app.get('/signin', login   );
+  app.post('/booking/confirmation', passport.authMiddleware(), insertIntoConfirmedBooking, insertIntoBookedTables, insertIntoBooks, updateAward, confirmation);
 
   /*  PROTECTED POST */
   app.post('/reg_user', passport.antiMiddleware(), registerUser);
@@ -71,9 +70,6 @@ function initRouter(app) {
 
   app.get('/contactUs'           , contact            );
 }
-
-
-
 
 function editReservations (req, res, next) {
 
@@ -582,6 +578,12 @@ function logout(req, res, next) {
 
 function error(err, res) {
   res.render('error', {message: 'ERROR OCCURED', error: err});
+
+ 
+function insertIntoBookedTables(req, res, next) {
+  console.log(req.body)
+  pool.query(sql_query.find_empty_tables, )
+  next();
 }
 
 function contact (req, res, next) {

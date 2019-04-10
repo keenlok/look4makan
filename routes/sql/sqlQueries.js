@@ -53,6 +53,14 @@ const insert_branch = 'INSERT INTO branches (rname, bid, location, openingHours,
 
 const insert_location = 'INSERT INTO locations (locname) VALUES ($1);'
 
+const insert_menu = 'INSERT INTO menu (name) VALUES ($1);'
+
+const insert_cuisine = 'INSERT INTO cuisinetypes (cuisinename) VALUES ($1);'
+
+const menu = 'SELECT * FROM menu;'
+
+const insert_into_menu = 'INSERT INTO  menuitems (menuname, foodname, price) VALUES ($1, $2, $3);'
+
 const queries = {
   findRestaurant : find_restaurant,
   getRestaurant : get_restaurant,
@@ -60,6 +68,7 @@ const queries = {
   add_user : add_user,
   setup_user_awards: setup_user_awards,
   userpass : userpass,
+  get_menu: menu,
   getMenuItems : get_menu_items,
   getAllLocations : all_locations,
   getAllCuisines : all_cuisines,
@@ -76,7 +85,10 @@ const queries = {
   findAllUserBookings : findAllUserBookings,
   insert_rname: insert_rname,
   insert_branch: insert_branch,
-  insert_location: insert_location
+  insert_location: insert_location,
+  insert_menu: insert_menu,
+  insert_cuisine: insert_cuisine,
+  insert_into_menu: insert_into_menu
 };
 
 module.exports = queries;

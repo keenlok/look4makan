@@ -2,6 +2,7 @@ const sql_query = require('./sql/sqlQueries')
 const passport = require('passport')
 const bcrypt = require('bcrypt')
 const utils = require('./utils/util')
+const admin = require('./admin')
 
 // Postgre SQL Connection
 const { Pool } = require('pg')
@@ -32,13 +33,16 @@ function initRouter(app) {
   // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
 
   /*  Admin privileges  */
-  app.get('/edit'       , adminDashboard   )
-  app.get('/edit/insert', insertData       )
-  app.get('/edit/update', updateData       )
+  app.get('/edit'       , admin.adminDashboard   )
+  app.get('/edit/insert', admin.insertData       )
+  app.get('/edit/update', admin.updateData       )
 
-  app.post('/insert/diners'     , insertIntoDiners             )
-  app.post('/insert/restaurants', insertIntoRestaurantsBranches)
-  app.post('/insert/locations', insertLocations              )
+  app.post('/insert/diners'     , admin.insertIntoDiners             )
+  app.post('/insert/restaurants', admin.insertIntoRestaurantsBranches)
+  app.post('/insert/locations'  , admin.insertLocations              )
+  app.post('/insert/menu'       , admin.insertMenu                   )
+  app.post('/insert/intomenu'   , admin.insertIntoMenu               )
+  app.post('/insert/cuisine'    , admin.insertCuisine                )
 
 
   /*  PROTECTED GET */
@@ -543,143 +547,6 @@ function confirmation(req, res, next) {
     res.render('confirmation', { page: "Confirmation", rname : rname, location : location,  reservationTime : reservationTime, reservationDate : reservationDate, paxNo : paxNo, auth : false});
   }
 }
-
-/*  --- Admin functions ---  */
-function adminDashboard (req, res, next) {
-  let user = req.user
-  if (typeof user === "undefined") {
-    res.redirect('/') // Prevent unauthenticated access to this page
-  }
-  let date = utils.getDateInStr()
-
-  res.render('edit', {
-    page: "Admin Dashboard",
-    dateInStr: date,
-    auth: true,
-    user: user
-  })
-}
-
-function insertData (req, res, next) {
-  let user = req.user
-  if (typeof user === "undefined") {
-    res.redirect('/') // Prevent unauthenticated access to this page
-  }
-  let date = utils.getDateInStr()
-  pool.query(sql_query.getAllLocations, (err, data) => {
-    if (err) {
-      console.error("Error getting Locations", err)
-    } else {
-      console.log("Successfully queried location data")
-      let location = data.rows
-      pool.query(sql_query.getAllCuisines, (err, data) => {
-        if (err) {
-          console.error("Error getting Locations", err)
-        } else {
-          console.log("Successfully queried cuisine data")
-          let cuisine = data.rows
-          res.render('admin_insert', {
-            page: "Admin Insert",
-            dateInStr: date,
-            auth: true,
-            user: user,
-            location: location,
-            cuisine: cuisine
-          })
-        }
-      })
-    }
-  })
-}
-
-// Basically register without the logging in to the user
-function insertIntoDiners(req, res, next) {
-  let username = req.body.username
-  let password = bcrypt.hashSync(req.body.password, salt)
-  let firstName = req.body.firstname
-  let lastName = req.body.lastname
-
-  pool.query(sql_query.add_user, [username, password, firstName, lastName], (err, data) => {
-    if (err) {
-      console.error("error in adding user", err);
-      res.redirect('/edit/insert?user=fail')
-    } else {
-      console.log('Added users')
-      res.redirect('/edit/insert?user=success')
-    }
-  })
-}
-
-function insertIntoRestaurantsBranches(req, res, next) {
-  let rname = req.body.rname
-  let opentime = req.body.opentime
-  let closetime = req.body.closetime
-  let location = req.body.location
-  let cuisine = req.body.cuisine
-
-  let default_start_bid = 1
-  let operatingHours = utils.getTimeRangeAsStr(opentime, closetime)
-
-  // console.log(req.body)
-  // console.log(operatingHours)
-  pool.query(sql_query.insert_rname, [rname], (err, data) => {
-    if (err) {
-      console.error("Error in adding rname", err)
-      res.redirect('/edit/insert?rname=fail')
-    } else {
-      console.log("Successfully added restaurant!")
-      let args = [
-        rname,
-        default_start_bid,
-        location,
-        operatingHours,
-        utils.getCorrectTimeFormat(opentime),
-        utils.getCorrectTimeFormat(closetime),
-        cuisine
-      ]
-      pool.query(sql_query.insert_branch, args, (err, data) => {
-        if (err) {
-          console.error("Error in inserting branch", err)
-          res.redirect('/edit/insert?branch=fail')
-        } else {
-          console.log("Successfully added branch!")
-          res.redirect('/edit/insert?rest&branch=success')
-        }
-      })
-    }
-  })
-}
-
-function insertLocations(req, res, next) {
-  let location = req.body.location
-  pool.query(sql_query.insert_location, [location], (err, data) => {
-    if (err) {
-      console.error("Error in adding location", err)
-      res.redirect('/edit/insert?location=fail')
-    } else {
-      console.log("successfully added location")
-      res.redirect('/edit/insert?location=success')
-    }
-  })
-
-}
-
-function updateData (req, res, next) {
-  let user = req.user
-  if (typeof user === "undefined") {
-    res.redirect('/') // Prevent unauthenticated access to this page
-  }
-  let date = utils.getDateInStr()
-
-  res.render('admin_update', {
-    page: "Admin Update",
-    dateInStr: date,
-    auth: true,
-    user: user
-  })
-}
-
-/* --- Admin functions ends here --- */
 
 function updateAward(req, res, next) {
   if(req.user === undefined) {

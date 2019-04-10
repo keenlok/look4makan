@@ -1,5 +1,5 @@
 drop trigger if exists prevent_password_changes on diners;
-drop trigger if exists no_overload on bookedtables;
+drop trigger if exists trig_validPax on bookedtables;
 drop trigger if exists trig_notTooShort on diners;
 drop trigger if exists trig_noTimeTravel on userpreferences;
 -----------------------------------------------
@@ -29,28 +29,31 @@ where username = 'lokeen';
 select * from diners;
 
 -----------------------------------------------
---Trigger to capacity of a branch to go to negative
+--Trigger on BookedTables to make sure that capacity is valid
 -----------------------------------------------
-create or replace function checkoverload()
+create or replace function validPax()
 returns trigger as $$
 begin if 
-	new.capacity < 0
-then raise notice 'restaurant is too full';
-return null;
+	new.capacity <= 0 or new.capacity > (select branchtables.capacity from branchtables where rname = new.rname and tid = new.tid and bid = new.bid)
+	then raise notice 'Invalid pax number or not enough seats at this table';
+	return null;
 else return new;
 end if;
 end; $$ language plpgsql;
 
-create trigger no_overload
-before update
+create trigger trig_validPax
+before insert or update
 on BookedTables
 for each row
-execute procedure checkoverload();
+execute procedure validPax();
 
 --test
 update BookedTables
 set capacity = capacity - 1
 where rname = 'Crystal Jade' and bid = 1 and tid = 1 and bookedtimeslot = '23:00:00' and bookeddate = '2019-05-16';
+
+insert into bookedtables (rname, bid, tid, capacity, bookedtimeslot, bookeddate) values
+('MacDonalds', 1, 3, 3213, '10:00:00', '2019-04-11');
 
 select * from BookedTables;
 
@@ -62,7 +65,7 @@ select * from BookedTables;
 create or replace function notTooShort()
 returns trigger as $$
 begin if not new.isAdmin and length(new.username) < 9 then
-	raise notice 'cannot';
+	raise notice 'Username must be at least 9 characters';
 	return null;
 else return new;
 end if; end; $$ language plpgsql;
@@ -102,4 +105,5 @@ execute procedure noTimeTravel();
 --test
 insert into userpreferences (username, preferredrname, preferredloc, preferreddate, preferredtime, cuisinetype, paxnum) values
 ('lokeen', 'MacDonalds', 'Jurong Point', '2001-12-23' ,'14:39:53', 'Chinese', 6);
-select * from userpreferences
+select * from userpreferences;
+

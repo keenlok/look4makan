@@ -54,7 +54,7 @@ set capacity = capacity - 1
 where rname = 'Crystal Jade' and bid = 1 and tid = 1 and bookedtimeslot = '23:00:00' and bookeddate = '2019-05-16';
 
 insert into bookedtables (rname, bid, tid, capacity, bookedtimeslot, bookeddate) values
-('MacDonalds', 1, 3, 3213, '10:00:00', '2019-04-11');
+('MacDonalds', 1, 3, 3213, '10:00:00', '2019-04-10');
 
 select * from BookedTables;
 
@@ -90,7 +90,7 @@ select * from diners;
 
 create or replace function noTimeTravel()
 returns trigger as $$
-begin if new.preferredDate <= current_date and new.preferredTime <= localtime then
+begin if new.preferredDate < current_date or (new.preferredDate = current_date and new.preferredTime <= localtime) then
 	raise notice 'This app is not a time machine';
 	return null;
 else return new;
@@ -133,6 +133,6 @@ set capacity = capacity - 1
 where rname = 'Crystal Jade' and bid = 1 and tid = 1 and bookedtimeslot = '23:00:00' and bookeddate = '2019-05-16';
 
 insert into bookedtables (rname, bid, tid, capacity, bookedtimeslot, bookeddate) values
-('MacDonalds', 1, 3, 3213, '01:00:00', '2019-04-11');
+('MacDonalds', 1, 3, 3213, '23:00:00', '2019-04-11');
 
 select * from BookedTables;

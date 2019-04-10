@@ -18,8 +18,10 @@ function initRouter(app) {
 
   app.get('/'                    , index            );
   app.get('/contactUs'           , contact          );
-  app.post('/search'             , search           );
+  app.get('/search'             , search           );
+
   app.post('/search/restaurants' , insertIntoUserPreference, search_restaurant);
+
   app.get('/restaurant'          , restaurant       );
   // app.get('/restaurants'         , list_restaurants )
   app.post('/booking'            , booking          );
@@ -34,8 +36,8 @@ function initRouter(app) {
   app.get('/edit/insert', insertData       )
   app.get('/edit/update', updateData       )
 
-  app.post('/insert/diners'    , insertIntoDiners)
-  app.post('/insert/restaurants')
+  app.post('/insert/diners'     , insertIntoDiners             )
+  app.post('/insert/restaurants', insertIntoRestaurantsBranches)
 
 
   /*  PROTECTED GET */
@@ -124,7 +126,7 @@ function index(req, res, next) {
 
 function search (req, res, next) {
   let ctx = 0, avg = 0, table;
-  let queryStr = req.body.restaurant;
+  let queryStr = req.query.restaurant;
   let rname = '%' + queryStr.toLowerCase() + '%';
   let searchQuery = sql_query.findRestaurant;
   let time = utils.getTime();
@@ -563,12 +565,29 @@ function insertData (req, res, next) {
     res.redirect('/') // Prevent unauthenticated access to this page
   }
   let date = utils.getDateInStr()
-
-  res.render('admin_insert', {
-    page: "Admin Insert",
-    dateInStr: date,
-    auth: true,
-    user: user
+  pool.query(sql_query.getAllLocations, (err, data) => {
+    if (err) {
+      console.error("Error getting Locations", err)
+    } else {
+      console.log("Successfully queried location data", data)
+      let location = data.rows
+      pool.query(sql_query.getAllCuisines, (err, data) => {
+        if (err) {
+          console.error("Error getting Locations", err)
+        } else {
+          console.log("Successfully queried cuisine data", data)
+          let cuisine = data.rows
+          res.render('admin_insert', {
+            page: "Admin Insert",
+            dateInStr: date,
+            auth: true,
+            user: user,
+            location: location,
+            cuisine: cuisine
+          })
+        }
+      })
+    }
   })
 }
 
@@ -588,6 +607,47 @@ function insertIntoDiners(req, res, next) {
       res.redirect('/edit/insert?user=success')
     }
   })
+}
+
+function insertIntoRestaurantsBranches(req, res, next) {
+  let rname = req.body.rname
+  let opentime = req.body.opentime
+  let closetime = req.body.closetime
+  let location = req.body.location
+  let cuisine = req.body.cuisine
+
+  let default_start_bid = 1
+  let operatingHours = utils.getTimeRangeAsStr(opentime, closetime)
+
+  console.log(req.body)
+  console.log(operatingHours)
+  pool.query(sql_query.insert_rname, [rname], (err, data) => {
+    if (err) {
+      console.error("Error in adding rname", err)
+      res.redirect('/edit/insert?rname=fail')
+    } else {
+      console.log("Successfully added restaurant!")
+      let args = [
+        rname,
+        default_start_bid,
+        location,
+        operatingHours,
+        utils.getCorrectTimeFormat(opentime),
+        utils.getCorrectTimeFormat(closetime),
+        cuisine
+      ]
+      pool.query(sql_query.insert_branch, args, (err, data) => {
+        if (err) {
+          console.error("Error in inserting branch", err)
+          res.redirect('/edit/insert?branch=fail')
+        } else {
+          console.log("Successfully added branch!")
+          res.redirect('/edit/insert?rest&branch=success')
+        }
+      })
+    }
+  })
+
 }
 
 function updateData (req, res, next) {

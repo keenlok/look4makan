@@ -45,6 +45,10 @@ const updateAward = "UPDATE Awards  SET awardpoints = awardpoints + $1 WHERE use
 
 const findAllUserBookings = "SELECT DISTINCT rname FROM confirmedBookings WHERE username = $1;";
 
+const insert_rname = 'INSERT INTO restaurants (rname) VALUES ($1);'
+
+const insert_branch = 'INSERT INTO branches (rname, bid, location, openingHours, openTime, closeTime, cuisineType) VALUES ($1, $2, $3, $4, $5, $6, $7);';
+
 const queries = {
   findRestaurant : find_restaurant,
   getRestaurant : get_restaurant,
@@ -64,7 +68,9 @@ const queries = {
   find_tid : find_tid_given_bid_rname,
   delete_old_entries: delete_old_entries,
   updateAward : updateAward,
-  findAllUserBookings : findAllUserBookings
+  findAllUserBookings : findAllUserBookings,
+  insert_rname: insert_rname,
+  insert_branch: insert_branch
 };
 
 module.exports = queries;

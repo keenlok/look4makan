@@ -255,3 +255,53 @@ function setupUserAccount(pool, username) {
 }
 
 module.exports.setupUserAccount = setupUserAccount
+
+function getTimeStr(time) {
+  const am = 'am'
+  const pm = 'pm'
+
+  let timeArgs = time.split(':')
+  let timeHour = parseInt(timeArgs[0])
+  // console.log(timeHour)
+  let timeString = ''
+  // console.log("What is time/12", Math.floor(timeHour / 12))
+
+  if (Math.floor(timeHour / 12) > 0) {
+    timeString = timeString + pm
+    timeHour %= 12
+  } else {
+    timeString = timeString + am
+  }
+  if (timeArgs[1] != '00') {
+    timeString = time + timeString
+  } else {
+    timeString = timeHour + timeString
+  }
+  // console.log(timeString)
+  return timeString
+}
+
+/**
+ * Assuming both times is in 24 hr format
+ * @param start
+ * @param end
+ */
+function getTimeRangeAsStr(start, end) {
+
+  let startStr = getTimeStr(start)
+  let endStr = getTimeStr(end)
+
+  return startStr + ' - ' + endStr
+}
+
+module.exports.getTimeRangeAsStr = getTimeRangeAsStr
+
+function getCorrectTimeFormat(time) {
+  let timeArgs = time.split(':')
+  if (timeArgs.length < 3) {
+    return time + ':00'
+  }
+  return time
+}
+
+module.exports.getCorrectTimeFormat = getCorrectTimeFormat

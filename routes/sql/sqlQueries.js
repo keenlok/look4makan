@@ -14,14 +14,6 @@ const add_user = 'INSERT INTO diners (userName, password, firstName, lastName, i
 const setup_user_awards = 'INSERT INTO awards (username, awardpoints) ' +
                           'VALUES ($1, $2);';
 
-const find_user_preference = 'SELECT distinct rname, bid, openingHours, location ' +
-                            'FROM branches B NATURAL JOIN branchTables BT ' +
-                             'WHERE B.rname IN ($1) AND B.location IN ($2) AND ' +
-                            'cuisineType IN ($3) AND B.openTime <= $4 AND ' +
-                            'B.closeTime >= $4 AND BT.capacity >= $5 AND ' +
-                            'NOT EXISTS (SELECT 1 FROM bookedtables BKT ' +
-                                'WHERE BKT.bid = BT.bid AND BT.rname = BKT.rname ' +
-                                      'AND BT.tid = BKT.tid);';
 
 const checkForVacancyForUpdatedReservation = "SELECT tid FROM branches B NATURAL JOIN branchTables BT"
                                           + " WHERE B.rname = $1 AND B.bid = $2 AND BT.capacity >= $3"
@@ -34,10 +26,6 @@ const checkForVacancyForUpdatedReservation = "SELECT tid FROM branches B NATURAL
 
 const userpass = 'SELECT * FROM diners WHERE username = $1';
 
-const get_menu_items = 'SELECT DISTINCT menuname, foodname, price ' +
-                    'FROM menu M NATURAL JOIN menuitems F NATURAL JOIN sells S ' +
-                      'WHERE S.rname = $1 ORDER BY menuname;';
-
 const all_locations = "select * from Locations;";
 
 const all_cuisines = "select * from CuisineTypes;";
@@ -46,25 +34,50 @@ const all_rname= "select rname from Restaurants;";
 
 const all_timeSlots= "select * from Time;";
 
-const min_max_hour_of_a_branch = "SELECT openTime, closeTime FROM Branches B " +
-                            "WHERE B.rname = $1 AND B.bid = $2;";
 
+//checked
 const insertUserPreference =  'INSERT INTO UserPreferences (userName, preferredRname, preferredLoc, preferredDate,' +
-                              ' preferredTime, cuisineType, paxNum) VALUES ($1, $2, $3, $4, $5, $6, $7);';
+    ' preferredTime, cuisineType, paxNum) VALUES ($1, $2, $3, $4, $5, $6, $7) ' +
+    'ON CONFLICT (username) DO UPDATE SET preferredrname = EXCLUDED.preferredrname,' +
+    'preferredloc = EXCLUDED.preferredloc, preferreddate = EXCLUDED.preferreddate, ' +
+    'preferredTime = EXCLUDED.preferredtime, cuisinetype = EXCLUDED.cuisinetype, paxnum = EXCLUDED.paxnum;';
+
+//checked
+const search_result = 'SELECT distinct rname, bid, openingHours, location ' +
+    'FROM branches B NATURAL JOIN advertises A NATURAL JOIN branchTables BT ' +
+    'WHERE B.rname IN ($1) AND B.location IN ($2) AND ' +
+    'cuisineType IN ($3) AND B.openTime <= $4 AND ' +
+    'B.closeTime >= $4 AND BT.capacity >= $5 AND ' +
+    'NOT EXISTS (SELECT 1 FROM bookedtables BKT ' +
+    'WHERE BKT.bid = BT.bid AND BT.rname = BKT.rname ' +
+    'AND BT.tid = BKT.tid AND BKT.bookedtimeslot >= $4 ' +
+    'AND BKT.bookedtimeslot - \'00:45:00\' < $4 AND BKT.bookeddate = $6);';
+
+
+const min_max_hour_of_a_branch = "SELECT openTime, closeTime FROM Branches B " +
+    "WHERE B.rname = $1 AND B.bid = $2;";
+
+
+const get_menu_items = 'SELECT DISTINCT menuname, foodname, price ' +
+    'FROM menu M NATURAL JOIN menuitems F NATURAL JOIN sells S ' +
+    'WHERE S.rname = $1 ORDER BY menuname;';
+
 
 const insertConfirmedBooking =  "INSERT INTO ConfirmedBookings (userName, rname, bid) VALUES ($1, $2, $3);";
 
 const find_tid_given_bid_rname = "SELECT tid from BranchTables BT WHERE BT.rname = $1 AND " +
-                              "BT.bid = $2 AND BT.capacity >= $3 ORDER BY capacity limit 1;";
+    "BT.bid = $2 AND BT.capacity >= $3 ORDER BY capacity limit 1;";
 
 const insertBooks =  "INSERT INTO Books (userName, rname, bid, tid , pax, reservationTime, reservationDate) " +
-                      "VALUES ($1, $2, $3, $4, $5, $6, $7);";
+    "VALUES ($1, $2, $3, $4, $5, $6, $7);";
+
+const updateAward = "UPDATE Awards  SET awardpoints = awardpoints + $1 WHERE username = $2;";
+
+
 
 const delete_old_entries = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:15:00\' <= $1 AND bookedDate <= $2;';
 
 const delete_old_entries_for_testing = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:01:00\' <= $1 AND bookedDate <= $2;';
-
-const updateAward = "UPDATE Awards  SET awardpoints = awardpoints + $1 WHERE username = $2;";
 
 const findAllUserBookings = "SELECT rname, bid FROM confirmedBookings WHERE username = $1;";
 
@@ -76,8 +89,8 @@ const findRatingsGivenUsernameRname = "SELECT rating FROM Ratings WHERE rname = 
 const insertIntoRatings = "INSERT INTO Ratings (rating, userName, rname, bid) VALUES ($1, $2, $3, $4);";
 
 const deleteBookedTable = "DELETE FROM BookedTables WHERE rname = $1 AND bid = $2 AND " +
-                            "tid = $3 AND bookedTimeslot >= $4 AND " +
-                        "bookedTimeslot < $4 + '01:00:00' AND bookedDate = $5;";
+    "tid = $3 AND bookedTimeslot >= $4 AND " +
+    "bookedTimeslot < $4 + '01:00:00' AND bookedDate = $5;";
 
 const insert_rname = 'INSERT INTO restaurants (rname) VALUES ($1);';
 
@@ -97,7 +110,7 @@ const insert_into_menu = 'INSERT INTO  menuitems (menuname, foodname, price) VAL
 const queries = {
   findRestaurant : find_restaurant,
   getRestaurant : get_restaurant,
-  findWithUserPreference : find_user_preference,
+  search_result : search_result,
   add_user : add_user,
   setup_user_awards: setup_user_awards,
   userpass : userpass,
@@ -108,6 +121,7 @@ const queries = {
   getAllRestaurantName : all_rname,
   getAllTimeSlots : all_timeSlots,
   findMinMaxHourOfABranch : min_max_hour_of_a_branch,
+
   insertUserPreference : insertUserPreference,
   insertConfirmedBooking : insertConfirmedBooking,
   insertBooks : insertBooks,

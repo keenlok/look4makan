@@ -205,12 +205,39 @@ function insertIntoMenu(req, res, next) {
   })
 }
 
-module.exports.insertIntoDiners = insertIntoDiners
-module.exports.insertIntoRestaurantsBranches = insertIntoRestaurantsBranches
-module.exports.insertLocations = insertLocations
-module.exports.insertCuisine = insertCuisine
-module.exports.insertMenu = insertMenu
-module.exports.insertIntoMenu = insertIntoMenu
+function search (req, res, next) {
+    let ctx = 0, avg = 0, table;
+    let queryStr = req.query.restaurant;
+    let rname = '%' + queryStr.toLowerCase() + '%';
+    let searchQuery = sql_query.findRestaurant;
+    let time = utils.getTime();
+
+    pool.query(searchQuery, [rname, time], (err, data) => {
+        if (err || !data.rows || data.rows.length === 0) {
+            ctx = 0;
+            table = [];
+            console.log("Error in search", err)
+        } else {
+            ctx = data.rows.length;
+            table = data.rows
+        }
+        if (req.isAuthenticated()) {
+            res.render('search', {page: 'Search Results', auth: true, query: queryStr, table: table, ctx: ctx})
+        } else {
+            res.render('search', {page: 'Search Results', auth: false, query: queryStr, table: table, ctx: ctx})
+        }
+    })
+}
+
+
+module.exports.insertIntoDiners = insertIntoDiners;
+module.exports.insertIntoRestaurantsBranches = insertIntoRestaurantsBranches;
+module.exports.insertLocations = insertLocations;
+module.exports.insertCuisine = insertCuisine;
+module.exports.insertMenu = insertMenu;
+module.exports.insertIntoMenu = insertIntoMenu;
+module.exports.search = search;
+
 
 
 

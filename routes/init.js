@@ -99,7 +99,7 @@ function rateReservations (req, res, next) {
   pool.query(selectQuery, [username], (err, data) => {
     if(!err) {
       let auth = req.isAuthenticated();
-      res.render("rateReservations", {data: data.rows, auth : auth});
+      res.render("rateReservations", {data: data.rows, auth : auth, user: req.user});
     }
   });
 }

@@ -41,6 +41,8 @@ const insertBooks =  "INSERT INTO Books (userName, rname, bid, tid , pax, reserv
 
 const delete_old_entries = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:15:00\' <= $1 AND bookedDate <= $2;';
 
+const delete_old_entries_for_testing = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:01:00\' <= $1 AND bookedDate <= $2;';
+
 const updateAward = "UPDATE Awards  SET awardpoints = awardpoints + $1 WHERE username = $2;";
 
 const findAllUserBookings = "SELECT rname, bid FROM confirmedBookings WHERE username = $1;";
@@ -53,6 +55,20 @@ const insertIntoRatings = "INSERT INTO Ratings (rating, userName, rname, bid) VA
 
 const deleteBookedTable = "DELETE FROM BookedTables WHERE rname = $1 AND bid = $2 AND tid = $3 AND bookedTimeslot >= $4 AND bookedTimeslot < $4 + '01:00:00' AND bookedDate = $5;";
 
+const insert_rname = 'INSERT INTO restaurants (rname) VALUES ($1);'
+
+const insert_branch = 'INSERT INTO branches (rname, bid, location, openingHours, openTime, closeTime, cuisineType) VALUES ($1, $2, $3, $4, $5, $6, $7);';
+
+const insert_location = 'INSERT INTO locations (locname) VALUES ($1);'
+
+const insert_menu = 'INSERT INTO menu (name) VALUES ($1);'
+
+const insert_cuisine = 'INSERT INTO cuisinetypes (cuisinename) VALUES ($1);'
+
+const menu = 'SELECT * FROM menu;'
+
+const insert_into_menu = 'INSERT INTO  menuitems (menuname, foodname, price) VALUES ($1, $2, $3);'
+
 const queries = {
   findRestaurant : find_restaurant,
   getRestaurant : get_restaurant,
@@ -60,6 +76,7 @@ const queries = {
   add_user : add_user,
   setup_user_awards: setup_user_awards,
   userpass : userpass,
+  get_menu: menu,
   getMenuItems : get_menu_items,
   getAllLocations : all_locations,
   getAllCuisines : all_cuisines,
@@ -71,8 +88,15 @@ const queries = {
   insertBooks : insertBooks,
   find_tid : find_tid_given_bid_rname,
   delete_old_entries: delete_old_entries,
+  // delete_old_entries: delete_old_entries_for_testing, // use this when testing
   updateAward : updateAward,
   findAllUserBookings : findAllUserBookings,
+  insert_rname: insert_rname,
+  insert_branch: insert_branch,
+  insert_location: insert_location,
+  insert_menu: insert_menu,
+  insert_cuisine: insert_cuisine,
+  insert_into_menu: insert_into_menu,
   findRatingsGivenUsernameRname : findRatingsGivenUsernameRname,
   insertIntoRatings : insertIntoRatings,
   findAllUserBooks : findAllUserBooks,

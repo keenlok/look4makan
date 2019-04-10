@@ -1,7 +1,9 @@
 const sql_query = require('./sql/sqlQueries')
 const passport = require('passport')
 const bcrypt = require('bcrypt')
-const utils = require('./utils/util');
+const utils = require('./utils/util')
+const admin = require('./admin')
+
 
 // Postgre SQL Connection
 const { Pool } = require('pg');
@@ -15,11 +17,13 @@ const round = 10;
 const salt  = bcrypt.genSaltSync(round);
 
 function initRouter(app) {
+
   app.get('/'                    , index);
   app.post("/ratings/complete", insertIntoRatings);
   app.get('/contactUs'           , contact            );
-  app.post('/search'             , search           );
+  app.get('/search'             , search           );
   app.post('/search/restaurants' , insertIntoUserPreference, search_restaurant);
+
   app.get('/restaurant'          , restaurant       );
   // app.get('/restaurants'         , list_restaurants )
   app.post('/booking'            , booking          );
@@ -32,7 +36,19 @@ function initRouter(app) {
 
     // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
 
-  app.get('/edit'                 , adminDashboard   )
+  /*  Admin privileges  */
+  app.get('/edit'       , admin.adminDashboard   )
+  app.get('/edit/insert', admin.insertData       )
+  app.get('/edit/update', admin.updateData       )
+
+  app.post('/insert/diners'     , admin.insertIntoDiners             )
+  app.post('/insert/restaurants', admin.insertIntoRestaurantsBranches)
+  app.post('/insert/locations'  , admin.insertLocations              )
+  app.post('/insert/menu'       , admin.insertMenu                   )
+  app.post('/insert/intomenu'   , admin.insertIntoMenu               )
+  app.post('/insert/cuisine'    , admin.insertCuisine                )
+
+
   /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register);
   app.get('/signin', login   );
@@ -230,7 +246,7 @@ function index(req, res, next) {
 
 function search (req, res, next) {
   let ctx = 0, avg = 0, table;
-  let queryStr = req.body.restaurant;
+  let queryStr = req.query.restaurant;
   let rname = '%' + queryStr.toLowerCase() + '%';
   let searchQuery = sql_query.findRestaurant;
   let time = utils.getTime();
@@ -645,22 +661,6 @@ function confirmation(req, res, next) {
   else {
     res.render('confirmation', { page: "Confirmation", rname : rname, location : location,  reservationTime : reservationTime, reservationDate : reservationDate, paxNo : paxNo, auth : false});
   }
-}
-
-function adminDashboard (req, res, next) {
-  let user = req.user
-  if (typeof user === "undefined") {
-    res.redirect('/') // Prevent unauthenticated access to this page
-  }
-  let date = utils.getDateInStr()
-
-  res.render('edit', {
-    page: "Admin Dashboard",
-    dateInStr: date,
-    auth: true,
-    user: user
-  })
-
 }
 
 function updateAward(req, res, next) {

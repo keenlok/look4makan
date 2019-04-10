@@ -415,8 +415,8 @@ insert into Sells (menuname, rname, bid) values
 
 -- testing
 insert into confirmedbookings (userName, rname, bid) values
-('Aaron', 'Macdonalds', 1),
-('Aaron', 'Macdonlds', 2),
+('Aaron', 'MacDonalds', 1),
+('Aaron', 'MacDonalds', 2),
 ('Aaron', 'BurgerKing', 1),
 ('Aaron', 'Forlino', 1);
 

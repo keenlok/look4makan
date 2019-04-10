@@ -51,6 +51,8 @@ const findRatingsGivenUsernameRname = "SELECT rating FROM Ratings WHERE rname = 
 
 const insertIntoRatings = "INSERT INTO Ratings (rating, userName, rname, bid) VALUES ($1, $2, $3, $4);";
 
+const deleteBookedTable = "DELETE FROM BookedTables WHERE rname = $1 AND bid = $2 AND tid = $3 AND bookedTimeslot >= $4 AND bookedTimeslot < $4 + '01:00:00' AND bookedDate = $5;";
+
 const queries = {
   findRestaurant : find_restaurant,
   getRestaurant : get_restaurant,
@@ -73,7 +75,8 @@ const queries = {
   findAllUserBookings : findAllUserBookings,
   findRatingsGivenUsernameRname : findRatingsGivenUsernameRname,
   insertIntoRatings : insertIntoRatings,
-    findAllUserBooks : findAllUserBooks
+  findAllUserBooks : findAllUserBooks,
+  deleteBookedTable : deleteBookedTable
 };
 
 module.exports = queries;

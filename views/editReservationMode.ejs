@@ -13,41 +13,39 @@
     <% include ./partials/header %>
 </header>
 <body>
-<form method="post" action="/edits/complete">
-    <input type="hidden" id="rname" name="rname" value="<%=rname%>">
-    <input type="hidden" id="bid" name="bid" value="<%=bid%>">
-
-    <input type="hidden" id="pax" name="pax" value="<%=pax%>">
-    <input type="hidden" id="reservationTime" name="reservationTime" value="<%=reservationTime%>">
-    <input type="hidden" id="reservationDate" name="reservationDate" value="<%=reservationDate%>">
-
     <br><br>
     <label><strong>Current Reservation:</strong></label><br>
 
+<form method="post" action="/edits/complete">
     <table>
         <tbody>
             <tr>
                 <td> Restaurant:</td>
-                <td><input type="text" id="rname" name="rname" value="<%=rname%>" disabled style="margin-top:5px; margin-left : 10px"></td>
+                <td><input type="text" id="rname" name="rname" value="<%=rname%>" readonly style="margin-top:5px; margin-left : 10px"></td>
             </tr>
             <tr>
                 <td> Branch Number:</td>
 
-                <td><input type=text" id="bid" name="bid" value="<%=bid%>" disabled style="margin-top:5px; margin-left : 10px"></td>
+                <td><input type=text" id="bid" name="bid" value="<%=bid%>" readonly style="margin-top:5px; margin-left : 10px"></td>
+            </tr>
+            <tr>
+                <td> Table Number:</td>
+
+                <td><input type=text" id="tid" name="tid" value="<%=tid%>" readonly style="margin-top:5px; margin-left : 10px"></td>
             </tr>
             <tr>
                 <td> Pax:</td>
-                <td><input type="text" id="pax" name="pax" value="<%=pax%>" disabled style="margin-top:5px; margin-left : 10px"></td>
+                <td><input type="text" id="pax" name="pax" value="<%=pax%>" readonly style="margin-top:5px; margin-left : 10px"></td>
             </tr>
             <tr>
 
                 <td> Reservation Time:</td>
-                <td><input type="text" id="reservationTime" name="reservationTime" value="<%=reservationTime%>" disabled style="margin-top:5px; margin-left : 10px"></td>
+                <td><input type="time" id="reservationTime" name="reservationTime" value="<%=reservationTime%>" readonly style="margin-top:5px; margin-left : 10px"></td>
             </tr>
 
             <tr>
                 <td> Reservation Date:</td>
-                <td><input type="text" id="reservationDate" name="reservationDate" value="<%=reservationDate%>" disabled style="margin-top:5px; margin-left : 10px"></td>
+                <td><input type="text" id="reservationDate" name="reservationDate" value="<%=reservationDate%>" readonly style="margin-top:5px; margin-left : 10px"></td>
             </tr>
         </tbody>
     </table>
@@ -59,54 +57,81 @@
         <tbody>
         <tr>
             <td> Restaurant:</td>
-            <td><input type="text" id="rname" name="rname" value="<%=rname%>" disabled style="margin-top:5px; margin-left : 10px"></td>
+            <td><input type="text" id="newRname" name="newRname" value="<%=rname%>" readonly style="margin-top:5px; margin-left : 10px"></td>
         </tr>
         <tr>
             <td> Branch Number:</td>
-            <td><input type=text" id="bid" name="bid" value="<%=bid%>" disabled style="margin-top:5px; margin-left : 10px"></td>
+            <td><input type=text" id="newBid" name="newBid" value="<%=bid%>" readonly style="margin-top:5px; margin-left : 10px"></td>
         </tr>
         <tr>
             <td> Pax:</td>
-            <td><input type="number" id="pax" name="pax" value="<%=pax%>" style="margin-top:5px; margin-left : 10px"></td>
+            <td><input type="number" id="newPax" name="newPax" value="<%=pax%>" style="margin-top:5px; margin-left : 10px"></td>
         </tr>
         <tr>
             <td> Reservation Time:</td>
-            <td><input type="time" id="reservationTime" name="reservationTime" value="<%=reservationTime%>" style="margin-top:5px; margin-left : 10px"></td>
+            <td><input type="time" id="newReservationTime" name="newReservationTime" value="<%=reservationTime%>" style="margin-top:5px; margin-left : 10px"></td>
         </tr>
 
         <tr>
             <td> Reservation Date:</td>
-            <td><input type="date" id="reservationDate" name="reservationDate" value="<%=reservationDate%>" style="margin-top:5px; margin-left : 10px"></td>
+            <td><input type="date" id="newReservationDate" name="newReservationDate" value="<%=reservationDate%>" style="margin-top:5px; margin-left : 10px"></td>
         </tr>
         </tbody>
     </table>
+    <input type="hidden" id="isUpdate" name="isUpdate" value="true">
+</form>
     <br>
     <table>
         <tbody>
         <tr>
-            <td><button class="btn btn-primary" onclick="show()">Confirm New Reservation</button></td>
+            <td><button class="btn btn-primary" onclick="change()">Confirm New Reservation</button></td>
 
-            <td><button class="btn btn-primary" onclick="show()" style="margin-left : 200px">Cancel Reservation</button></td>
+            <td><button class="btn btn-primary" onclick="cancel()" style="margin-left : 200px">Cancel Reservation</button></td>
         </tr>
         </tbody>
     </table>
+
+
 </form>
 
 
 <script>
-    // function show() {
-    //     let rname = document.getElementById('rname').value;
-    //     let bid = document.getElementById('bid').value;
-    //     let newRating = document.getElementById('newRating').value;
-    //
-    //     if(confirm("You are giving a rating " + newRating +"/5" + " for your dining experience at " +
-    //         rname + ", branch number " + bid  + ".")) {
-    //         $('form').submit();
-    //     }
-    //     else {
-    //         event.preventDefault();
-    //     }
-    // }
+    function change() {
+            let rname = document.getElementById('newRname').value;
+            let bid = document.getElementById('newBid').value;
+            let pax = document.getElementById('newPax').value;
+            let reservationTime = document.getElementById('newReservationTime').value;
+            let reservationDate = document.getElementById('newReservationDate').value;
+            if(confirm("Changing your reservation details to: \n\n" +
+                "Restaurant: " + rname + "\n Branch Number: " + bid +  "\n Pax: " + pax + "\n Reservation Time: " + reservationTime + "\n Reservation Date: " + reservationDate)) {
+                let isUpdate = document.getElementById('isUpdate').value;
+                alert("isUpdate boolean is " + isUpdate);
+                $('form').submit();
+            }
+            else {
+                event.preventDefault();
+            }
+    }
+
+    function cancel() {
+        let rname = document.getElementById('rname').value;
+        let bid = document.getElementById('bid').value;
+        let tid = document.getElementById('tid').value;
+        let pax = document.getElementById('pax').value;
+        let reservationTime = document.getElementById('reservationTime').value;
+        let reservationDate = document.getElementById('reservationDate').value;
+        if(confirm("Deleting your reservation: \n\n" +
+            "Restaurant: " + rname + "\n Branch Number: " + bid + "\n Table Number: " + tid + "\n Pax: " + pax + "\n Reservation Time: " + reservationTime + "\n Reservation Date: " + reservationDate)) {
+            $('input#isUpdate').val("false");
+            let isUpdate = document.getElementById('isUpdate').value;
+            alert("isUpdate boolean is " + isUpdate);
+            $('form').submit();
+        }
+        else {
+            event.preventDefault();
+        }
+    }
+
 </script>
 </body>
 </html>

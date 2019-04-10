@@ -27,6 +27,7 @@ function initRouter(app) {
   app.post('/rateReservations/ratings', ratings);
   app.get('/editReservations', editReservations);
   app.post('/editReservations/edit', editReservationMode);
+  app.post('/edits/complete', updateDeleteReservation);
 
 
     // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
@@ -51,18 +52,57 @@ function initRouter(app) {
 
 }
 
+function updateDeleteReservation (req, res, next) {
+    // console.log(req);
+    let rname = req.body.rname;
+    let bid = req.body.bid;
+    let tid = req.body.tid;
+    let pax = req.body.pax;
+    let reservationTime = req.body.reservationTime;
+    let reservationDate = req.body.reservationDate;
+    let isUpdate = req.body.isUpdate;
+
+    console.log(req.user.username + " " + rname + " " + bid + " " + tid + " " + reservationTime + " " + reservationDate + " " + isUpdate);
+    let arguments = [rname, bid, tid, reservationTime, reservationDate];
+    let delete_query = sql_query.deleteBookedTable;
+    pool.query(delete_query, arguments, (err, data) => {
+      if(err) {
+        console.error("Fail to delete from Books", err);
+      }
+
+      else if(!err) {
+          console.log("Successful delete from BookedTables, cascades to delete from Books too");
+
+          if(isUpdate === "true") {
+            let newRname = req.body.rname;
+            let newBid = req.body.bid;
+            let newPax = req.body.pax;
+            let newReservationTime = req.body.reservationTime;
+            let newReservationDate = req.body.reservationDate;
+
+        }
+      }
+      res.redirect("/");
+    })
+
+
+
+
+}
+
 function editReservationMode (req, res, next) {
     let rname = req.body.rname;
     let bid = req.body.bid;
+    let tid = req.body.tid;
     let pax = req.body.pax;
     let reservationTime = req.body.reservationTime;
     let reservationDate = req.body.reservationDate;
 
-    console.log("RECEIVED " + rname + " " + bid +  " " + pax + " " + reservationTime + " " + reservationDate); //leave for testing correctness
+    console.log("RECEIVED " + rname + " " + bid + " " + tid + " " + pax + " " + reservationTime + " " + reservationDate); //leave for testing correctness
 
     let auth = req.isAuthenticated();
 
-    res.render("editReservationMode", {rname : rname, rname: rname, bid : bid, pax : pax, reservationTime : reservationTime, reservationDate : reservationDate, auth: auth});
+    res.render("editReservationMode", {rname : rname, rname: rname, bid : bid, tid : tid, pax : pax, reservationTime : reservationTime, reservationDate : reservationDate, auth: auth});
 
 }
 

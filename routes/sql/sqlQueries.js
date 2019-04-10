@@ -3,11 +3,9 @@
 //
 // const branch_w_status = 'WITH restaurantStatus AS ( SELECT rname, bid, COUNT(tid) AS num FROM freetables GROUP BY rname, bid ) SELECT R.rname, location, CASE WHEN (opentime > $1 OR closeTime < $1) THEN \'CLOSED\' WHEN num > 0 THEN \'AVAILABLE\' WHEN num = 0 THEN \'FULL\' WHEN num = NULL THEN \'UNAVAILABLE\' END AS status FROM (advertises NATURAL JOIN restaurants NATURAL JOIN branches) R LEFT JOIN restaurantStatus S ON R.rname = S.rname AND R.bid = S.bid;';
 
-const get_restaurant = 'SELECT distinct R.rname, openinghours, location, CASE WHEN (opentime > $2 OR closeTime < $2)' +
-  ' THEN \'CLOSED\' END AS status FROM (restaurants NATURAL JOIN branches) R WHERE R.rname = $1;'
+const get_restaurant = 'SELECT distinct R.rname, openinghours, location, CASE WHEN (opentime > $2 OR closeTime < $2) THEN \'CLOSED\' END AS status FROM (restaurants NATURAL JOIN branches) R WHERE R.rname = $1;'
 
-const find_restaurant = 'SELECT distinct R.rname, openinghours, location, CASE WHEN (opentime > $2 OR closeTime <' +
-  ' $2) THEN \'CLOSED\'  END AS status FROM (restaurants NATURAL JOIN branches) R WHERE LOWER(R.rname) LIKE $1;'
+const find_restaurant = 'SELECT distinct R.rname, openinghours, location, CASE WHEN (opentime > $2 OR closeTime < $2) THEN \'CLOSED\'  END AS status FROM (restaurants NATURAL JOIN branches) R WHERE LOWER(R.rname) LIKE $1;'
 
 const add_user = 'INSERT INTO diners (userName, password, firstName, lastName, isAdmin) VALUES ($1, $2, $3, $4, FALSE);'
 
@@ -30,8 +28,7 @@ const all_timeSlots= "select * from Time;";
 
 const min_max_hour_of_a_branch = "SELECT openTime, closeTime FROM Branches B WHERE B.rname = $1 AND B.bid = $2;";
 
-const insertUserPreference =  'INSERT INTO UserPreferences (userName, preferredRname, preferredLoc, preferredDate,' +
-  ' preferredTime, cuisineType, paxNum) VALUES ($1, $2, $3, $4, $5, $6, $7);';
+const insertUserPreference =  'INSERT INTO UserPreferences (userName, preferredRname, preferredLoc, preferredDate, preferredTime, cuisineType, paxNum) VALUES ($1, $2, $3, $4, $5, $6, $7);';
 
 const insertConfirmedBooking =  "INSERT INTO ConfirmedBookings (userName, rname, bid) VALUES ($1, $2, $3);";
 
@@ -67,6 +64,10 @@ const menu = 'SELECT * FROM menu;'
 
 const insert_into_menu = 'INSERT INTO  menuitems (menuname, foodname, price) VALUES ($1, $2, $3);'
 
+const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, capacity, bookedTimeslot, bookedDate) VALUES ($1, $2, $3, $4, $5, $6);'
+
+const find_empty_tables = 'SELECT * FROM branchtables B NATURAL JOIN branches BB WHERE NOT EXISTS ( SELECT 1 FROM bookedtables T WHERE T.rname = B.rname AND T.bookeddate = $1 AND T.bookedtimeslot + \'1:00:00\' < $2 ) AND B.rname = $3 AND B.capacity >= 4 AND BB.location = $4 ORDER BY bid, tid LIMIT 1 ;'
+
 const queries = {
   findRestaurant : find_restaurant,
   getRestaurant : get_restaurant,
@@ -97,7 +98,9 @@ const queries = {
   insert_into_menu: insert_into_menu,
   findRatingsGivenUsernameRname : findRatingsGivenUsernameRname,
   insertIntoRatings : insertIntoRatings,
-  findAllUserBooks : findAllUserBooks
+  findAllUserBooks : findAllUserBooks,
+  insert_into_bookedtables: insert_into_bookedtables,
+  find_empty_tables: find_empty_tables
 };
 
 module.exports = queries;

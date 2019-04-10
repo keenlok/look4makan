@@ -32,9 +32,6 @@ function initRouter(app) {
   app.get('/editReservations', editReservations);
   app.post('/editReservations/edit', editReservationMode);
 
-
-    // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
-
   /*  Admin privileges  */
   app.get('/edit'       , admin.adminDashboard   )
   app.get('/edit/insert', admin.insertData       )
@@ -51,7 +48,7 @@ function initRouter(app) {
   /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register);
   app.get('/signin', login   );
-  app.post('/booking/confirmation', passport.authMiddleware(), insertIntoConfirmedBooking, insertIntoBooks, updateAward, confirmation);
+  app.post('/booking/confirmation', passport.authMiddleware(), insertIntoConfirmedBooking, insertIntoBookedTables, insertIntoBooks, updateAward, confirmation);
 
 
   /*  PROTECTED POST */
@@ -552,6 +549,12 @@ function insertIntoConfirmedBooking (req, res, next) {
   return next();
 }
 
+function insertIntoBookedTables(req, res, next) {
+  console.log(req.body)
+  pool.query(sql_query.find_empty_tables, )
+  next();
+}
+
 function insertIntoBooks (req, res, next) {
   let rname = req.body.rname;
   let bid = req.body.bid;
@@ -567,23 +570,10 @@ function insertIntoBooks (req, res, next) {
 
   let selectQuery = sql_query.find_tid;
 
-  // selectQuery = selectQuery.replace("$1", pad(rname));
-  // selectQuery = selectQuery.replace("$2", bid);
-  // selectQuery = selectQuery.replace("$3", pax);
-
-  console.log("SELECTQUERY: " + selectQuery);
+  // console.log("SELECTQUERY: " + selectQuery);
 
   pool.query(selectQuery, [rname, bid, pax], (err, data) => {
     if(!err) {
-      // insertQuery = insertQuery.replace("$1", pad(req.user.username));
-      // insertQuery = insertQuery.replace("$2", pad(rname));
-      // insertQuery = insertQuery.replace("$3", bid);
-      // insertQuery = insertQuery.replace("$4", data.rows[0].tid);
-      // insertQuery = insertQuery.replace("$5", pax);
-      // insertQuery = insertQuery.replace("$6", pad(reservationTime));
-      // insertQuery = insertQuery.replace("$7", pad(reservationDate));
-
-
       let arguments = [
         req.user.username,
         rname,

@@ -227,7 +227,7 @@ function updateSqlServer(pool) {
       if (err) {
           console.error(err)
       } else {
-          console.log('successfully refreshed entries!')
+          console.log('successfully refreshed Booked Table entries!')
       }
   })
 }

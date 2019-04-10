@@ -109,8 +109,8 @@ function updateDeleteReservation (req, res, next) {
                 //=>  Books: userName, rname, bid, tid, pax, reservationTime, reservationDate
             }
         }
-        res.redirect("/");
     });
+    res.redirect("/");
 }
 
 function editReservationMode (req, res, next) {

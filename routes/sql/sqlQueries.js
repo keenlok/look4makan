@@ -12,7 +12,7 @@ const add_user = 'INSERT INTO diners (userName, password, firstName, lastName, i
                  'VALUES ($1, $2, $3, $4, FALSE);';
 
 const setup_user_awards = 'INSERT INTO awards (username, awardpoints) ' +
-                          'VALUES ($1, $2);'
+                          'VALUES ($1, $2);';
 
 const find_user_preference = 'SELECT distinct rname, bid, openingHours, location ' +
                             'FROM branches B NATURAL JOIN branchTables BT ' +

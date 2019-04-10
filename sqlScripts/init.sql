@@ -47,10 +47,12 @@ create table CuisineTypes (
 cuisineName varchar(10) primary key
 );
 
+--not sure
 create table Awards(
 userName varchar(20) primary key references diners,
 awardPoints integer
 );
+
 
 create table ConfirmedBookings (
 userName varchar(20),
@@ -67,46 +69,59 @@ preferredDate date,
 preferredTime time,
 cuisineType varchar(10) references CuisineTypes,
 paxNum integer,
---budget integer,
 primary key (userName)
 );
 
+create table Branches (
+rname varchar(40),
+bid integer,
+location varchar(40) references Locations not null,
+openingHours varchar(20),
+openTime time,
+closeTime time,
+cuisineType varchar(10) references CuisineTypes not null,
+primary key (rname, bid)
+);
+
 create table BranchTables (
-rname varchar(40) references Restaurants,
+rname varchar(40),
 bid integer,
 tid integer,
 capacity integer,
+foreign key (rname, bid) references Branches,
 primary key (rname, bid, tid)
 );
-
 
 create table BookedTables (
 rname varchar(40),
 bid integer,
 tid integer,
-capacity integer,  --should change to paxNo not capacity
+--pax integer,  --should change to paxNo not capacity, i dont think need this
 bookedTimeslot time,
 bookedDate date,
 foreign key (rname, bid, tid) references BranchTables,
 primary key (rname, bid, tid, bookedTimeslot, bookedDate)
 );
 
+
+--problematic
 create table Books (
 userName varchar(20),
 rname varchar(40),
 bid integer,
 tid integer,
-pax integer,
 reservationTime time,
 reservationDate date,
+pax integer,
 foreign key (rname, bid, tid, reservationTime, reservationDate) references BookedTables
 on delete cascade,
 foreign key (userName) references userpreferences,
 primary key (userName, rname, bid, tid, reservationTime, reservationDate)
 );
 
+
 create table Ratings (
-rating int check( rating >= 0 and rating <= 5 ),
+rating integer check( rating >= 0 and rating <= 5 ),
 userName varchar(20) references Diners,
 rname varchar(40),
 bid integer,
@@ -114,16 +129,7 @@ primary key (userName, rname, bid),
 foreign key (userName, rname, bid) references ConfirmedBookings
 );
 
-create table Branches (
-rname varchar(40),
-bid integer,
-location varchar(40) references Locations,
-openingHours varchar(20),
-openTime time,
-closeTime time,
-cuisineType varchar(10) references CuisineTypes,
-primary key (rname, bid)
-);
+
 
 create table Menu (
 name varchar(50) primary key
@@ -144,7 +150,6 @@ bid integer,
 primary key (rname,bid),
 foreign key (rname,bid) references Branches
 );
-
 
 
 
@@ -366,10 +371,15 @@ insert into BranchTables (rname, bid, tid, capacity) values
 ('NamNam', 1, 1, 3);
 
 
-
-insert into BookedTables (rname, bid, tid, capacity, bookedTimeslot, bookedDate) values
+/*
+insert into BookedTables (rname, bid, tid, pax, bookedTimeslot, bookedDate) values
 ('Crystal Jade', 1, 1, 0, '23:00:00', '2019-05-16');
 --('MacDonalds', 1, 1, 50, '10:00:00', '2019-04-11');
+*/
+insert into BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) values
+('Crystal Jade', 1, 1, '23:00:00', '2019-05-16');
+--('MacDonalds', 1, 1, '10:00:00', '2019-04-11');
+
 
 
 
@@ -427,13 +437,22 @@ SELECT DISTINCT rname FROM confirmedBookings WHERE username = 'Aaron';
 */
 --testing
 --for one booking, need four entries to Booked Table
-insert into BookedTables (rname, bid, tid, capacity, bookedTimeslot, bookedDate)
+/*
+insert into BookedTables (rname, bid, tid, pax, bookedTimeslot, bookedDate)
 values ('MacDonalds', 1, 1, 1, '10:00:00', '2020-01-01'),
 ('MacDonalds', 1, 1, 1, '10:15:00', '2020-01-01'),
 ('MacDonalds', 1, 1, 1, '10:30:00', '2020-01-01'),
 ('MacDonalds', 1, 1, 1, '10:45:00', '2020-01-01'),
 --last entry just to test that deleting a reservationTime 10:00:00 only deletes the first four not the last one
 ('MacDonalds', 1, 1, 1, '11:00:00', '2020-01-01');
+*/
+insert into BookedTables (rname, bid, tid, bookedTimeslot, bookedDate)
+values ('MacDonalds', 1, 1, '10:00:00', '2020-01-01'),
+('MacDonalds', 1, 1, '10:15:00', '2020-01-01'),
+('MacDonalds', 1, 1, '10:30:00', '2020-01-01'),
+('MacDonalds', 1, 1, '10:45:00', '2020-01-01'),
+--last entry just to test that deleting a reservationTime 10:00:00 only deletes the first four not the last one
+('MacDonalds', 1, 1, '11:00:00', '2020-01-01');
 
 insert into userpreferences
 (userName, preferredRname, preferredLoc,

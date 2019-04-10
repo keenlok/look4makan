@@ -109,13 +109,13 @@ insert into userpreferences (username, preferredrname, preferredloc, preferredda
 select * from userpreferences;
 
 -----------------------------------------------
---Trigger to prevent booking timeslot where restaurant is not open
+--Trigger to prevent booking timeslot outside of opening hours
 -----------------------------------------------
 create or replace function validHours()
 returns trigger as $$
 begin if 
 	new.bookedtimeslot < (select branches.opentime from branches where rname = new.rname and bid = new.bid) or new.bookedtimeslot > (select branches.closetime from branches where rname = new.rname and bid = new.bid)
-	then raise notice 'This branch is not opened at this hour';
+	then raise notice 'This branch is not opened at this time';
 	return null;
 else return new;
 end if;

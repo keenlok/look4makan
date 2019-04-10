@@ -37,23 +37,25 @@
         <td><%= data[i].bid%></td>
         <td></td><td></td><td></td><td></td><td></td><td></td>
         <td></td><td></td><td></td><td></td><td></td><td></td>
-        <td><button class="btn btn-primary rateButton" onclick="show()" >Rate</button></td>
+        <td><button class="btn btn-primary rateButton"  >Rate</button></td>
     </tr>
     <% } %>
     </tbody>
 </table>
 <script>
-    function show() {
-        let rnameElement =  $('.rateButton').parent().parent().children().get(0);
+    $('.rateButton').click(function() {
+        let rnameElement =  $(this).parent().parent().children().get(0);
         let rname = $(rnameElement).text();
         $('input#rname').val(rname);
 
-        let bidElement =  $('.rateButton').parent().parent().children().get(1);
+        let bidElement =  $(this).parent().parent().children().get(1);
         let bid = $(bidElement).text();
         $('input#bid').val(bid);
 
+        alert("sending " + rname + " " + bid);
+
         $('form').submit();
-    }
+    });
 </script>
 </body>
 </html>

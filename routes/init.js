@@ -15,7 +15,8 @@ const round = 10;
 const salt  = bcrypt.genSaltSync(round);
 
 function initRouter(app) {
-  app.get('/'                    , index            );
+  app.get('/'                    , index);
+  app.post("/ratings/complete", insertIntoRatings);
   app.get('/contactUs'           , contact            );
   app.post('/search'             , search           );
   app.post('/search/restaurants' , insertIntoUserPreference, search_restaurant);
@@ -46,6 +47,29 @@ function initRouter(app) {
   /* LOGOUT */
   app.get('/logout', passport.authMiddleware(), logout);
 
+}
+
+function insertIntoRatings (req, res, next) {
+    console.log("HERE: " + req.body.rname);
+    if(req.body.rname === undefined) {
+      return next();
+    }
+
+    let rname = req.body.rname;
+    let bid = req.body.bid;
+    let rating = req.body.newRating;
+
+    let insertQuery = sql_query.insertIntoRatings;
+
+    pool.query(insertQuery, [rating, req.user.username, rname, bid], (err, data) => {
+      if(!err) {
+        console.log("successful insertion into Ratings Table!");
+      }
+      else {
+        console.error("failed insertion into Ratings Table", err);
+      }
+    });
+    res.redirect("/");
 }
 
 function ratings (req, res, next) {

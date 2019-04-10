@@ -47,6 +47,8 @@ const findAllUserBookings = "SELECT rname, bid FROM confirmedBookings WHERE user
 
 const findRatingsGivenUsernameRname = "SELECT rating FROM Ratings WHERE rname = $1 AND username = $2 and bid = $3;";
 
+const insertIntoRatings = "INSERT INTO Ratings (rating, userName, rname, bid) VALUES ($1, $2, $3, $4);";
+
 const queries = {
   findRestaurant : find_restaurant,
   getRestaurant : get_restaurant,
@@ -67,7 +69,8 @@ const queries = {
   delete_old_entries: delete_old_entries,
   updateAward : updateAward,
   findAllUserBookings : findAllUserBookings,
-  findRatingsGivenUsernameRname : findRatingsGivenUsernameRname
+  findRatingsGivenUsernameRname : findRatingsGivenUsernameRname,
+  insertIntoRatings : insertIntoRatings
 };
 
 module.exports = queries;

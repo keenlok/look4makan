@@ -16,20 +16,24 @@
  <form method="post" action="/ratings/complete">
          <input type="hidden" id="rname" name="rname" value="<%=rname%>">
          <input type="hidden" id="bid" name="bid" value="<%=bid%>">
-        <label>Current Rating: </label>
+        <br><br>
+     <label>Current Rating: </label>
         <% if (data.length === 0) { %>
             <input type="text" id="rating" name="rating" value="0" disabled>
         <% } else { %>
             <input type="text" id="rating" name="rating" value="<%=data[0].rating%>" readonly>
         <% } %>
-        <label>New Rating: </label>
+     <br><br><br><br><br>
+
+     <label>New Rating: </label>
          <select id="newRating" name="newRating">
              <% for (let i = 0; i <= 5; i++) { %>
                 <option value="<%=i%>" ><%= i %></option>
              <% } %>
          </select>
+     <br><br><br><br>
 
-        <td><button class="btn btn-primary" onclick="show()">Submit Rating</button></td>
+     <td><button class="btn btn-primary" onclick="show()">Submit Rating</button></td>
  </form>
 
 

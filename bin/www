@@ -92,4 +92,6 @@ function onListening() {
 }
 
 // Updates the sql server every minute
-setInterval(require('../routes/utils/util').updateSqlServer, 300000)
+const nomal_interval = 300000 // 5 minutes
+let testing_interval = 60000  // 1 minute
+setInterval(require('../routes/utils/util').updateSqlServer, testing_interval)

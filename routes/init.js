@@ -16,25 +16,26 @@ const salt  = bcrypt.genSaltSync(round);
 
 function initRouter(app) {
   app.get('/'                    , index            );
-  app.get('/contactUs'                    , contact            );
-  app.post('/search'              , search           );
-  app.post('/search/restaurants'  , insertIntoUserPreference, search_restaurant);
+  app.get('/contactUs'           , contact            );
+  app.post('/search'             , search           );
+  app.post('/search/restaurants' , insertIntoUserPreference, search_restaurant);
   app.get('/restaurant'          , restaurant       );
   // app.get('/restaurants'         , list_restaurants )
-  app.post('/booking'             , booking          );
-    app.get('/rateReservations'                    , rateReservations);
-    app.post('/Ratings'             , ratings);
+  app.post('/booking'            , booking          );
+  app.get('/rateReservations'    , rateReservations);
+  app.post('/Ratings'            , ratings);
 
 
-    // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
+  // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
 
-    /*  PROTECTED GET */
+  app.get('/edit'                 , adminDashboard   )
+  /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register);
   app.get('/signin', login   );
   app.post('/booking/confirmation', passport.authMiddleware(), insertIntoConfirmedBooking, insertIntoBooks, updateAward, confirmation);
 
 
-    /*  PROTECTED POST */
+  /*  PROTECTED POST */
   app.post('/reg_user', passport.antiMiddleware(), registerUser);
 
   app.post('/authenticate', passport.authenticate('local', {
@@ -73,8 +74,8 @@ function rateReservations (req, res, next) {
   let username = (req.user === undefined) ? '' : req.user.username;
   pool.query(selectQuery, [username], (err, data) => {
     if(!err) {
-        let auth = req.isAuthenticated();
-        res.render("rateReservations", {data: data.rows, auth : auth});
+      let auth = req.isAuthenticated();
+      res.render("rateReservations", {data: data.rows, auth : auth});
     }
   });
 }
@@ -91,40 +92,40 @@ function index(req, res, next) {
   let time = utils.getTime();
   let dateInStr = utils.getDateInStr();
   const title = 'Looking for places to eat?';
-   // console.log(time, date)
+  // console.log(time, date)
 
-    //console.log(utils.getDate());
+  //console.log(utils.getDate());
   // console.log(query)
-    let date = utils.getDate();
-    let query = sql_query.getAllLocations;
-    let query1= sql_query.getAllCuisines;
-    let query2= sql_query.getAllRestaurantName;
-    let query3= sql_query.getAllTimeSlots;
+  let date = utils.getDate();
+  let query = sql_query.getAllLocations;
+  let query1= sql_query.getAllCuisines;
+  let query2= sql_query.getAllRestaurantName;
+  let query3= sql_query.getAllTimeSlots;
 
-    pool.query(query, (err, data) => {
+  pool.query(query, (err, data) => {
     if (err) {
       console.error(err)
       error(err, res);
     } else {
-        pool.query(query1, (err1, data1) => {
-            pool.query(query2, (err2, data2) => {
-                pool.query(query3, (err3, data3) => {
-                  let auth = !!req.isAuthenticated()
-                  res.render('index', {
-                    title: title,
-                    dateInStr : dateInStr,
-                    date : date,
-                    time : time,
-                    auth: auth,
-                    data: data.rows,
-                    data1: data1.rows,
-                    data2: data2.rows,
-                    data3: data3.rows,
-                    user: user
-                  })
-                });
-            });
+      pool.query(query1, (err1, data1) => {
+        pool.query(query2, (err2, data2) => {
+          pool.query(query3, (err3, data3) => {
+            let auth = !!req.isAuthenticated()
+            res.render('index', {
+              title: title,
+              dateInStr : dateInStr,
+              date : date,
+              time : time,
+              auth: auth,
+              data: data.rows,
+              data1: data1.rows,
+              data2: data2.rows,
+              data3: data3.rows,
+              user: user
+            })
+          });
         });
+      });
     }});
 }
 
@@ -196,7 +197,7 @@ function insertIntoUserPreference (req, res, next) {
   ];
 
 
-   console.log("INSERT QUERY :", insertQuery, arguments);
+  console.log("INSERT QUERY :", insertQuery, arguments);
   pool.query(insertQuery, arguments, (err, data) => {
     if(!err) {
       console.log("successful insertion into UserPreferences Table");
@@ -217,7 +218,7 @@ function search_restaurant(req, res, next) {
   let paxNo = req.body.paxNo;
   let date = req.body.reservationDate;
 
-    if(rname !== '')  {
+  if(rname !== '')  {
     rname = pad(rname);
   }
   else {
@@ -258,13 +259,13 @@ function search_restaurant(req, res, next) {
 
   searchQuery = searchQuery.replace('$5', paxNo);
 
-    if(date !== '') {
-        date = pad(date);
-    }
+  if(date !== '') {
+    date = pad(date);
+  }
 
-    searchQuery = searchQuery.replace('$6', date);
+  searchQuery = searchQuery.replace('$6', date);
 
-    pool.query(searchQuery, (err, data) => {
+  pool.query(searchQuery, (err, data) => {
     if (err || !data.rows || data.rows.length === 0) {
       ctx = 0
       table = []
@@ -445,8 +446,8 @@ function booking(req, res, next) {
         auth: auth,
         user: user
       });
-        });
     });
+  });
 }
 
 function insertIntoConfirmedBooking (req, res, next) {
@@ -477,96 +478,111 @@ function insertIntoConfirmedBooking (req, res, next) {
 }
 
 function insertIntoBooks (req, res, next) {
-    let rname = req.body.rname;
-    let bid = req.body.bid;
-    let pax = req.body.pax;
-    let reservationTime = req.body.reservationTime;
-    let reservationDate = req.body.reservationDate;
+  let rname = req.body.rname;
+  let bid = req.body.bid;
+  let pax = req.body.pax;
+  let reservationTime = req.body.reservationTime;
+  let reservationDate = req.body.reservationDate;
 
-    let insertQuery = sql_query.insertBooks;
+  let insertQuery = sql_query.insertBooks;
 
-    if(req.user === undefined) {
-        return next();
-    }
-
-    let selectQuery = sql_query.find_tid;
-
-    // selectQuery = selectQuery.replace("$1", pad(rname));
-    // selectQuery = selectQuery.replace("$2", bid);
-    // selectQuery = selectQuery.replace("$3", pax);
-
-    console.log("SELECTQUERY: " + selectQuery);
-
-    pool.query(selectQuery, [rname, bid, pax], (err, data) => {
-        if(!err) {
-            // insertQuery = insertQuery.replace("$1", pad(req.user.username));
-            // insertQuery = insertQuery.replace("$2", pad(rname));
-            // insertQuery = insertQuery.replace("$3", bid);
-            // insertQuery = insertQuery.replace("$4", data.rows[0].tid);
-            // insertQuery = insertQuery.replace("$5", pax);
-            // insertQuery = insertQuery.replace("$6", pad(reservationTime));
-            // insertQuery = insertQuery.replace("$7", pad(reservationDate));
-
-
-            let arguments = [
-                req.user.username,
-                rname,
-                bid,
-                data.rows[0].tid,
-                pax,
-                reservationTime,
-                reservationDate
-            ];
-
-            pool.query(insertQuery, arguments, (err, data) => {
-                if(!err) {
-                    console.log("Successful insertion into Booking Table ")
-                }
-                else {
-                    console.log("Failed insertion into Books Table ", err.detail)
-                }
-            });
-        }
-    });
+  if(req.user === undefined) {
     return next();
+  }
+
+  let selectQuery = sql_query.find_tid;
+
+  // selectQuery = selectQuery.replace("$1", pad(rname));
+  // selectQuery = selectQuery.replace("$2", bid);
+  // selectQuery = selectQuery.replace("$3", pax);
+
+  console.log("SELECTQUERY: " + selectQuery);
+
+  pool.query(selectQuery, [rname, bid, pax], (err, data) => {
+    if(!err) {
+      // insertQuery = insertQuery.replace("$1", pad(req.user.username));
+      // insertQuery = insertQuery.replace("$2", pad(rname));
+      // insertQuery = insertQuery.replace("$3", bid);
+      // insertQuery = insertQuery.replace("$4", data.rows[0].tid);
+      // insertQuery = insertQuery.replace("$5", pax);
+      // insertQuery = insertQuery.replace("$6", pad(reservationTime));
+      // insertQuery = insertQuery.replace("$7", pad(reservationDate));
+
+
+      let arguments = [
+        req.user.username,
+        rname,
+        bid,
+        data.rows[0].tid,
+        pax,
+        reservationTime,
+        reservationDate
+      ];
+
+      pool.query(insertQuery, arguments, (err, data) => {
+        if(!err) {
+          console.log("Successful insertion into Booking Table ")
+        }
+        else {
+          console.log("Failed insertion into Books Table ", err.detail)
+        }
+      });
+    }
+  });
+  return next();
 }
 
- function confirmation(req, res, next) {
+function confirmation(req, res, next) {
 
-   let rname = req.body.rname;
-   let location = req.body.location;
-   let reservationTime = utils.convert24to12Time(req.body.reservationTime);
-   let reservationDate = utils.getDateInStr((req.query.reservationDate));
-   let paxNo = req.body.pax;
+  let rname = req.body.rname;
+  let location = req.body.location;
+  let reservationTime = utils.convert24to12Time(req.body.reservationTime);
+  let reservationDate = utils.getDateInStr((req.query.reservationDate));
+  let paxNo = req.body.pax;
 
+  if(req.isAuthenticated()) {
+    res.render('confirmation', { page: "Confirmation", rname : rname, location : location, reservationTime : reservationTime,  reservationDate : reservationDate, paxNo : paxNo, auth: true});
+  }
+  else {
+    res.render('confirmation', { page: "Confirmation", rname : rname, location : location,  reservationTime : reservationTime, reservationDate : reservationDate, paxNo : paxNo, auth : false});
+  }
+}
 
-   if(req.isAuthenticated()) {
-       res.render('confirmation', { page: "Confirmation", rname : rname, location : location, reservationTime : reservationTime,  reservationDate : reservationDate, paxNo : paxNo, auth: true});
-   }
-   else {
-       res.render('confirmation', { page: "Confirmation", rname : rname, location : location,  reservationTime : reservationTime, reservationDate : reservationDate, paxNo : paxNo, auth : false});
-   }
- }
+function adminDashboard (req, res, next) {
+  let user = req.user
+  if (typeof user === "undefined") {
+    res.redirect('/') // Prevent unauthenticated access to this page
+  }
+  let date = utils.getDateInStr()
 
- function updateAward(req, res, next) {
-    if(req.user === undefined) {
-      return next();
+  res.render('edit', {
+    page: "Admin Dashboard",
+    dateInStr: date,
+    auth: true,
+    user: user
+  })
+
+}
+
+function updateAward(req, res, next) {
+  if(req.user === undefined) {
+    return next();
+  }
+  const awardPoint = 100;
+  let updateQuery = sql_query.updateAward;
+  pool.query(updateQuery, [awardPoint, req.user.username], (err, data) => {
+    if(!err) {
+      console.log("successful Updating of Rewards!");
     }
-    const awardPoint = 100;
-    let updateQuery = sql_query.updateAward;
-    pool.query(updateQuery, [awardPoint, req.user.username], (err, data) => {
-      if(!err) {
-        console.log("successful Updating of Rewards!");
-      }
-      else {
-        console.error("Failure to update rewards.. ", err);
-      }
-     });
-    next();
+    else {
+      console.error("Failure to update rewards.. ", err);
+    }
+  });
+  next();
 
- }
+}
 function login(req, res, next) {
-    res.render('signin', {title: 'Look4Makan', loginPage: true});
+  res.render('signin', {title: 'Look4Makan', loginPage: true});
 }
 
 function logout(req, res, next) {

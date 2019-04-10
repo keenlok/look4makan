@@ -16,14 +16,14 @@ const salt  = bcrypt.genSaltSync(round);
 
 function initRouter(app) {
   app.get('/'                    , index            );
-  app.get('/contactUs'                    , contact            );
-  app.post('/search'              , search           );
-  app.post('/search/restaurants'  , insertIntoUserPreference, search_restaurant);
+  app.get('/contactUs'           , contact            );
+  app.post('/search'             , search           );
+  app.post('/search/restaurants' , insertIntoUserPreference, search_restaurant);
   app.get('/restaurant'          , restaurant       );
   // app.get('/restaurants'         , list_restaurants )
-  app.post('/booking'             , booking          );
-  app.get('/rateReservations'                    , rateReservations);
-  app.post('/Ratings'             , ratings);
+  app.post('/booking'            , booking          );
+  app.get('/rateReservations'    , rateReservations);
+  app.post('/Ratings'            , ratings);
 
 
   // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
@@ -537,9 +537,13 @@ function adminDashboard (req, res, next) {
   if (typeof user === "undefined") {
     res.redirect('/') // Prevent unauthenticated access to this page
   }
+  let date = utils.getDateInStr()
 
   res.render('edit', {
-    pages: "Admin Dashboard"
+    page: "Admin Dashboard",
+    dateInStr: date,
+    auth: true,
+    user: user
   })
 
 }

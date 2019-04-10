@@ -14,16 +14,6 @@ const add_user = 'INSERT INTO diners (userName, password, firstName, lastName, i
 const setup_user_awards = 'INSERT INTO awards (username, awardpoints) ' +
                           'VALUES ($1, $2);';
 
-
-const checkForVacancyForUpdatedReservation = "SELECT tid FROM branches B NATURAL JOIN branchTables BT"
-                                          + " WHERE B.rname = $1 AND B.bid = $2 AND BT.capacity >= $3"
-                                          + " AND B.openTime <= $4 AND B.closeTime >= $4"
-                                          + " AND NOT EXISTS (SELECT 1 FROM bookedtables BKT"
-                                          + " WHERE BKT.bid = BT.bid AND BT.rname = BKT.rname AND BT.tid = BKT.tid"
-                                          + " and BKT.bookeddate = $5 and BKT.bookedtimeslot = $4)"
-                                          + " ORDER BY BT.capacity LIMIT 1;";
-
-
 const userpass = 'SELECT * FROM diners WHERE username = $1';
 
 const all_locations = "select * from Locations;";
@@ -33,7 +23,6 @@ const all_cuisines = "select * from CuisineTypes;";
 const all_rname= "select rname from Restaurants;";
 
 const all_timeSlots= "select * from Time;";
-
 
 //checked
 const insertUserPreference =  'INSERT INTO UserPreferences (userName, preferredRname, preferredLoc, preferredDate,' +
@@ -75,9 +64,6 @@ const updateAward = "UPDATE Awards  SET awardpoints = awardpoints + $1 WHERE use
 
 
 
-const delete_old_entries = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:15:00\' <= $1 AND bookedDate <= $2;';
-
-const delete_old_entries_for_testing = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:01:00\' <= $1 AND bookedDate <= $2;';
 
 const findAllUserBookings = "SELECT rname, bid FROM confirmedBookings WHERE username = $1;";
 
@@ -91,6 +77,17 @@ const insertIntoRatings = "INSERT INTO Ratings (rating, userName, rname, bid) VA
 const deleteBookedTable = "DELETE FROM BookedTables WHERE rname = $1 AND bid = $2 AND " +
     "tid = $3 AND bookedTimeslot >= $4 AND " +
     "bookedTimeslot < $4 + '01:00:00' AND bookedDate = $5;";
+
+const checkForVacancyForUpdatedReservation = "SELECT tid FROM branches B NATURAL JOIN branchTables BT"
+    + " WHERE B.rname = $1 AND B.bid = $2 AND BT.capacity >= $3"
+    + " AND B.openTime <= $4 AND B.closeTime >= $4"
+    + " AND NOT EXISTS (SELECT 1 FROM bookedtables BKT"
+    + " WHERE BKT.bid = BT.bid AND BT.rname = BKT.rname AND BT.tid = BKT.tid"
+    + " and BKT.bookeddate = $5 and BKT.bookedtimeslot = $4)"
+    + " ORDER BY BT.capacity LIMIT 1;";
+
+
+
 
 const insert_rname = 'INSERT INTO restaurants (rname) VALUES ($1);';
 
@@ -106,6 +103,11 @@ const insert_cuisine = 'INSERT INTO cuisinetypes (cuisinename) VALUES ($1);';
 const menu = 'SELECT * FROM menu;';
 
 const insert_into_menu = 'INSERT INTO  menuitems (menuname, foodname, price) VALUES ($1, $2, $3);';
+
+const delete_old_entries = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:15:00\' <= $1 AND bookedDate <= $2;';
+
+const delete_old_entries_for_testing = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:01:00\' <= $1 AND bookedDate <= $2;';
+
 
 const queries = {
   findRestaurant : find_restaurant,

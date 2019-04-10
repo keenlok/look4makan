@@ -619,8 +619,8 @@ function insertIntoRestaurantsBranches(req, res, next) {
   let default_start_bid = 1
   let operatingHours = utils.getTimeRangeAsStr(opentime, closetime)
 
-  console.log(req.body)
-  console.log(operatingHours)
+  // console.log(req.body)
+  // console.log(operatingHours)
   pool.query(sql_query.insert_rname, [rname], (err, data) => {
     if (err) {
       console.error("Error in adding rname", err)

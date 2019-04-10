@@ -41,6 +41,8 @@ const insertBooks =  "INSERT INTO Books (userName, rname, bid, tid , pax, reserv
 
 const delete_old_entries = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:15:00\' <= $1 AND bookedDate <= $2;';
 
+const delete_old_entries_for_testing = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:01:00\' <= $1 AND bookedDate <= $2;';
+
 const updateAward = "UPDATE Awards  SET awardpoints = awardpoints + $1 WHERE username = $2;";
 
 const findAllUserBookings = "SELECT DISTINCT rname FROM confirmedBookings WHERE username = $1;";
@@ -69,6 +71,7 @@ const queries = {
   insertBooks : insertBooks,
   find_tid : find_tid_given_bid_rname,
   delete_old_entries: delete_old_entries,
+  // delete_old_entries: delete_old_entries_for_testing, // use this when testing
   updateAward : updateAward,
   findAllUserBookings : findAllUserBookings,
   insert_rname: insert_rname,

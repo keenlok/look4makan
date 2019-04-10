@@ -24,15 +24,15 @@ drop table if exists BookedTables cascade;
 
 create table Time (
 timeSlot time primary key,
-timeSlotStr varchar(10)
+timeSlotStr varchar(10) not null
 );
 
 create table Diners (
 userName varchar(20) primary key,
-firstName varchar(20),
-lastName varchar(20),
-password varchar(64) NOT NULL,
-isAdmin boolean
+firstName varchar(20) not null,
+lastName varchar(20) not null,
+password varchar(64) not null,
+isAdmin boolean not null
 );
 
 create table Locations (
@@ -65,10 +65,10 @@ create table UserPreferences (
 userName varchar(20),
 preferredRname varchar(40),
 preferredLoc varchar(40) references Locations,
-preferredDate date,
-preferredTime time,
+preferredDate date not null,
+preferredTime time not null,
 cuisineType varchar(10) references CuisineTypes,
-paxNum integer,
+paxNum integer not null,
 primary key (userName)
 );
 
@@ -112,7 +112,7 @@ bid integer,
 tid integer,
 reservationTime time,
 reservationDate date,
-pax integer,
+pax integer not null,
 foreign key (rname, bid, tid, reservationTime, reservationDate) references BookedTables
 on delete cascade,
 foreign key (userName) references userpreferences,
@@ -128,7 +128,6 @@ bid integer,
 primary key (userName, rname, bid),
 foreign key (userName, rname, bid) references ConfirmedBookings
 );
-
 
 
 create table Menu (
@@ -457,7 +456,7 @@ values ('MacDonalds', 1, 1, '10:00:00', '2020-01-01'),
 insert into userpreferences
 (userName, preferredRname, preferredLoc,
 preferredDate, preferredTime, cuisineType, paxNum)
-values ('Aaron', null,null,null,null,null,null);
+values ('Aaron', null,null,'2022-03-04','13:00:00',null, 4);
 
 insert into Books (username, rname, bid, tid, pax, reservationtime, reservationdate)
 values ('Aaron', 'MacDonalds', 1, 1, 1, '10:00:00', '2020-01-01');

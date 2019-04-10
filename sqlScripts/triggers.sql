@@ -2,6 +2,7 @@ drop trigger if exists prevent_password_changes on diners;
 drop trigger if exists trig_validPax on bookedtables;
 drop trigger if exists trig_notTooShort on diners;
 drop trigger if exists trig_noTimeTravel on userpreferences;
+drop trigger if exists trig_validHours on bookedtables;
 -----------------------------------------------
 --Trigger to prevent change of password
 -----------------------------------------------
@@ -53,7 +54,7 @@ set capacity = capacity - 1
 where rname = 'Crystal Jade' and bid = 1 and tid = 1 and bookedtimeslot = '23:00:00' and bookeddate = '2019-05-16';
 
 insert into bookedtables (rname, bid, tid, capacity, bookedtimeslot, bookeddate) values
-('MacDonalds', 1, 3, 3213, '10:00:00', '2019-04-11');
+('MacDonalds', 1, 3, 3213, '10:00:00', '2019-04-10');
 
 select * from BookedTables;
 
@@ -89,7 +90,7 @@ select * from diners;
 
 create or replace function noTimeTravel()
 returns trigger as $$
-begin if new.preferredDate <= current_date and new.preferredTime <= localtime then
+begin if new.preferredDate < current_date or (new.preferredDate = current_date and new.preferredTime <= localtime) then
 	raise notice 'This app is not a time machine';
 	return null;
 else return new;
@@ -107,3 +108,31 @@ insert into userpreferences (username, preferredrname, preferredloc, preferredda
 ('lokeen', 'MacDonalds', 'Jurong Point', '2001-12-23' ,'14:39:53', 'Chinese', 6);
 select * from userpreferences;
 
+-----------------------------------------------
+--Trigger to prevent booking timeslot where restaurant is not open
+-----------------------------------------------
+create or replace function validHours()
+returns trigger as $$
+begin if 
+	new.bookedtimeslot < (select branches.opentime from branches where rname = new.rname and bid = new.bid) or new.bookedtimeslot > (select branches.closetime from branches where rname = new.rname and bid = new.bid)
+	then raise notice 'This branch is not opened at this hour';
+	return null;
+else return new;
+end if;
+end; $$ language plpgsql;
+
+create trigger trig_validHours
+before insert or update
+on BookedTables
+for each row
+execute procedure validHours();
+
+--test
+update BookedTables
+set capacity = capacity - 1
+where rname = 'Crystal Jade' and bid = 1 and tid = 1 and bookedtimeslot = '23:00:00' and bookeddate = '2019-05-16';
+
+insert into bookedtables (rname, bid, tid, capacity, bookedtimeslot, bookeddate) values
+('MacDonalds', 1, 3, 3213, '23:00:00', '2019-04-11');
+
+select * from BookedTables;

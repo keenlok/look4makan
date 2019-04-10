@@ -34,6 +34,45 @@
         </form>
     </div>
 </div>
+<div class="row">
+    <div class="col-xl-9 mx-auto">
+        <h2 class="mb-5">Insert Data into Restaurants And Branches</h2>
+    </div>
+    <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+        <form class="d-flex flex-row justify-content-center " action="/insert/restaurants" method="post">
+            <div class="container-fluid">
+                <div class="row">
+                    <input class="form-control flex-item flex-grow-1 m-1" type="text" placeholder="Type restaurant Name..." name="rname">
+                </div>
+                <div class="row">
+                        <div class="col">
+                            <input class="form-control flex-grow-1 m-1" type="text" placeholder="Type opening time in 24hr format..." name="opentime">
+                        </div>
+                        <div class="col">
+                            <input class="form-control flex-grow-1 m-1" type="text" placeholder="Type closing time in 24hr format..." name="closetime">
+                        </div>
+                </div>
+                <div class="row">
+                    <select class="m-1 flex-grow-1 " id="locations" name="location">
+                        <option value=""> Select Location </option>
+                        <% for (var i = 0; i < location.length; i++) { %>
+                        <option value="<%= location[i].locname %>"><%= location[i].locname %> </option>
+                        <% } %>
+                    </select>
+                    <select class="m-1 flex-grow-1" id="cuisines" name="cuisineType">
+                        <option value=""> Select Cuisine Type </option>
+                        <% for (var i = 0; i < cuisine.length; i++) { %>
+                        <option value="<%= cuisine[i].cuisinename%>"><%= cuisine[i].cuisinename %> </option>
+                        <% } %>
+                    </select>
+                </div>
+                <div class="row">
+                    <button class="btn btn-primary m-1" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 <script>
   var urlstatus = window.location.search;
   if (typeof urlstatus !== "undefined" && urlstatus != '') {

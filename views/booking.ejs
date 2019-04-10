@@ -27,7 +27,7 @@
     <tr>
         <th scope="col">Menu Name</th>
         <th scope="col">Menu Item</th>
-        <th scope="col">Price</th>
+        <th scope="col">Price (SGD)</th>
     </tr>
     </thead>
     <tbody>
@@ -40,7 +40,8 @@
         <% flag = false; %>
         <% } %>
         <td><%= menu[i][j].foodname %></td>
-        <td><%= menu[i][j].price %></td>
+        <% let price = "$" + menu[i][j].price;%>
+        <td><%=price %></td>
     </tr>
     <% } }%>
     </tbody>

@@ -1,29 +1,30 @@
 const sql_query = require('./sql/sqlQueries')
 const passport = require('passport')
 const bcrypt = require('bcrypt')
-const utils = require('./utils/util')
+const utils = require('./utils/util');
 
 // Postgre SQL Connection
-const { Pool } = require('pg')
+const { Pool } = require('pg');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   //ssl: true
-})
+});
 
 const round = 10;
 const salt  = bcrypt.genSaltSync(round);
 
 function initRouter(app) {
-  app.get('/'                    , index            );
-  app.get('/contactUs'                    , contact            );
-  app.post('/search'              , search           );
-  app.post('/search/restaurants'  , insertIntoUserPreference, search_restaurant);
+  app.get('/'                    , index);
+  app.post("/ratings/complete", insertIntoRatings);
+  app.get('/contactUs'           , contact            );
+  app.post('/search'             , search           );
+  app.post('/search/restaurants' , insertIntoUserPreference, search_restaurant);
   app.get('/restaurant'          , restaurant       );
   // app.get('/restaurants'         , list_restaurants )
-  app.post('/booking'             , booking          );
-  app.get('/rateReservations'                    , rateReservations);
-  app.post('/Ratings'             , ratings);
+  app.post('/booking'            , booking          );
+  app.get('/rateReservations'    , rateReservations);
+  app.post('/Ratings'            , ratings);
 
 
   // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
@@ -48,8 +49,47 @@ function initRouter(app) {
 
 }
 
+function insertIntoRatings (req, res, next) {
+    console.log("HERE: " + req.body.rname);
+    if(req.body.rname === undefined) {
+      return next();
+    }
+
+    let rname = req.body.rname;
+    let bid = req.body.bid;
+    let rating = req.body.newRating;
+
+    let insertQuery = sql_query.insertIntoRatings;
+
+    pool.query(insertQuery, [rating, req.user.username, rname, bid], (err, data) => {
+      if(!err) {
+        console.log("successful insertion into Ratings Table!");
+      }
+      else {
+        console.error("failed insertion into Ratings Table", err);
+      }
+    });
+    res.redirect("/");
+}
+
 function ratings (req, res, next) {
-  // res.render("ratings");
+  let rname = req.body.rname;
+  let bid = req.body.bid;
+  // console.log(req);
+  if(req.user !== undefined) {
+      let selectQuery = sql_query.findRatingsGivenUsernameRname;
+      console.log("query : " + selectQuery);
+      console.log("rname : " + rname);
+      console.log("bid : " + bid);
+      console.log("username : " + req.user.username);
+      pool.query(selectQuery, [rname,req.user.username, bid], (err, data) => {
+        if(err) {
+          console.log("FUCK");
+        }
+        let auth = req.isAuthenticated();
+        res.render("ratings", {rname : rname, username : req.user.username, bid : bid, data : data.rows, auth: auth});
+      });
+  }
 }
 
 function rateReservations (req, res, next) {
@@ -537,9 +577,13 @@ function adminDashboard (req, res, next) {
   if (typeof user === "undefined") {
     res.redirect('/') // Prevent unauthenticated access to this page
   }
+  let date = utils.getDateInStr()
 
   res.render('edit', {
-    pages: "Admin Dashboard"
+    page: "Admin Dashboard",
+    dateInStr: date,
+    auth: true,
+    user: user
   })
 
 }

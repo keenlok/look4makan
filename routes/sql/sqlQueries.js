@@ -39,11 +39,15 @@ const find_tid_given_bid_rname = "SELECT tid from BranchTables BT WHERE BT.rname
 
 const insertBooks =  "INSERT INTO Books (userName, rname, bid, tid , pax, reservationTime, reservationDate) VALUES ($1, $2, $3, $4, $5, $6, $7);";
 
-const delete_old_entries = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'1:00:00\' <= $1 AND bookedDate <= $2;';
+const delete_old_entries = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:15:00\' <= $1 AND bookedDate <= $2;';
 
 const updateAward = "UPDATE Awards  SET awardpoints = awardpoints + $1 WHERE username = $2;";
 
-const findAllUserBookings = "SELECT DISTINCT rname FROM confirmedBookings WHERE username = $1;";
+const findAllUserBookings = "SELECT rname, bid FROM confirmedBookings WHERE username = $1;";
+
+const findRatingsGivenUsernameRname = "SELECT rating FROM Ratings WHERE rname = $1 AND username = $2 and bid = $3;";
+
+const insertIntoRatings = "INSERT INTO Ratings (rating, userName, rname, bid) VALUES ($1, $2, $3, $4);";
 
 const queries = {
   findRestaurant : find_restaurant,
@@ -64,7 +68,9 @@ const queries = {
   find_tid : find_tid_given_bid_rname,
   delete_old_entries: delete_old_entries,
   updateAward : updateAward,
-  findAllUserBookings : findAllUserBookings
+  findAllUserBookings : findAllUserBookings,
+  findRatingsGivenUsernameRname : findRatingsGivenUsernameRname,
+  insertIntoRatings : insertIntoRatings
 };
 
 module.exports = queries;

@@ -1,0 +1,145 @@
+<html>
+<head>
+    <title><%= page %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/landing-page.min.css' />
+    <!-- Custom fonts for this template -->
+    <link href="/stylesheets/vendor/fontawesome-free/css/all.css" rel="stylesheet">
+    <link href="/stylesheets/vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+</head>
+<header>
+    <% include ./partials/header %>
+</header>
+<body>
+<div class="align-content-md-start">
+    <p><%= dateInStr %></p>
+</div>
+<div class="row">
+    <div class="col-xl-9 mx-auto">
+        <h2 class="mb-5">Insert Data into Diners</h2>
+    </div>
+    <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+        <form class="d-flex flex-row justify-content-center " action="/insert/diners" method="post">
+            <input class="form-control m-1" type="text" placeholder="Type username..." name="username">
+            <input class="form-control m-1" type="text" placeholder="Type First name..." name="firstname">
+            <input class="form-control m-1" type="text" placeholder="Type Last name..." name="lastname">
+            <input class="form-control m-1" type="text" placeholder="Type Password..." name="password">
+            <button class="btn btn-primary m-1" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-9 mx-auto">
+        <h2 class="mb-5">Insert New Restaurants And Branches</h2>
+    </div>
+    <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+        <form class="d-flex flex-row justify-content-center " action="/insert/restaurants" method="post">
+            <div class="container-fluid">
+                <div class="row">
+                    <input class="form-control flex-item flex-grow-1 m-1" type="text" placeholder="Type restaurant Name..." name="rname">
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <input class="form-control flex-grow-1 m-1" type="text" placeholder="Type opening time in 24hr format..." name="opentime">
+                    </div>
+                    <div class="col">
+                        <input class="form-control flex-grow-1 m-1" type="text" placeholder="Type closing time in 24hr format..." name="closetime">
+                    </div>
+                </div>
+                <div class="row">
+                    <select class="m-1 flex-grow-1 " id="locations" name="location">
+                        <option value=""> Select Location </option>
+                        <% for (var i = 0; i < location.length; i++) { %>
+                        <option value="<%= location[i].locname %>"><%= location[i].locname %> </option>
+                        <% } %>
+                    </select>
+                    <select class="m-1 flex-grow-1" id="cuisines" name="cuisineType">
+                        <option value=""> Select Cuisine Type </option>
+                        <% for (var i = 0; i < cuisine.length; i++) { %>
+                        <option value="<%= cuisine[i].cuisinename%>"><%= cuisine[i].cuisinename %> </option>
+                        <% } %>
+                    </select>
+                </div>
+                <div class="row">
+                    <button class="btn btn-primary m-1" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-9 mx-auto">
+        <h2 class="mb-5">Insert New Locations</h2>
+    </div>
+    <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+        <form class="d-flex flex-row justify-content-center " action="/insert/locations" method="post">
+            <input class="form-control flex-grow-1 m-1" type="text" placeholder="Type in Location..." name="location">
+            <button class="btn btn-primary m-1" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-9 mx-auto">
+        <h2 class="mb-5">Insert New Menus</h2>
+    </div>
+    <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+        <form class="d-flex flex-row justify-content-center " action="/insert/menu" method="post">
+            <input class="form-control flex-grow-1 m-1" type="text" placeholder="Type in Menu Name..." name="menu">
+            <button class="btn btn-primary m-1" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-9 mx-auto">
+        <h2 class="mb-5">Insert New Cuisine Types</h2>
+    </div>
+    <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+        <form class="d-flex flex-row justify-content-center " action="/insert/cuisine" method="post">
+            <input class="form-control flex-grow-1 m-1" type="text" placeholder="Type in Cuisine Type..." name="cuisine">
+            <button class="btn btn-primary m-1" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-9 mx-auto">
+        <h2 class="mb-5">Insert Into Existing Menu</h2>
+    </div>
+    <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+        <form class="d-flex flex-row justify-content-center " action="/insert/intomenu" method="post">
+            <select class="m-1 flex-grow-1 " id="menuname" name="menuname">
+                <option value=""> Select Menu </option>
+                <% for (var i = 0; i < menu.length; i++) { %>
+                <option value="<%= menu[i].name %>"><%= menu[i].name %> </option>
+                <% } %>
+            </select>
+            <input class="form-control flex-grow-1 m-1" type="text" placeholder="Type in Food..." name="food">
+            <input class="form-control flex-grow-1 m-1" type="text" placeholder="Type in Price..." name="price">
+            <button class="btn btn-primary m-1" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+<script>
+  var urlstatus = window.location.search;
+  if (typeof urlstatus !== "undefined" && urlstatus != '') {
+    let args = urlstatus.split('?');
+    if (typeof args[1] !== "undefined") {
+      // console.log(args[1]);
+      let typestatus = args[1];
+      let arr = typestatus.split('=');
+      let type = arr[0];
+      let status = arr[1];
+      console.log(type + ": " + status);
+    }
+  }
+</script>
+</body>
+<footer>
+    <%- include ./partials/footer.ejs %>
+</footer>
+</html>

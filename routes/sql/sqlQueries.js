@@ -49,6 +49,8 @@ const insert_rname = 'INSERT INTO restaurants (rname) VALUES ($1);'
 
 const insert_branch = 'INSERT INTO branches (rname, bid, location, openingHours, openTime, closeTime, cuisineType) VALUES ($1, $2, $3, $4, $5, $6, $7);';
 
+const insert_location = 'INSERT INTO locations (locname) VALUES ($1);'
+
 const queries = {
   findRestaurant : find_restaurant,
   getRestaurant : get_restaurant,
@@ -70,7 +72,8 @@ const queries = {
   updateAward : updateAward,
   findAllUserBookings : findAllUserBookings,
   insert_rname: insert_rname,
-  insert_branch: insert_branch
+  insert_branch: insert_branch,
+  insert_location: insert_location
 };
 
 module.exports = queries;

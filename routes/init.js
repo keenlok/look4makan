@@ -38,6 +38,7 @@ function initRouter(app) {
 
   app.post('/insert/diners'     , insertIntoDiners             )
   app.post('/insert/restaurants', insertIntoRestaurantsBranches)
+  app.post('/insert/locations', insertLocations              )
 
 
   /*  PROTECTED GET */
@@ -569,13 +570,13 @@ function insertData (req, res, next) {
     if (err) {
       console.error("Error getting Locations", err)
     } else {
-      console.log("Successfully queried location data", data)
+      console.log("Successfully queried location data")
       let location = data.rows
       pool.query(sql_query.getAllCuisines, (err, data) => {
         if (err) {
           console.error("Error getting Locations", err)
         } else {
-          console.log("Successfully queried cuisine data", data)
+          console.log("Successfully queried cuisine data")
           let cuisine = data.rows
           res.render('admin_insert', {
             page: "Admin Insert",
@@ -645,6 +646,19 @@ function insertIntoRestaurantsBranches(req, res, next) {
           res.redirect('/edit/insert?rest&branch=success')
         }
       })
+    }
+  })
+}
+
+function insertLocations(req, res, next) {
+  let location = req.body.location
+  pool.query(sql_query.insert_location, [location], (err, data) => {
+    if (err) {
+      console.error("Error in adding location", err)
+      res.redirect('/edit/insert?location=fail')
+    } else {
+      console.log("successfully added location")
+      res.redirect('/edit/insert?location=success')
     }
   })
 

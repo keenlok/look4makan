@@ -94,7 +94,7 @@ const queries = {
   insert_location: insert_location,
   insert_menu: insert_menu,
   insert_cuisine: insert_cuisine,
-  insert_into_menu: insert_into_menu
+  insert_into_menu: insert_into_menu,
   findRatingsGivenUsernameRname : findRatingsGivenUsernameRname,
   insertIntoRatings : insertIntoRatings,
   findAllUserBooks : findAllUserBooks

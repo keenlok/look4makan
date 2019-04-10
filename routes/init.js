@@ -34,6 +34,9 @@ function initRouter(app) {
   app.get('/edit/insert', insertData       )
   app.get('/edit/update', updateData       )
 
+  app.post('/insert/diners'    , insertIntoDiners)
+  app.post('/insert/restaurants')
+
 
   /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register);
@@ -566,6 +569,24 @@ function insertData (req, res, next) {
     dateInStr: date,
     auth: true,
     user: user
+  })
+}
+
+// Basically register without the logging in to the user
+function insertIntoDiners(req, res, next) {
+  let username = req.body.username
+  let password = bcrypt.hashSync(req.body.password, salt)
+  let firstName = req.body.firstname
+  let lastName = req.body.lastname
+
+  pool.query(sql_query.add_user, [username, password, firstName, lastName], (err, data) => {
+    if (err) {
+      console.error("error in adding user", err);
+      res.redirect('/edit/insert?user=fail')
+    } else {
+      console.log('Added users')
+      res.redirect('/edit/insert?user=success')
+    }
   })
 }
 

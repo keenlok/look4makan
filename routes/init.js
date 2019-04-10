@@ -578,7 +578,7 @@ function logout(req, res, next) {
 
 function error(err, res) {
   res.render('error', {message: 'ERROR OCCURED', error: err});
-
+}
  
 function insertIntoBookedTables(req, res, next) {
   console.log(req.body)

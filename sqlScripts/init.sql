@@ -84,7 +84,7 @@ create table BookedTables (
 rname varchar(40),
 bid integer,
 tid integer,
-capacity integer,
+capacity integer,  --should change to paxNo not capacity
 bookedTimeslot time,
 bookedDate date,
 foreign key (rname, bid, tid) references BranchTables,
@@ -366,8 +366,8 @@ insert into BranchTables (rname, bid, tid, capacity) values
 
 
 insert into BookedTables (rname, bid, tid, capacity, bookedTimeslot, bookedDate) values
-('Crystal Jade', 1, 1, 0, '23:00:00', '2019-05-16'),
-('MacDonalds', 1, 1, 50, '10:00:00', '2019-04-11');
+('Crystal Jade', 1, 1, 0, '23:00:00', '2019-05-16');
+--('MacDonalds', 1, 1, 50, '10:00:00', '2019-04-11');
 
 
 
@@ -413,11 +413,34 @@ insert into Sells (menuname, rname, bid) values
 ('Yumyum Menu', 'NamNam', 1);
 
 
--- testing
+
 insert into confirmedbookings (userName, rname, bid) values
 ('Aaron', 'MacDonalds', 1),
 ('Aaron', 'MacDonalds', 2),
 ('Aaron', 'BurgerKing', 1),
 ('Aaron', 'Forlino', 1);
 
+/*
+SELECT DISTINCT rname FROM confirmedBookings WHERE username = 'Aaron';
+*/
+--testing
+--for one booking, need four entries to Booked Table
+insert into BookedTables (rname, bid, tid, capacity, bookedTimeslot, bookedDate)
+values ('MacDonalds', 1, 1, 1, '10:00:00', '2020-01-01'),
+('MacDonalds', 1, 1, 1, '10:15:00', '2020-01-01'),
+('MacDonalds', 1, 1, 1, '10:30:00', '2020-01-01'),
+('MacDonalds', 1, 1, 1, '10:45:00', '2020-01-01'),
+--last entry just to test that deleting a reservationTime 10:00:00 only deletes the first four not the last one
+('MacDonalds', 1, 1, 1, '11:00:00', '2020-01-01');
+
+insert into userpreferences
+(userName, preferredRname, preferredLoc,
+preferredDate, preferredTime, cuisineType, paxNum)
+values ('Aaron', null,null,null,null,null,null);
+
+insert into Books (username, rname, bid, tid, pax, reservationtime, reservationdate)
+values ('Aaron', 'MacDonalds', 1, 1, 1, '10:00:00', '2020-01-01');
+
+
+--SELECT DISTINCT rname, bid, tid, pax, reservationTime, reservationDate FROM Books WHERE username = 'Aaron';
 

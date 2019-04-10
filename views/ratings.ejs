@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rate Your Reservation</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <script src='/stylesheets/vendor/jquery/jquery.js'></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+</head>
+<header>
+    <% include ./partials/header %>
+</header>
+<body>
+ <form method="post" action="/">
+        <label>Current Rating: </label>
+        <% if (data.length === 0) { %>
+            <input type="text" id="rating" name="rating" value="0" readonly>
+        <% } else { %>
+            <input type="text" id="rating" name="rating" value="<%=rating%>" readonly>
+        <% } %>
+        <label>New Rating: </label>
+         <select id="newRating" name="newRating">
+             <% for (let i = 0; i <= 5; i++) { %>
+                <option value="<%=i%>" ><%= i %></option>
+             <% } %>
+         </select>
+
+        <td><button class="btn btn-primary" onclick="show()">Submit Rating</button></td>
+
+ </form>
+
+<form type="hidden" method="post" action="/Ratings">
+    <!--<input type="hidden" id="rname" name="rname">-->
+    <!--<input type="hidden" id="bid" name="bid">-->
+    <!---->
+</form>
+
+<script>
+    function show() {
+        let rnameElement = $("td").parent().children().get(0);
+        let rname = $(rnameElement).text();
+        $('input#rname').val(rname);
+        console.log(rname);
+
+        let bidElement = $("td").parent().children().get(0);
+        let bid = $(bidElement).text();
+        $('input#bid').val(bid);
+        alert(rname+ " " + bid);
+
+        // $('input#rname').val(bid);
+        // $('form').submit();
+    }
+</script>
+</body>
+</html>

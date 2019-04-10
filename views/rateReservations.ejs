@@ -20,28 +20,38 @@
 <% } %>
 <form type="hidden" method="post" action="/Ratings">
     <input type="hidden" id="rname" name="rname">
+    <input type="hidden" id="bid" name="bid">
+
 </form>
 <table class="table table">
     <thead>
     <tr>
         <th scope="col">Restaurant</th>
+        <th scope="col">BID</th>
     </tr>
     </thead>
     <tbody>
     <% for(var i=0; i< data.length; i++) { %>
     <tr>
         <td><%= data[i].rname%></td>
+        <td><%= data[i].bid%></td>
         <td></td><td></td><td></td><td></td><td></td><td></td>
         <td></td><td></td><td></td><td></td><td></td><td></td>
-        <td><button class="btn btn-primary" onclick="show()">Rate</button></td>
+        <td><button class="btn btn-primary rateButton" onclick="show()" >Rate</button></td>
     </tr>
     <% } %>
     </tbody>
 </table>
 <script>
     function show() {
-        let rname = document.getElementById('rname').value;
+        let rnameElement =  $('.rateButton').parent().parent().children().get(0);
+        let rname = $(rnameElement).text();
         $('input#rname').val(rname);
+
+        let bidElement =  $('.rateButton').parent().parent().children().get(1);
+        let bid = $(bidElement).text();
+        $('input#bid').val(bid);
+
         $('form').submit();
     }
 </script>

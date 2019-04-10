@@ -1,15 +1,15 @@
 const sql_query = require('./sql/sqlQueries')
 const passport = require('passport')
 const bcrypt = require('bcrypt')
-const utils = require('./utils/util')
+const utils = require('./utils/util');
 
 // Postgre SQL Connection
-const { Pool } = require('pg')
+const { Pool } = require('pg');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   //ssl: true
-})
+});
 
 const round = 10;
 const salt  = bcrypt.genSaltSync(round);
@@ -48,7 +48,23 @@ function initRouter(app) {
 }
 
 function ratings (req, res, next) {
-  // res.render("ratings");
+  let rname = req.body.rname;
+  let bid = req.body.bid;
+  // console.log(req);
+  if(req.user !== undefined) {
+      let selectQuery = sql_query.findRatingsGivenUsernameRname;
+      console.log("query : " + selectQuery);
+      console.log("rname : " + rname);
+      console.log("bid : " + bid);
+      console.log("username : " + req.user.username);
+      pool.query(selectQuery, [rname,req.user.username, bid], (err, data) => {
+        if(err) {
+          console.log("FUCK");
+        }
+        let auth = req.isAuthenticated();
+        res.render("ratings", {rname : rname, username : req.user.username, bid : bid, data : data.rows, auth: auth});
+      });
+  }
 }
 
 function rateReservations (req, res, next) {

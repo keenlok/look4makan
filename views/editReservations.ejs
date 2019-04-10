@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Your Reservations</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <script src='/stylesheets/vendor/jquery/jquery.js'></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+</head>
+<header>
+    <% include ./partials/header %>
+</header>
+<body>
+<% if (user === undefined) { %>
+<h2>No bookings found</h2>
+<br><br>
+<p>You are not signed into your account!</p>
+<p>You can only rate restaurants when you have signed in!</p>
+<p> Start creating / signing into your account!</p>
+<br><br><br>
+
+<% } else if (data.length === 0) { %>
+<h2>No bookings found!</h2>
+<br><br>
+<p>You have not made any reservations before!</p>
+<p>You can only edit reservations you have made before!</p>
+<p> Start making your reservations!</p>
+<br><br><br>
+
+<% } else { %>
+<h2><%=data.length %> Results found!</h2>
+<form type="hidden" method="post" action="/Ratings">
+    <input type="hidden" id="rname" name="rname">
+    <input type="hidden" id="bid" name="bid">
+    <input type="hidden" id="pax" name="pax">
+    <input type="hidden" id="reservationTime" name="reservationTime">
+    <input type="hidden" id="reservationDate" name="reservationDate">
+</form>
+<table class="table table">
+    <thead>
+    <tr>
+        <th scope="col">Restaurant</th>
+        <th scope="col">BID</th>
+        <th scope="col">Pax</th>
+        <th scope="col">Reservation Time</th>
+        <th scope="col">Reservation Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% for(var i=0; i< data.length; i++) { %>
+    <tr>
+        <td><%= data[i].rname%></td>
+        <td><%= data[i].bid%></td>
+        <td><%= data[i].pax%></td>
+        <td><%= data[i].reservationtime%></td>
+        <td><%= data[i].reservationdate%></td>
+        <td><button class="btn btn-primary editButton">Edit</button></td>
+
+    </tr>
+    <% } %>
+    </tbody>
+</table>
+<% } %>
+<script>
+    $('.editButton').click(function() {
+        let rnameElement =  $(this).parent().parent().children().get(0);
+        let rname = $(rnameElement).text();
+        $('input#rname').val(rname);
+
+        let bidElement =  $(this).parent().parent().children().get(1);
+        let bid = $(bidElement).text();
+        $('input#bid').val(bid);
+
+        let paxElement =  $(this).parent().parent().children().get(2);
+        let pax = $(paxElement).text();
+        $('input#pax').val(pax);
+
+        let reservationTimeElement =  $(this).parent().parent().children().get(3);
+        let reservationTime = $(reservationTimeElement).text();
+        $('input#reservationTime').val(reservationTime);
+
+        let reservationDateElement =  $(this).parent().parent().children().get(4);
+        let reservationDate = $(reservationDateElement).text();
+        $('input#reservationDate').val(reservationDate);
+
+        alert("sending " + rname + " " + bid +  " " + pax + " " + reservationTime + " " + reservationDate); //leave for testing correctness
+
+        $('form').submit();
+    });
+</script>
+</body>
+</html>

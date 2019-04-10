@@ -45,6 +45,8 @@ const updateAward = "UPDATE Awards  SET awardpoints = awardpoints + $1 WHERE use
 
 const findAllUserBookings = "SELECT rname, bid FROM confirmedBookings WHERE username = $1;";
 
+const findAllUserBooks = "SELECT DISTINCT rname, bid, tid, pax, reservationTime, reservationDate FROM Books WHERE username = $1;";
+
 const findRatingsGivenUsernameRname = "SELECT rating FROM Ratings WHERE rname = $1 AND username = $2 and bid = $3;";
 
 const insertIntoRatings = "INSERT INTO Ratings (rating, userName, rname, bid) VALUES ($1, $2, $3, $4);";
@@ -70,7 +72,8 @@ const queries = {
   updateAward : updateAward,
   findAllUserBookings : findAllUserBookings,
   findRatingsGivenUsernameRname : findRatingsGivenUsernameRname,
-  insertIntoRatings : insertIntoRatings
+  insertIntoRatings : insertIntoRatings,
+    findAllUserBooks : findAllUserBooks
 };
 
 module.exports = queries;

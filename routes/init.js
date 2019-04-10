@@ -25,7 +25,7 @@ function initRouter(app) {
   app.post('/booking'            , booking          );
   app.get('/rateReservations'    , rateReservations);
   app.post('/Ratings'            , ratings);
-
+  app.get('/editReservations', editReservations);
 
   // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
 
@@ -49,8 +49,20 @@ function initRouter(app) {
 
 }
 
+
+function editReservations (req, res, next) {
+
+    let selectQuery = sql_query.findAllUserBooks;
+    let username = (req.user === undefined) ? '' : req.user.username;
+    pool.query(selectQuery, [username], (err, data) => {
+        if(!err) {
+            let auth = req.isAuthenticated();
+            res.render("editReservations", {data: data.rows, auth : auth, user: req.user});
+        }
+    });
+}
+
 function insertIntoRatings (req, res, next) {
-    console.log("HERE: " + req.body.rname);
     if(req.body.rname === undefined) {
       return next();
     }

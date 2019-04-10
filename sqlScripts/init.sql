@@ -24,15 +24,15 @@ drop table if exists BookedTables cascade;
 
 create table Time (
 timeSlot time primary key,
-timeSlotStr varchar(10)
+timeSlotStr varchar(10) not null
 );
 
 create table Diners (
 userName varchar(20) primary key,
-firstName varchar(20),
-lastName varchar(20),
-password varchar(64) NOT NULL,
-isAdmin boolean
+firstName varchar(20) not null,
+lastName varchar(20) not null,
+password varchar(64) not null,
+isAdmin boolean not null
 );
 
 create table Locations (
@@ -47,10 +47,12 @@ create table CuisineTypes (
 cuisineName varchar(10) primary key
 );
 
+--not sure
 create table Awards(
 userName varchar(20) primary key references diners,
 awardPoints integer
 );
+
 
 create table ConfirmedBookings (
 userName varchar(20),
@@ -63,50 +65,63 @@ create table UserPreferences (
 userName varchar(20),
 preferredRname varchar(40),
 preferredLoc varchar(40) references Locations,
-preferredDate date,
-preferredTime time,
+preferredDate date not null,
+preferredTime time not null,
 cuisineType varchar(10) references CuisineTypes,
-paxNum integer,
---budget integer,
+paxNum integer not null,
 primary key (userName)
 );
 
+create table Branches (
+rname varchar(40),
+bid integer,
+location varchar(40) references Locations not null,
+openingHours varchar(20),
+openTime time,
+closeTime time,
+cuisineType varchar(10) references CuisineTypes not null,
+primary key (rname, bid)
+);
+
 create table BranchTables (
-rname varchar(40) references Restaurants,
+rname varchar(40),
 bid integer,
 tid integer,
 capacity integer,
+foreign key (rname, bid) references Branches,
 primary key (rname, bid, tid)
 );
-
 
 create table BookedTables (
 rname varchar(40),
 bid integer,
 tid integer,
-capacity integer,
+--pax integer,  --should change to paxNo not capacity, i dont think need this
 bookedTimeslot time,
 bookedDate date,
 foreign key (rname, bid, tid) references BranchTables,
 primary key (rname, bid, tid, bookedTimeslot, bookedDate)
 );
 
+
+--problematic
 create table Books (
 userName varchar(20),
 rname varchar(40),
 bid integer,
 tid integer,
-pax integer,
 reservationTime time,
 reservationDate date,
+pax integer not null,
 foreign key (rname, bid, tid, reservationTime, reservationDate) references BookedTables
 on delete cascade,
 foreign key (userName) references userpreferences,
 primary key (userName, rname, bid, tid, reservationTime, reservationDate)
 );
 
+
 create table Ratings (
-rating int check( rating >= 0 and rating <= 5 ),
+rating integer check( rating >= 0 and rating <= 5 ),
 userName varchar(20) references Diners,
 rname varchar(40),
 bid integer,
@@ -114,16 +129,6 @@ primary key (userName, rname, bid),
 foreign key (userName, rname, bid) references ConfirmedBookings
 );
 
-create table Branches (
-rname varchar(40),
-bid integer,
-location varchar(40) references Locations,
-openingHours varchar(20),
-openTime time,
-closeTime time,
-cuisineType varchar(10) references CuisineTypes,
-primary key (rname, bid)
-);
 
 create table Menu (
 name varchar(50) primary key
@@ -144,7 +149,6 @@ bid integer,
 primary key (rname,bid),
 foreign key (rname,bid) references Branches
 );
-
 
 
 
@@ -347,6 +351,7 @@ insert into advertises (rname, bid) values
 
 insert into BranchTables (rname, bid, tid, capacity) values
 ('MacDonalds', 1, 1, 4),
+('MacDonalds', 1, 2, 2),
 ('MacDonalds', 1, 3, 4),
 ('MacDonalds', 1, 4, 5),
 ('MacDonalds', 2, 1, 4),
@@ -365,9 +370,15 @@ insert into BranchTables (rname, bid, tid, capacity) values
 ('NamNam', 1, 1, 3);
 
 
-insert into BookedTables (rname, bid, tid, capacity, bookedTimeslot, bookedDate) values
-('Crystal Jade', 1, 1, 0, '23:00:00', '2019-05-16'),
-('MacDonalds', 1, 1, 50, '10:00:00', '2019-04-11');
+/*
+insert into BookedTables (rname, bid, tid, pax, bookedTimeslot, bookedDate) values
+('Crystal Jade', 1, 1, 0, '23:00:00', '2019-05-16');
+--('MacDonalds', 1, 1, 50, '10:00:00', '2019-04-11');
+*/
+insert into BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) values
+('Crystal Jade', 1, 1, '23:00:00', '2019-05-16');
+--('MacDonalds', 1, 1, '10:00:00', '2019-04-11');
+
 
 
 
@@ -413,11 +424,68 @@ insert into Sells (menuname, rname, bid) values
 ('Yumyum Menu', 'NamNam', 1);
 
 
--- testing
+
 insert into confirmedbookings (userName, rname, bid) values
 ('Aaron', 'MacDonalds', 1),
 ('Aaron', 'MacDonalds', 2),
 ('Aaron', 'BurgerKing', 1),
 ('Aaron', 'Forlino', 1);
 
+/*
+SELECT DISTINCT rname FROM confirmedBookings WHERE username = 'Aaron';
+*/
+--testing
+--for one booking, need four entries to Booked Table
+/*
+insert into BookedTables (rname, bid, tid, pax, bookedTimeslot, bookedDate)
+values ('MacDonalds', 1, 1, 1, '10:00:00', '2020-01-01'),
+('MacDonalds', 1, 1, 1, '10:15:00', '2020-01-01'),
+('MacDonalds', 1, 1, 1, '10:30:00', '2020-01-01'),
+('MacDonalds', 1, 1, 1, '10:45:00', '2020-01-01'),
+--last entry just to test that deleting a reservationTime 10:00:00 only deletes the first four not the last one
+('MacDonalds', 1, 1, 1, '11:00:00', '2020-01-01');
+*/
+insert into BookedTables (rname, bid, tid, bookedTimeslot, bookedDate)
+values ('MacDonalds', 1, 1, '10:00:00', '2020-01-01'),
+('MacDonalds', 1, 1, '10:15:00', '2020-01-01'),
+('MacDonalds', 1, 1, '10:30:00', '2020-01-01'),
+('MacDonalds', 1, 1, '10:45:00', '2020-01-01'),
+--last entry just to test that deleting a reservationTime 10:00:00 only deletes the first four not the last one
+('MacDonalds', 1, 1, '11:00:00', '2020-01-01');
+
+insert into userpreferences
+(userName, preferredRname, preferredLoc,
+preferredDate, preferredTime, cuisineType, paxNum)
+values ('Aaron', null,null,'2022-03-04','13:00:00',null, 4);
+
+insert into Books (username, rname, bid, tid, pax, reservationtime, reservationdate)
+values ('Aaron', 'MacDonalds', 1, 1, 1, '10:00:00', '2020-01-01');
+
+
+--SELECT DISTINCT rname, bid, tid, pax, reservationTime, reservationDate FROM Books WHERE username = 'Aaron';
+
+
+--result means it is available for booking (i only need the TID)
+
+--testing
+
+/*
+ select * from bookedtables;
+
+delete from bookedtables where rname = 'MacDonalds' and bid= 1 and tid=1 and bookedTimeslot>='10:00:00' and bookedTimeslot < '11:00:00' and  bookedDate ='2020-01-01';
+select * from Books where username = 'Aaron';
+select * from bookedtables;
+
+
+SELECT tid
+FROM branches B NATURAL JOIN branchTables BT
+WHERE B.rname = 'MacDonalds' AND B.bid = 1 AND BT.capacity >= 2
+AND B.openTime <= '10:00:00' AND B.closeTime >= '10:00:00'
+AND NOT EXISTS (SELECT 1
+FROM bookedtables BKT
+WHERE BKT.bid = BT.bid AND BT.rname = BKT.rname AND BT.tid = BKT.tid
+and BKT.bookeddate = '2020-01-01' and BKT.bookedtimeslot = '10:00:00')
+order by BT.capacity
+limit 1;
+ */
 

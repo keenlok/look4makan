@@ -34,6 +34,7 @@
 <form type="hidden" method="post" action="/editReservations/edit">
     <input type="hidden" id="rname" name="rname">
     <input type="hidden" id="bid" name="bid">
+    <input type="hidden" id="tid" name="tid">
     <input type="hidden" id="pax" name="pax">
     <input type="hidden" id="reservationTime" name="reservationTime">
     <input type="hidden" id="reservationDate" name="reservationDate">
@@ -43,6 +44,7 @@
     <tr>
         <th scope="col">Restaurant</th>
         <th scope="col">BID</th>
+        <th scope="col">TID</th>
         <th scope="col">Pax</th>
         <th scope="col">Reservation Time</th>
         <th scope="col">Reservation Date</th>
@@ -53,6 +55,7 @@
     <tr>
         <td><%= data[i].rname%></td>
         <td><%= data[i].bid%></td>
+        <td><%= data[i].tid%></td>
         <td><%= data[i].pax%></td>
         <td><%= data[i].reservationtime%></td>
         <!--<% //console.log("HERE: " + data[i].reservationdate);%>-->
@@ -74,19 +77,23 @@
         let bid = $(bidElement).text();
         $('input#bid').val(bid);
 
-        let paxElement =  $(this).parent().parent().children().get(2);
+        let tidElement =  $(this).parent().parent().children().get(2);
+        let tid = $(tidElement).text();
+        $('input#tid').val(tid);
+
+        let paxElement =  $(this).parent().parent().children().get(3);
         let pax = $(paxElement).text();
         $('input#pax').val(pax);
 
-        let reservationTimeElement =  $(this).parent().parent().children().get(3);
+        let reservationTimeElement =  $(this).parent().parent().children().get(4);
         let reservationTime = $(reservationTimeElement).text();
         $('input#reservationTime').val(reservationTime);
 
-        let reservationDateElement =  $(this).parent().parent().children().get(4);
+        let reservationDateElement =  $(this).parent().parent().children().get(5);
         let reservationDate = $(reservationDateElement).text();
         $('input#reservationDate').val(reservationDate);
 
-        alert("sending " + rname + " " + bid +  " " + pax + " " + reservationTime + " " + reservationDate); //leave for testing correctness
+        alert("sending " + rname + " " + bid +  " " + tid + " " + pax + " " + reservationTime + " " + reservationDate); //leave for testing correctness
 
         $('form').submit();
     });

@@ -90,7 +90,6 @@ function convertMonthToStr (month) {
 }
 
 function getDateInStr(today) {
-  // console.log("TYPEOF  " + typeof  today);
   if (typeof today === 'undefined') {
     today = new Date();
   }
@@ -118,22 +117,14 @@ function getDate(today) {
   return date;
 }
 
+
 // //date = yyyy-mm-dd
 // function convertDateToStr(date) {
-//     date = "'" + date + "'";let components = date.split("-");
-//     console.log(components)
-//     let newdate = new Date(date)
-//     console.log(newdate.getDate())
-//     return convertDayToStr(newdate.getDay()) + ", " + parseInt(components[2]) + " "  + convertMonthToStr(parseInt(components[1])) + " "  + components[0];
+//   let components = date.split("-");
+//   let newdate = new Date(date)
+//
+//   return convertDayToStr(newdate.getDay()) + ", " + parseInt(components[2]) + " "  + convertMonthToStr(parseInt(components[1])) + " "  + components[0];
 // }
-
-//date = yyyy-mm-dd
-function convertDateToStr(date) {
-  let components = date.split("-");
-  let newdate = new Date(date)
-
-  return convertDayToStr(newdate.getDay()) + ", " + parseInt(components[2]) + " "  + convertMonthToStr(parseInt(components[1])) + " "  + components[0];
-}
 
 module.exports.convertDayToStr = convertDayToStr;
 module.exports.convertMonthToStr = convertMonthToStr;
@@ -167,6 +158,24 @@ function pad(str) {
 
 module.exports.pad = pad;
 
+
+function convert24to12Time (time) {
+  components = time.split(":");
+  let firstHalf, secondHalf;
+  let x = parseInt(components[0]);
+  if(x >= 12) {
+    secondHalf = " PM";
+    firstHalf = x === 12 ? 12 : x - 12;
+  }
+  else {
+        secondHalf = " AM";
+        firstHalf = x === 0 ? 12 : x;
+  }
+  return firstHalf + "." + components[1] + secondHalf;
+}
+
+module.exports.convert24to12Time = convert24to12Time;
+
 function separateData(data, menuCount) {
   let separatedData = new Array(menuCount)
   for (let i = 0; i < menuCount; i++) {
@@ -189,12 +198,12 @@ function separateData(data, menuCount) {
 module.exports.separateData = separateData;
 
 function getPool(pool) {
-  require('dotenv').config()
-  const {Pool} = require('pg')
+  require('dotenv').config();
+  const {Pool} = require('pg');
 
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-  })
+  });
   return pool
 }
 
@@ -203,16 +212,16 @@ function updateSqlServer(pool) {
     pool = getPool(pool)
   }
 
-  let query = sql_queries.delete_old_entries
-  let today = new Date()
-  let time = getTime(today)
-  let date = getDate(today)
-  console.log(time, date)
+  let query = sql_queries.delete_old_entries;
+  let today = new Date();
+  let time = getTime(today);
+  let date = getDate(today);
+  console.log(time, date);
 
   let queryArgs = [
     time,
     date
-  ]
+  ];
 
   pool.query(query, queryArgs, (err, data) => {
       if (err) {

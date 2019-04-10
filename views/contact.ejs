@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%= page %> </title>
+    <title> Contact </title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
@@ -12,28 +12,27 @@
     <% include ./partials/header %>
 </header>
 <body>
-<h2> Booking Confirmed! </h2>
-<table class="table">
-    <thead>
-    <tr>
-        <th scope="col">Restaurant</th>
-        <th scope="col">Location</th>
-        <th scope="col">Reservation Time
-        <th scope="col">Reservation Date</th>
-        <th scope="col">No of People</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td><%=rname%></td>
-        <td><%=location%></td>
-        <td><%=reservationTime%></td>
-        <td><%=reservationDate%></td>
-        <td><%=paxNo%> </td>
+<h2> Contact Information </h2>
+<hr>
+    <p> Address: NUS SOC </p>
+    <br><br>
+    <form action="mailto:aaronsgseah@gmail.com" method="post" enctype='text/plain'>
+        <label>Your Name: </label>
+        <input type="text" name="Sender's Name " value="">
+        <br>
+        <label>Your Email:</label>
+        <input type="email" name="Sender's Email " value="">
+        <br>
+        <label>Your Message</label><br>
+        <textarea name="Sender's Message " rows="8" cols="80"></textarea>
+        <br>
+        <input type="submit" name="" value="Send">
+    </form>
 
-    </tr>
-    </tbody>
-</table>
-<a href="/" class="float-right btn btn-outline-primary">Return Home</a>
+
 </body>
+
+<footer>
+    <%- include ./partials/footer.ejs %>
+</footer>
 </html>

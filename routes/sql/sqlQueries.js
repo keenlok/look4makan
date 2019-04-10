@@ -41,6 +41,10 @@ const insertBooks =  "INSERT INTO Books (userName, rname, bid, tid , pax, reserv
 
 const delete_old_entries = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'1:00:00\' <= $1 AND bookedDate <= $2;';
 
+const updateAward = "UPDATE Awards  SET awardpoints = awardpoints + $1 WHERE username = $2;";
+
+const findAllUserBookings = "SELECT DISTINCT rname FROM confirmedBookings WHERE username = $1;";
+
 const queries = {
   findRestaurant : find_restaurant,
   getRestaurant : get_restaurant,
@@ -58,7 +62,9 @@ const queries = {
   insertConfirmedBooking : insertConfirmedBooking,
   insertBooks : insertBooks,
   find_tid : find_tid_given_bid_rname,
-  delete_old_entries: delete_old_entries
+  delete_old_entries: delete_old_entries,
+  updateAward : updateAward,
+  findAllUserBookings : findAllUserBookings
 };
 
 module.exports = queries;

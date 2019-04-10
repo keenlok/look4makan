@@ -82,28 +82,35 @@ function updateDeleteReservation (req, res, next) {
     let arguments = [rname, bid, tid, reservationTime, reservationDate];
     let delete_query = sql_query.deleteBookedTable;
     pool.query(delete_query, arguments, (err, data) => {
-      if(err) {
-        console.error("Fail to delete from Books", err);
-      }
-
-      else if(!err) {
-          console.log("Successful delete from BookedTables, cascades to delete from Books too");
-
-          if(isUpdate === "true") {
-            let newRname = req.body.rname;
-            let newBid = req.body.bid;
-            let newPax = req.body.pax;
-            let newReservationTime = req.body.reservationTime;
-            let newReservationDate = req.body.reservationDate;
-
+        if (err) {
+            console.error("Fail to delete from Books", err);
         }
-      }
-      res.redirect("/");
-    })
 
+        else if (!err) {
+            console.log("Successful delete from BookedTables, cascades to delete from Books too");
 
+            if(isUpdate === "false") {
+              //remove from confirmedBookings, cascade deletes in ratings too
+                //minus 100 from awards
 
+            }
+            if (isUpdate === "true") {
+                let newRname = req.body.rname;
+                let newBid = req.body.bid;
+                let newPax = req.body.pax;
+                let newReservationTime = req.body.reservationTime;
+                let newReservationDate = req.body.reservationDate;
+                /
+                //check if there is such a vacancy given all the above parameters (only need TID output)
+                let select_query = checkForVacancyForUpdatedReservation;
 
+                //if there is, insert into bookedTables,  Books (dont have to insert confirmedBookings as entry remains same
+                //needed details => bookedTables : rname, bid, tid, capacity  --should change to paxNo not capacity, bookedTimeslot ,bookedDate
+                //=>  Books: userName, rname, bid, tid, pax, reservationTime, reservationDate
+            }
+        }
+        res.redirect("/");
+    });
 }
 
 function editReservationMode (req, res, next) {
@@ -405,37 +412,37 @@ function search_restaurant(req, res, next) {
 }
 
 function restaurant(req, res, next) {
-  let rname = req.query.rname
-  const time = utils.getTime()
+  let rname = req.query.rname;
+  const time = utils.getTime();
   // console.log(time, req.query)
-  let query = sql_query.getRestaurant
+  let query = sql_query.getRestaurant;
   pool.query(query, [rname, time], (err, data) => {
     let table, count, auth
-    let date = utils.getDateInStr()
+    let date = utils.getDateInStr();
 
     if (err) {
       error(err, res)
     } else if (!data.rows || data.rows.length === 0) {
-      table = []
+      table = [];
       count = 0
     } else {
-      table = data.rows
-      count = data.rows.length
+      table = data.rows;
+      count = data.rows.length;
       rname = table[0].rname
     }
 
     // Get menu items for this restaurant
     let subquery = sql_query.getMenuItems
     pool.query(subquery, [rname], (err, data) => {
-      let menu, menuCount
+      let menu, menuCount;
 
       if (err) {
         console.error("CANNOT GET MENU items")
       } else if (!data.rows || data.rows.length === 0) {
-        menuCount = 0
+        menuCount = 0;
         menu = []
       } else {
-        menu = data.rows
+        menu = data.rows;
         let getMenuCount = (menu) => {
           let count = 0
           for (let i = 0; i < menu.length; i++) {
@@ -446,13 +453,13 @@ function restaurant(req, res, next) {
             }
           }
           return count
-        }
-        menuCount = getMenuCount(menu)
-        menu = utils.separateData(menu, menuCount)
+        };
+        menuCount = getMenuCount(menu);
+        menu = utils.separateData(menu, menuCount);
         console.log("The menu count is: ",menuCount);
       }
 
-      auth = !!req.isAuthenticated();
+      auth = req.isAuthenticated();
       res.render('restaurant', {
         page: 'Look4Makan',
         data: table,
@@ -685,13 +692,13 @@ function login(req, res, next) {
 }
 
 function logout(req, res, next) {
-  req.session.destroy()
-  req.logout()
+  req.session.destroy();
+  req.logout();
   res.redirect('/')
 }
 
 function error(err, res) {
-  res.render('error', {message: 'ERROR OCCURED', error: err})
+  res.render('error', {message: 'ERROR OCCURED', error: err});
 }
 
 module.exports = initRouter;

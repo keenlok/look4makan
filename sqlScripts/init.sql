@@ -347,6 +347,7 @@ insert into advertises (rname, bid) values
 
 insert into BranchTables (rname, bid, tid, capacity) values
 ('MacDonalds', 1, 1, 4),
+('MacDonalds', 1, 2, 2),
 ('MacDonalds', 1, 3, 4),
 ('MacDonalds', 1, 4, 5),
 ('MacDonalds', 2, 1, 4),
@@ -363,6 +364,7 @@ insert into BranchTables (rname, bid, tid, capacity) values
 ('Ristorante Da Valentino', 1, 1, 1),
 ('Thai Tantric Authentic Thai Cuisine', 1, 1, 4),
 ('NamNam', 1, 1, 3);
+
 
 
 insert into BookedTables (rname, bid, tid, capacity, bookedTimeslot, bookedDate) values
@@ -443,4 +445,29 @@ values ('Aaron', 'MacDonalds', 1, 1, 1, '10:00:00', '2020-01-01');
 
 
 --SELECT DISTINCT rname, bid, tid, pax, reservationTime, reservationDate FROM Books WHERE username = 'Aaron';
+
+
+--result means it is available for booking (i only need the TID)
+
+--testing
+
+/*
+ select * from bookedtables;
+
+delete from bookedtables where rname = 'MacDonalds' and bid= 1 and tid=1 and bookedTimeslot>='10:00:00' and bookedTimeslot < '11:00:00' and  bookedDate ='2020-01-01';
+select * from Books where username = 'Aaron';
+select * from bookedtables;
+
+
+SELECT tid
+FROM branches B NATURAL JOIN branchTables BT
+WHERE B.rname = 'MacDonalds' AND B.bid = 1 AND BT.capacity >= 2
+AND B.openTime <= '10:00:00' AND B.closeTime >= '10:00:00'
+AND NOT EXISTS (SELECT 1
+FROM bookedtables BKT
+WHERE BKT.bid = BT.bid AND BT.rname = BKT.rname AND BT.tid = BKT.tid
+and BKT.bookeddate = '2020-01-01' and BKT.bookedtimeslot = '10:00:00')
+order by BT.capacity
+limit 1;
+ */
 

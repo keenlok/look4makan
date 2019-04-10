@@ -16,7 +16,16 @@ const setup_user_awards = 'INSERT INTO awards (username, awardpoints) VALUES ($1
 //should change to F.availableDate = $6 but dont do so cause will cause result to fail to show up at the moment
 const find_user_preference = 'SELECT distinct rname, bid, openingHours, location FROM branches B NATURAL JOIN branchTables BT WHERE B.rname IN ($1) AND B.location IN ($2) AND cuisineType IN ($3) AND B.openTime <= $4 AND B.closeTime >= $4 AND BT.capacity >= $5 AND NOT EXISTS (SELECT 1 FROM bookedtables BKT WHERE BKT.bid = BT.bid AND BT.rname = BKT.rname AND BT.tid = BKT.tid);';
 
-const userpass = 'SELECT * FROM diners WHERE username = $1'
+const checkForVacancyForUpdatedReservation = "SELECT tid FROM branches B NATURAL JOIN branchTables BT"
+                                          + " WHERE B.rname = $1 AND B.bid = $2 AND BT.capacity >= $3"
+                                          + " AND B.openTime <= $4 AND B.closeTime >= $4"
+                                          + " AND NOT EXISTS (SELECT 1 FROM bookedtables BKT"
+                                          + " WHERE BKT.bid = BT.bid AND BT.rname = BKT.rname AND BT.tid = BKT.tid"
+                                          + " and BKT.bookeddate = $5 and BKT.bookedtimeslot = $4)"
+                                          + " ORDER BY BT.capacity LIMIT 1;";
+
+
+const userpass = 'SELECT * FROM diners WHERE username = $1';
 
 const get_menu_items = 'SELECT DISTINCT menuname, foodname, price FROM menu M NATURAL JOIN menuitems F NATURAL JOIN sells S WHERE S.rname = $1 ORDER BY menuname;'
 
@@ -100,7 +109,8 @@ const queries = {
   findRatingsGivenUsernameRname : findRatingsGivenUsernameRname,
   insertIntoRatings : insertIntoRatings,
   findAllUserBooks : findAllUserBooks,
-  deleteBookedTable : deleteBookedTable
+  deleteBookedTable : deleteBookedTable,
+  checkForVacancyForUpdatedReservation : checkForVacancyForUpdatedReservation
 };
 
 module.exports = queries;

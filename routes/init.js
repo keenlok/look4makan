@@ -15,20 +15,26 @@ const round = 10;
 const salt  = bcrypt.genSaltSync(round);
 
 function initRouter(app) {
+
   app.get('/'                    , index            );
-  app.get('/contactUs'           , contact            );
+  app.get('/contactUs'           , contact          );
   app.post('/search'             , search           );
   app.post('/search/restaurants' , insertIntoUserPreference, search_restaurant);
   app.get('/restaurant'          , restaurant       );
   // app.get('/restaurants'         , list_restaurants )
   app.post('/booking'            , booking          );
-  app.get('/rateReservations'    , rateReservations);
-  app.post('/Ratings'            , ratings);
+  app.get('/rateReservations'    , rateReservations );
+  app.post('/Ratings'            , ratings          );
 
 
   // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
 
-  app.get('/edit'                 , adminDashboard   )
+  /*  Admin privileges  */
+  app.get('/edit'       , adminDashboard   )
+  app.get('/edit/insert', insertData       )
+  app.get('/edit/update', updateData       )
+
+
   /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register);
   app.get('/signin', login   );
@@ -532,6 +538,7 @@ function confirmation(req, res, next) {
   }
 }
 
+/*  --- Admin functions ---  */
 function adminDashboard (req, res, next) {
   let user = req.user
   if (typeof user === "undefined") {
@@ -545,8 +552,39 @@ function adminDashboard (req, res, next) {
     auth: true,
     user: user
   })
-
 }
+
+function insertData (req, res, next) {
+  let user = req.user
+  if (typeof user === "undefined") {
+    res.redirect('/') // Prevent unauthenticated access to this page
+  }
+  let date = utils.getDateInStr()
+
+  res.render('edit', {
+    page: "Admin Dashboard",
+    dateInStr: date,
+    auth: true,
+    user: user
+  })
+}
+
+function updateData (req, res, next) {
+  let user = req.user
+  if (typeof user === "undefined") {
+    res.redirect('/') // Prevent unauthenticated access to this page
+  }
+  let date = utils.getDateInStr()
+
+  res.render('edit', {
+    page: "Admin Dashboard",
+    dateInStr: date,
+    auth: true,
+    user: user
+  })
+}
+
+/* --- Admin functions ends here --- */
 
 function updateAward(req, res, next) {
   if(req.user === undefined) {

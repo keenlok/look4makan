@@ -23,6 +23,7 @@ function initRouter(app) {
   app.get('/booking'             , booking          );
   // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
 
+  app.get('/edit'                 , adminDashboard   )
     /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register);
   app.get('/signin', login   );
@@ -154,7 +155,7 @@ function insertIntoUserPreference (req, res, next) {
   ];
 
 
-   console.log("INSERT QUERY :", insertQuery, arguments);
+  console.log("INSERT QUERY :", insertQuery, arguments);
   pool.query(insertQuery, arguments, (err, data) => {
     if(!err) {
       console.log("successful insertion into UserPreferences Table");
@@ -175,7 +176,7 @@ function search_restaurant(req, res, next) {
   let paxNo = req.query.paxNo;
   let date = req.query.reservationDate;
 
-    if(rname !== '')  {
+  if(rname !== '')  {
     rname = pad(rname);
   }
   else {
@@ -216,13 +217,13 @@ function search_restaurant(req, res, next) {
 
   searchQuery = searchQuery.replace('$5', paxNo);
 
-    if(date !== '') {
-        date = pad(date);
-    }
+  if(date !== '') {
+    date = pad(date);
+  }
 
-    searchQuery = searchQuery.replace('$6', date);
+  searchQuery = searchQuery.replace('$6', date);
 
-    pool.query(searchQuery, (err, data) => {
+  pool.query(searchQuery, (err, data) => {
     if (err || !data.rows || data.rows.length === 0) {
       ctx = 0
       table = []
@@ -402,8 +403,8 @@ function booking(req, res, next) {
         auth: auth,
         user: user
       });
-        });
     });
+  });
 }
 
 function insertIntoConfirmedBooking (req, res, next) {
@@ -434,78 +435,90 @@ function insertIntoConfirmedBooking (req, res, next) {
 }
 
 function insertIntoBooks (req, res, next) {
-    let rname = req.query.rname;
-    let bid = req.query.bid;
-    let pax = req.query.pax;
-    let reservationTime = req.query.reservationTime;
-    let reservationDate = req.query.reservationDate;
+  let rname = req.query.rname;
+  let bid = req.query.bid;
+  let pax = req.query.pax;
+  let reservationTime = req.query.reservationTime;
+  let reservationDate = req.query.reservationDate;
 
-    let insertQuery = sql_query.insertBooks;
+  let insertQuery = sql_query.insertBooks;
 
-    if(req.user === undefined) {
-        return next();
-    }
-
-    let selectQuery = sql_query.find_tid;
-
-    // selectQuery = selectQuery.replace("$1", pad(rname));
-    // selectQuery = selectQuery.replace("$2", bid);
-    // selectQuery = selectQuery.replace("$3", pax);
-
-    console.log("SELECTQUERY: " + selectQuery);
-
-    pool.query(selectQuery, [rname, bid, pax], (err, data) => {
-        if(!err) {
-            // insertQuery = insertQuery.replace("$1", pad(req.user.username));
-            // insertQuery = insertQuery.replace("$2", pad(rname));
-            // insertQuery = insertQuery.replace("$3", bid);
-            // insertQuery = insertQuery.replace("$4", data.rows[0].tid);
-            // insertQuery = insertQuery.replace("$5", pax);
-            // insertQuery = insertQuery.replace("$6", pad(reservationTime));
-            // insertQuery = insertQuery.replace("$7", pad(reservationDate));
-
-
-            let arguments = [
-                req.user.username,
-                rname,
-                bid,
-                data.rows[0].tid,
-                pax,
-                reservationTime,
-                reservationDate
-            ];
-
-            pool.query(insertQuery, arguments, (err, data) => {
-                if(!err) {
-                    console.log("Successful insertion into Booking Table ")
-                }
-                else {
-                    console.log("Failed insertion into Books Table ", err.detail)
-                }
-            });
-        }
-    });
+  if(req.user === undefined) {
     return next();
+  }
+
+  let selectQuery = sql_query.find_tid;
+
+  // selectQuery = selectQuery.replace("$1", pad(rname));
+  // selectQuery = selectQuery.replace("$2", bid);
+  // selectQuery = selectQuery.replace("$3", pax);
+
+  console.log("SELECTQUERY: " + selectQuery);
+
+  pool.query(selectQuery, [rname, bid, pax], (err, data) => {
+    if(!err) {
+      // insertQuery = insertQuery.replace("$1", pad(req.user.username));
+      // insertQuery = insertQuery.replace("$2", pad(rname));
+      // insertQuery = insertQuery.replace("$3", bid);
+      // insertQuery = insertQuery.replace("$4", data.rows[0].tid);
+      // insertQuery = insertQuery.replace("$5", pax);
+      // insertQuery = insertQuery.replace("$6", pad(reservationTime));
+      // insertQuery = insertQuery.replace("$7", pad(reservationDate));
+
+
+      let arguments = [
+        req.user.username,
+        rname,
+        bid,
+        data.rows[0].tid,
+        pax,
+        reservationTime,
+        reservationDate
+      ];
+
+      pool.query(insertQuery, arguments, (err, data) => {
+        if(!err) {
+          console.log("Successful insertion into Booking Table ")
+        }
+        else {
+          console.log("Failed insertion into Books Table ", err.detail)
+        }
+      });
+    }
+  });
+  return next();
 }
 
- function confirmation(req, res, next) {
+function confirmation(req, res, next) {
 
-   let rname = req.query.rname;
-   let location = req.query.location;
-   let reservationTime = req.query.reservationTime;
-   let reservationDate = utils.getDateInStr((req.query.reservationDate));
-   let paxNo = req.query.pax;
+  let rname = req.query.rname;
+  let location = req.query.location;
+  let reservationTime = req.query.reservationTime;
+  let reservationDate = utils.getDateInStr((req.query.reservationDate));
+  let paxNo = req.query.pax;
 
-   if(req.isAuthenticated()) {
-       res.render('confirmation', { page: "Confirmation", rname : rname, location : location, reservationTime : reservationTime,  reservationDate : reservationDate, paxNo : paxNo, auth: true});
-   }
-   else {
-       res.render('confirmation', { page: "Confirmation", rname : rname, location : location,  reservationTime : reservationTime, reservationDate : reservationDate, paxNo : paxNo, auth : false});
-   }
- }
+  if(req.isAuthenticated()) {
+    res.render('confirmation', { page: "Confirmation", rname : rname, location : location, reservationTime : reservationTime,  reservationDate : reservationDate, paxNo : paxNo, auth: true});
+  }
+  else {
+    res.render('confirmation', { page: "Confirmation", rname : rname, location : location,  reservationTime : reservationTime, reservationDate : reservationDate, paxNo : paxNo, auth : false});
+  }
+}
+
+function adminDashboard (req, res, next) {
+  let user = req.user
+  if (typeof user === "undefined") {
+    res.redirect('/') // Prevent unauthenticated access to this page
+  }
+
+  res.render('edit', {
+    pages: "Admin Dashboard"
+  })
+
+}
 
 function login(req, res, next) {
-    res.render('signin', {title: 'Look4Makan', loginPage: true});
+  res.render('signin', {title: 'Look4Makan', loginPage: true});
 }
 
 function logout(req, res, next) {

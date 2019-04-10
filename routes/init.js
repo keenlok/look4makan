@@ -561,8 +561,8 @@ function insertData (req, res, next) {
   }
   let date = utils.getDateInStr()
 
-  res.render('edit', {
-    page: "Admin Dashboard",
+  res.render('admin_insert', {
+    page: "Admin Insert",
     dateInStr: date,
     auth: true,
     user: user
@@ -576,8 +576,8 @@ function updateData (req, res, next) {
   }
   let date = utils.getDateInStr()
 
-  res.render('edit', {
-    page: "Admin Dashboard",
+  res.render('admin_update', {
+    page: "Admin Update",
     dateInStr: date,
     auth: true,
     user: user

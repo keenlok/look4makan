@@ -24,20 +24,14 @@
     <input type="hidden" id="location" name="location">
     <input type="hidden" id="reservationDate" name="reservationDate" value="<%=reservationDate%>">
     <input type="hidden" id="reservationTime" name="reservationTime" value="<%=reservationTime%>">
-
     <input type="hidden" id="pax" name="pax" value="<%=pax%>">
 
-    <!--<% if (typeof cuisineType === "undefined") { %>-->
-    <!--<input type="hidden" id="cusine_type" name="cuisinetype" value="ANY">-->
-    <!--<% } else { %>-->
-    <!--<input type="hidden" id="cusine_type" name="cuisinetype" value="<%= cuisineType%>">-->
-    <!--<% } %>-->
 </form>
 <table class="table table-hover">
     <thead>
     <tr>
         <th scope="col">Restaurant</th>
-        <th scope="col">BID</th>
+        <th scope="col">Branch Number</th>
         <th scope="col">Opening Hours</th>
         <th scope="col">Location</th>
     </tr>
@@ -49,34 +43,29 @@
         <td><%= table[i].bid%></td>
         <td><%= table[i].openinghours%></td>
         <td><%= table[i].location%></td>
+        <td><button class="btn btn-primary bookButton">Book Now!</button></td>
     </tr>
     <% } %>
     </tbody>
 </table>
 <script>
-  $("td").click(function() {
-    let rnameElement = $(this).parent().children().get(0);
-    let rname = $(rnameElement).text();
-    $('input#rname').val(rname);
+    $('.bookButton').click(function() {
+        let rnameElement =  $(this).parent().parent().children().get(0);
+        let rname = $(rnameElement).text();
+        $('input#rname').val(rname);
 
-    let bidElement = $(this).parent().children().get(1);
-    let bid = $(bidElement).text();
-    $('input#bid').val(bid);
+        let bidElement =  $(this).parent().parent().children().get(1);
+        let bid = $(bidElement).text();
+        $('input#bid').val(bid);
 
-    let locationElement = $(this).parent().children().get(3);
-    let location = $(locationElement).text();
-    $('input#location').val(location);
+        let locationElement = $(this).parent().parent().children().get(3);
+        let location = $(locationElement).text();
+        $('input#location').val(location);
 
-      if($('input#rname').val() != '') {
-      // console.log("rname", $('input#rname').val());
-      // console.log("time", $('input#time').val());
-      // console.log("paxNo", $('input#pax').val());
-      // console.log("LOCATION", $('input#location').val());
+        alert("sending " + rname + " " + bid + " " + location); //leave for testing correctness
 
-          // console.log("cuisineType", $('input#cusine_type').val())
-      $('form').submit();
-    }
-  })
+        $('form').submit();
+    });
 </script>
 </body>
 </html>

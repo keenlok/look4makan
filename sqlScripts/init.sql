@@ -7,7 +7,6 @@ drop table if exists Awards cascade;
 drop table if exists ConfirmedBookings  cascade;
 drop table if exists UserPreferences  cascade;
 drop table if exists BranchTables  cascade;
-drop table if exists freeTables  cascade;
 
 drop table if exists Books  cascade;
 drop table if exists Ratings  cascade;
@@ -49,7 +48,7 @@ cuisineName varchar(10) primary key
 );
 
 create table Awards(
-userName varchar(20) primary key,
+userName varchar(20) primary key references diners,
 awardPoints integer
 );
 
@@ -107,11 +106,12 @@ primary key (userName, rname, bid, tid, reservationTime, reservationDate)
 );
 
 create table Ratings (
-review varchar(50),
+rating int check( rating >= 0 and rating <= 5 ),
 userName varchar(20) references Diners,
 rname varchar(40),
 bid integer,
-foreign key (userName,rname,bid) references ConfirmedBookings
+primary key (userName, rname, bid),
+foreign key (userName, rname, bid) references ConfirmedBookings
 );
 
 create table Branches (
@@ -183,7 +183,7 @@ insert into diners (username, firstname, lastname, password, isAdmin) values
 
 insert into awards (username, awardpoints) values
 ('lokeen', 0),
-('earon', 0),
+('Aaron', 0),
 ('alexis', 0),
 ('nicpang', 0),
 ('madScientist', 0);
@@ -413,5 +413,11 @@ insert into Sells (menuname, rname, bid) values
 ('Yumyum Menu', 'NamNam', 1);
 
 
+-- testing
+insert into confirmedbookings (userName, rname, bid) values
+('Aaron', 'MacDonalds', 1),
+('Aaron', 'MacDonalds', 2),
+('Aaron', 'BurgerKing', 1),
+('Aaron', 'Forlino', 1);
 
 

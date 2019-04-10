@@ -45,7 +45,13 @@ const delete_old_entries_for_testing = 'DELETE FROM bookedtables WHERE bookedTim
 
 const updateAward = "UPDATE Awards  SET awardpoints = awardpoints + $1 WHERE username = $2;";
 
-const findAllUserBookings = "SELECT DISTINCT rname FROM confirmedBookings WHERE username = $1;";
+const findAllUserBookings = "SELECT rname, bid FROM confirmedBookings WHERE username = $1;";
+
+const findAllUserBooks = "SELECT DISTINCT rname, bid, tid, pax, reservationTime, reservationDate FROM Books WHERE username = $1;";
+
+const findRatingsGivenUsernameRname = "SELECT rating FROM Ratings WHERE rname = $1 AND username = $2 and bid = $3;";
+
+const insertIntoRatings = "INSERT INTO Ratings (rating, userName, rname, bid) VALUES ($1, $2, $3, $4);";
 
 const insert_rname = 'INSERT INTO restaurants (rname) VALUES ($1);'
 
@@ -89,6 +95,9 @@ const queries = {
   insert_menu: insert_menu,
   insert_cuisine: insert_cuisine,
   insert_into_menu: insert_into_menu
+  findRatingsGivenUsernameRname : findRatingsGivenUsernameRname,
+  insertIntoRatings : insertIntoRatings,
+  findAllUserBooks : findAllUserBooks
 };
 
 module.exports = queries;

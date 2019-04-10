@@ -13,37 +13,63 @@
     <% include ./partials/header %>
 </header>
 <body>
-<% if (data.length === 0) { %>
+<% if (user === undefined) { %>
+<h2>No bookings found</h2>
+<br><br>
+<p>You are not signed into your account!</p>
+<p>You can only rate restaurants when you have signed in!</p>
+<p> Start creating / signing into your account!</p>
+<br><br><br>
+
+<% } else if (data.length === 0) { %>
 <h2>No bookings found!</h2>
+<br><br>
+<p>You have not made any reservations before!</p>
+<p>You can only rate restaurants you have made reservations!</p>
+<p> Start making your reservations!</p>
+<br><br><br>
+
 <% } else { %>
 <h2><%=data.length %> Results found!</h2>
+    <form type="hidden" method="post" action="/rateReservations/ratings">
+        <input type="hidden" id="rname" name="rname">
+        <input type="hidden" id="bid" name="bid">
+
+    </form>
+    <table class="table table">
+        <thead>
+        <tr>
+            <th scope="col">Restaurant</th>
+            <th scope="col">BID</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for(var i=0; i< data.length; i++) { %>
+        <tr>
+            <td><%= data[i].rname%></td>
+            <td><%= data[i].bid%></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td>
+            <td><button class="btn btn-primary rateButton"  >Rate</button></td>
+        </tr>
+        <% } %>
+        </tbody>
+    </table>
 <% } %>
-<form type="hidden" method="post" action="/Ratings">
-    <input type="hidden" id="rname" name="rname">
-</form>
-<table class="table table">
-    <thead>
-    <tr>
-        <th scope="col">Restaurant</th>
-    </tr>
-    </thead>
-    <tbody>
-    <% for(var i=0; i< data.length; i++) { %>
-    <tr>
-        <td><%= data[i].rname%></td>
-        <td></td><td></td><td></td><td></td><td></td><td></td>
-        <td></td><td></td><td></td><td></td><td></td><td></td>
-        <td><button class="btn btn-primary" onclick="show()">Rate</button></td>
-    </tr>
-    <% } %>
-    </tbody>
-</table>
 <script>
-    function show() {
-        let rname = document.getElementById('rname').value;
+    $('.rateButton').click(function() {
+        let rnameElement =  $(this).parent().parent().children().get(0);
+        let rname = $(rnameElement).text();
         $('input#rname').val(rname);
+
+        let bidElement =  $(this).parent().parent().children().get(1);
+        let bid = $(bidElement).text();
+        $('input#bid').val(bid);
+
+        alert("sending " + rname + " " + bid); //leave for testing correctness
+
         $('form').submit();
-    }
+    });
 </script>
 </body>
 </html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rate Your Reservation</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <script src='/stylesheets/vendor/jquery/jquery.js'></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+</head>
+<header>
+    <% include ./partials/header %>
+</header>
+<body>
+<form method="post" action="/edits/complete">
+    <input type="hidden" id="rname" name="rname" value="<%=rname%>">
+    <input type="hidden" id="bid" name="bid" value="<%=bid%>">
+
+    <input type="hidden" id="pax" name="pax" value="<%=pax%>">
+    <input type="hidden" id="reservationTime" name="reservationTime" value="<%=reservationTime%>">
+    <input type="hidden" id="reservationDate" name="reservationDate" value="<%=reservationDate%>">
+
+    <br><br>
+    <label><strong>Current Reservation:</strong></label><br>
+
+    <table>
+        <tbody>
+            <tr>
+                <td> Restaurant:</td>
+                <td><input type="text" id="rname" name="rname" value="<%=rname%>" disabled style="margin-top:5px; margin-left : 10px"></td>
+            </tr>
+            <tr>
+                <td> Branch Number:</td>
+
+                <td><input type=text" id="bid" name="bid" value="<%=bid%>" disabled style="margin-top:5px; margin-left : 10px"></td>
+            </tr>
+            <tr>
+                <td> Pax:</td>
+                <td><input type="text" id="pax" name="pax" value="<%=pax%>" disabled style="margin-top:5px; margin-left : 10px"></td>
+            </tr>
+            <tr>
+
+                <td> Reservation Time:</td>
+                <td><input type="text" id="reservationTime" name="reservationTime" value="<%=reservationTime%>" disabled style="margin-top:5px; margin-left : 10px"></td>
+            </tr>
+
+            <tr>
+                <td> Reservation Date:</td>
+                <td><input type="text" id="reservationDate" name="reservationDate" value="<%=reservationDate%>" disabled style="margin-top:5px; margin-left : 10px"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br><br>
+    <label><strong>New  Reservation:</strong></label><br>
+
+    <table>
+        <tbody>
+        <tr>
+            <td> Restaurant:</td>
+            <td><input type="text" id="rname" name="rname" value="<%=rname%>" disabled style="margin-top:5px; margin-left : 10px"></td>
+        </tr>
+        <tr>
+            <td> Branch Number:</td>
+            <td><input type=text" id="bid" name="bid" value="<%=bid%>" disabled style="margin-top:5px; margin-left : 10px"></td>
+        </tr>
+        <tr>
+            <td> Pax:</td>
+            <td><input type="number" id="pax" name="pax" value="<%=pax%>" style="margin-top:5px; margin-left : 10px"></td>
+        </tr>
+        <tr>
+            <td> Reservation Time:</td>
+            <td><input type="time" id="reservationTime" name="reservationTime" value="<%=reservationTime%>" style="margin-top:5px; margin-left : 10px"></td>
+        </tr>
+
+        <tr>
+            <td> Reservation Date:</td>
+            <td><input type="date" id="reservationDate" name="reservationDate" value="<%=reservationDate%>" style="margin-top:5px; margin-left : 10px"></td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <table>
+        <tbody>
+        <tr>
+            <td><button class="btn btn-primary" onclick="show()">Confirm New Reservation</button></td>
+
+            <td><button class="btn btn-primary" onclick="show()" style="margin-left : 200px">Cancel Reservation</button></td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+
+
+<script>
+    // function show() {
+    //     let rname = document.getElementById('rname').value;
+    //     let bid = document.getElementById('bid').value;
+    //     let newRating = document.getElementById('newRating').value;
+    //
+    //     if(confirm("You are giving a rating " + newRating +"/5" + " for your dining experience at " +
+    //         rname + ", branch number " + bid  + ".")) {
+    //         $('form').submit();
+    //     }
+    //     else {
+    //         event.preventDefault();
+    //     }
+    // }
+</script>
+</body>
+</html>

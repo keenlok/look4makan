@@ -4,33 +4,36 @@ const bcrypt = require('bcrypt')
 const utils = require('./utils/util')
 const admin = require('./admin')
 
+
 // Postgre SQL Connection
-const { Pool } = require('pg')
+const { Pool } = require('pg');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   //ssl: true
-})
+});
 
 const round = 10;
 const salt  = bcrypt.genSaltSync(round);
 
 function initRouter(app) {
 
-  app.get('/'                    , index            );
-  app.get('/contactUs'           , contact          );
+  app.get('/'                    , index);
+  app.post("/ratings/complete", insertIntoRatings);
+  app.get('/contactUs'           , contact            );
   app.get('/search'             , search           );
-
   app.post('/search/restaurants' , insertIntoUserPreference, search_restaurant);
 
   app.get('/restaurant'          , restaurant       );
   // app.get('/restaurants'         , list_restaurants )
   app.post('/booking'            , booking          );
-  app.get('/rateReservations'    , rateReservations );
-  app.post('/Ratings'            , ratings          );
+  app.get('/rateReservations'    , rateReservations);
+  app.post('/rateReservations/ratings', ratings);
+  app.get('/editReservations', editReservations);
+  app.post('/editReservations/edit', editReservationMode);
 
 
-  // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
+    // app.get('/booking/confirmation', insertIntoConfirmedBooking, insertIntoBooks, confirmation   );
 
   /*  Admin privileges  */
   app.get('/edit'       , admin.adminDashboard   )
@@ -64,8 +67,80 @@ function initRouter(app) {
 
 }
 
+function editReservationMode (req, res, next) {
+    let rname = req.body.rname;
+    let bid = req.body.bid;
+    let pax = req.body.pax;
+    let reservationTime = req.body.reservationTime;
+    let reservationDate = req.body.reservationDate;
+
+    console.log("RECEIVED " + rname + " " + bid +  " " + pax + " " + reservationTime + " " + reservationDate); //leave for testing correctness
+
+    let auth = req.isAuthenticated();
+
+    res.render("editReservationMode", {rname : rname, rname: rname, bid : bid, pax : pax, reservationTime : reservationTime, reservationDate : reservationDate, auth: auth});
+
+}
+
+
+function editReservations (req, res, next) {
+
+    let selectQuery = sql_query.findAllUserBooks;
+    let username = (req.user === undefined) ? '' : req.user.username;
+    pool.query(selectQuery, [username], (err, data) => {
+        if(!err) {
+            if(data.rows !== undefined) {
+              for (let i = 0; i < data.rows.length; i++) {
+                let date = new Date(data.rows[i].reservationdate);
+                data.rows[i].reservationdate = utils.getDate(date);
+              }
+            }
+            let auth = req.isAuthenticated();
+            res.render("editReservations", {data: data.rows, auth : auth, user: req.user});
+        }
+    });
+}
+
+function insertIntoRatings (req, res, next) {
+    if(req.body.rname === undefined) {
+      return next();
+    }
+
+    let rname = req.body.rname;
+    let bid = req.body.bid;
+    let rating = req.body.newRating;
+
+    let insertQuery = sql_query.insertIntoRatings;
+
+    pool.query(insertQuery, [rating, req.user.username, rname, bid], (err, data) => {
+      if(!err) {
+        console.log("successful insertion into Ratings Table!");
+      }
+      else {
+        console.error("failed insertion into Ratings Table", err);
+      }
+    });
+    res.redirect("/");
+}
+
 function ratings (req, res, next) {
-  // res.render("ratings");
+  let rname = req.body.rname;
+  let bid = req.body.bid;
+
+  if(req.user !== undefined) {
+      let selectQuery = sql_query.findRatingsGivenUsernameRname;
+      console.log("query : " + selectQuery);
+      console.log("rname : " + rname);
+      console.log("bid : " + bid);
+      console.log("username : " + req.user.username);
+      pool.query(selectQuery, [rname,req.user.username, bid], (err, data) => {
+        if(err) {
+          console.log("FUCK");
+        }
+        let auth = req.isAuthenticated();
+        res.render("ratings", {rname : rname, username : req.user.username, bid : bid, data : data.rows, auth: auth});
+      });
+  }
 }
 
 function rateReservations (req, res, next) {
@@ -75,7 +150,7 @@ function rateReservations (req, res, next) {
   pool.query(selectQuery, [username], (err, data) => {
     if(!err) {
       let auth = req.isAuthenticated();
-      res.render("rateReservations", {data: data.rows, auth : auth});
+      res.render("rateReservations", {data: data.rows, auth : auth, user: req.user});
     }
   });
 }

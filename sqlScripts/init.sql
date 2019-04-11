@@ -135,7 +135,7 @@ name varchar(50) primary key
 );
 
 create table Sells (
-menuName varchar(50) references Menu on update cascade on delete cascade,
+menuName varchar(50) references Menu,
 rname varchar(40),
 bid integer,
 primary key (menuName, rname, bid),
@@ -153,7 +153,7 @@ foreign key (rname,bid) references Branches
 
 
 create table menuItems (
-menuName varchar(50) references Menu on update cascade on delete cascade,
+menuName varchar(50) references Menu,
 foodName varchar(50),
 price integer,
 primary key (menuName,foodName, price)
@@ -322,14 +322,13 @@ insert into branches (rname, bid, location, openinghours, opentime, closetime, c
 
 
 
-
-
 insert into advertises (rname, bid) values
 ('MacDonalds', 1),
 ('MacDonalds', 2),
 ('MacDonalds', 3),
 ('MacDonalds', 4),
 ('MacDonalds', 5),
+
 ('BurgerKing', 1),
 ('BurgerKing', 2),
 
@@ -345,7 +344,6 @@ insert into advertises (rname, bid) values
 ('Ristorante Da Valentino', 1),
 ('Thai Tantric Authentic Thai Cuisine', 1),
 ('NamNam', 1);
-
 
 
 
@@ -376,7 +374,11 @@ insert into BookedTables (rname, bid, tid, pax, bookedTimeslot, bookedDate) valu
 --('MacDonalds', 1, 1, 50, '10:00:00', '2019-04-11');
 */
 insert into BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) values
-('Crystal Jade', 1, 1, '23:00:00', '2019-05-16');
+('Crystal Jade', 1, 1, '23:00:00', '2019-05-16'),
+('Crystal Jade', 1, 1, '23:15:00', '2019-05-16'),
+('Crystal Jade', 1, 1, '23:30:00', '2019-05-16'),
+('Crystal Jade', 1, 1, '23:45:00', '2019-05-16');
+
 --('MacDonalds', 1, 1, '10:00:00', '2019-04-11');
 
 
@@ -445,6 +447,8 @@ values ('MacDonalds', 1, 1, 1, '10:00:00', '2020-01-01'),
 --last entry just to test that deleting a reservationTime 10:00:00 only deletes the first four not the last one
 ('MacDonalds', 1, 1, 1, '11:00:00', '2020-01-01');
 */
+
+
 insert into BookedTables (rname, bid, tid, bookedTimeslot, bookedDate)
 values ('MacDonalds', 1, 1, '10:00:00', '2020-01-01'),
 ('MacDonalds', 1, 1, '10:15:00', '2020-01-01'),
@@ -453,10 +457,18 @@ values ('MacDonalds', 1, 1, '10:00:00', '2020-01-01'),
 --last entry just to test that deleting a reservationTime 10:00:00 only deletes the first four not the last one
 ('MacDonalds', 1, 1, '11:00:00', '2020-01-01');
 
+
 insert into userpreferences
 (userName, preferredRname, preferredLoc,
 preferredDate, preferredTime, cuisineType, paxNum)
 values ('Aaron', null,null,'2022-03-04','13:00:00',null, 4);
+
+insert into userpreferences
+(userName, preferredRname, preferredLoc,
+preferredDate, preferredTime, cuisineType, paxNum)
+values ('Aaron', null,null,'2021-03-04','00:00:00',null, 0)
+on conflict (userName) do update set preferredDate = '2021-09-12';
+
 
 insert into Books (username, rname, bid, tid, pax, reservationtime, reservationdate)
 values ('Aaron', 'MacDonalds', 1, 1, 1, '10:00:00', '2020-01-01');
@@ -488,4 +500,27 @@ and BKT.bookeddate = '2020-01-01' and BKT.bookedtimeslot = '10:00:00')
 order by BT.capacity
 limit 1;
  */
+
+-- from Branches ('BurgerKing', 1, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Western'),
+--from branchTables ('BurgerKing', 1, 1, 2),
+-- current no BookedTables at Burgerking
+
+/*
+insert into BookedTables (rname, bid, tid, bookedTimeslot, bookedDate)
+values('BurgerKing', 1, 1, '19:30:00', '2019-01-01');
+--values ('BurgerKing', 1, 1, '21:30:00', '2019-01-01'),
+--('BurgerKing', 1, 1, '21:45:00', '2019-01-01'),
+--('BurgerKing', 1, 1, '21:00:00', '2019-01-01'),
+--('BurgerKing', 1, 1, '22:00:00', '2019-01-01'),
+--('BurgerKing', 1, 1, '22:30:00', '2019-01-01'),
+--('BurgerKing', 1, 1, '23:00:00', '2019-01-01'),
+--('BurgerKing', 1, 1, '23:30:00', '2019-01-01');
+
+
+SELECT * FROM branchtables B NATURAL JOIN branches BB
+    WHERE NOT EXISTS ( SELECT 1 FROM bookedtables T WHERE T.rname = B.rname AND
+    T.bookeddate = '2019-01-01' AND T.bookedtimeslot + '1:00:00' < '22:00:00' )
+    AND B.rname = 'BurgerKing' AND B.capacity >= 1 AND BB.location = 'Orchard Scape' AND B.bid = 1
+    ORDER BY bid, tid LIMIT 1 ;
+*/
 

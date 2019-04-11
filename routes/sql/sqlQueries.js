@@ -79,7 +79,7 @@ const insertIntoRatings = "INSERT INTO Ratings (rating, userName, rname, bid) VA
 
 const deleteBookedTable = "DELETE FROM BookedTables WHERE rname = $1 AND bid = $2 AND " +
     "tid = $3 AND bookedTimeslot >= $4 AND " +
-    "bookedTimeslot < $4 + '01:00:00' AND bookedDate = $5;";
+    "bookedTimeslot < $4::time + '01:00:00' AND bookedDate = $5;";
 
 const checkForVacancyForUpdatedReservation = "SELECT tid FROM branches B NATURAL JOIN branchTables BT"
     + " WHERE B.rname = $1 AND B.bid = $2 AND BT.capacity >= $3"
@@ -88,6 +88,8 @@ const checkForVacancyForUpdatedReservation = "SELECT tid FROM branches B NATURAL
     + " WHERE BKT.bid = BT.bid AND BT.rname = BKT.rname AND BT.tid = BKT.tid"
     + " and BKT.bookeddate = $5 and BKT.bookedtimeslot = $4)"
     + " ORDER BY BT.capacity LIMIT 1;";
+
+const deleteConfirmedBooking = "DELETE FROM ConfirmedBookings WHERE userName, rname, bid"
 
 
 const insert_rname = 'INSERT INTO restaurants (rname) VALUES ($1);';
@@ -112,7 +114,6 @@ const delete_old_entries_for_testing = 'DELETE FROM bookedtables WHERE bookedTim
 
 
 //const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) VALUES ($1, $2, $3, $4, $5), ($1, $2, $3, $6, $5), ($1, $2, $3, $7, $5), ($1, $2, $3, $8, $5);'
-
 
 const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) ' +
     'VALUES ($1, $2, $3, $4, $5), ' +
@@ -170,6 +171,7 @@ const queries = {
   findAllUserBooks : findAllUserBooks,
   deleteBookedTable : deleteBookedTable,
   checkForVacancyForUpdatedReservation : checkForVacancyForUpdatedReservation,
+  deleteConfirmedBooking : deleteConfirmedBooking,
 
 
   get_menu: menu,

@@ -177,8 +177,8 @@ function updateDeleteReservation (req, res, next) {
 
     console.log(req.user.username + " " + rname + " " + bid + " " + tid + " " + reservationTime + " " + reservationDate + " " + isUpdate);
     let arguments = [rname, bid, tid, reservationTime, reservationDate];
-    let delete_query = sql_query.deleteBookedTable;
-    pool.query(delete_query, arguments, (err, data) => {
+    let delete_query1 = sql_query.deleteBookedTable;
+    pool.query(delete_query1, arguments, (err, data) => {
         if (err) {
             console.error("Fail to delete from Books", err);
         }
@@ -187,6 +187,26 @@ function updateDeleteReservation (req, res, next) {
             console.log("Successful delete from BookedTables, cascades to delete from Books too");
 
             if(isUpdate === "false") {
+                let delete_query2 = sql_query.deleteConfirmedBooking;
+                pool.query(delete_query2, [req.user.username, rname, bid], (err, data) => {
+                  if(err) {
+                      console.error("Fail to delete from ConfirmedBookings", err);
+                  }
+                  else if (!err) {
+                      console.log("Successful delete from ConfirmedBookings, cascades to delete from Ratings");
+                  }
+                });
+                let update_query = sql_query.updateAward;
+                pool.query(update_query, [-100, req.user.username], (err, data) => {
+                    if (err) {
+                        console.error("Fail to update Awards", err);
+                    }
+
+                    else if (!err) {
+                        console.log("Successful update from Awards, minus 100 points");
+                    }
+                });
+
                 //remove from confirmedBookings, cascade deletes in ratings too
                 //minus 100 from awards
 
@@ -199,6 +219,16 @@ function updateDeleteReservation (req, res, next) {
                 let newReservationDate = req.body.reservationDate;
                 //check if there is such a vacancy given all the above parameters (only need TID output)
                 let select_query = checkForVacancyForUpdatedReservation;
+
+
+                pool.query(select_query, [newRname, newBid, newPax, newReservationTime, newReservationDate], (err,data) => {
+                  if(err) {
+                    console.log("failed to find vacancy!");
+                  }
+                  else {
+                      //if there is, insert into bookedTables,  Books (dont have to insert confirmedBookings as entry remains same
+                  }
+                })
 
                 //if there is, insert into bookedTables,  Books (dont have to insert confirmedBookings as entry remains same
                 //needed details => bookedTables : rname, bid, tid, capacity  --should change to paxNo not capacity, bookedTimeslot ,bookedDate

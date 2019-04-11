@@ -63,9 +63,9 @@
         <input type="time"  id="time" min="<%=data[0].opentime%>" max="<%=data[0].closetime%>" step="900" class="form-control form-control-lg" value="<%=reservationTime%>" name="reservationTime" readonly required> <br>
         <label>Reservation Date</label> <br>
         <%reservationDate = reservationDate.slice(1,reservationDate.length-1)%>
-        <input id="date" type="date" class="form-control form-control-lg" value="<%=reservationDate%>" name="reservationDate" readonly  > <br>
+        <input id="date" type="date" class="form-control form-control-lg" value="<%=reservationDate%>" name="reservationDate" readonly> <br>
         <label>Pax No</label> <br>
-        <input id="paxNo" value="<%=paxNo%>" name="pax" readonly > <br><br>
+        <input id="paxNo" value="<%=paxNo%>" name="pax" readonly> <br><br>
         <div class="col-12 col-md-3">
             <button type="submit" class="btn btn-block btn btn-primary" onclick="show()">Confirm Reservation</button>
         </div>

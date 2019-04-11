@@ -21,9 +21,6 @@ drop table if exists Locations cascade;
 drop table if exists Time cascade;
 drop table if exists BookedTables cascade;
 
-drop trigger if exists trig_noTimeTravel on userpreferences;
-
-
 create table Time (
 timeSlot time primary key,
 timeSlotStr varchar(10) not null
@@ -161,6 +158,117 @@ foodName varchar(50),
 price integer,
 primary key (menuName,foodName, price)
 );
+
+
+
+
+drop trigger if exists prevent_password_changes on diners;
+drop trigger if exists trig_validPax on books;
+drop trigger if exists trig_notTooShort on diners;
+drop trigger if exists trig_noTimeTravel on userpreferences;
+drop trigger if exists trig_validHours on bookedtables;
+
+
+-----------------------------------------------
+--Trigger to prevent change of password
+-----------------------------------------------
+
+create or replace function cannotChng()
+returns trigger as $$
+ begin if NEW.password <> OLD.password then
+  raise exception 'Cannot change password';
+ return null;
+ else return NEW;
+end if;
+end; $$ language plpgsql;
+
+create trigger prevent_password_changes
+before update
+on diners
+for each row
+execute procedure cannotChng();
+
+
+-----------------------------------------------
+--Trigger on BookedTables to make sure that capacity is valid
+-----------------------------------------------
+create or replace function validPax()
+returns trigger as $$
+begin if
+	new.pax <= 0 or new.pax > (select branchtables.capacity from branchtables where rname = new.rname and tid = new.tid and bid = new.bid)
+	then raise exception 'Invalid pax number or not enough seats at this table';
+	return null;
+else return new;
+end if;
+end; $$ language plpgsql;
+
+create trigger trig_validPax
+before insert or update
+on books
+for each row
+execute procedure validPax();
+
+
+-----------------------------------------------
+--Trigger to prevent username to be less than 9 characters
+-----------------------------------------------
+
+
+create or replace function notTooShort()
+returns trigger as $$
+begin if not new.isAdmin and length(new.username) < 9  then
+	raise exception 'Username must be at least 9 characters';
+	return null;
+else return new;
+end if; end; $$ language plpgsql;
+
+create trigger trig_notTooShort
+before insert or update
+on diners
+for each row
+execute procedure notTooShort();
+
+
+-----------------------------------------------
+--Trigger to prevent booking the past
+-----------------------------------------------
+
+
+create or replace function noTimeTravel()
+returns trigger as $$
+begin if new.preferredDate < current_date or (new.preferredDate = current_date and new.preferredTime <= localtime) then
+	raise exception 'This app is not a time machine';
+	return null;
+else return new;
+end if;
+end; $$ language plpgsql;
+
+create trigger trig_noTimeTravel
+before insert or update
+on userpreferences
+for each row
+execute procedure noTimeTravel();
+
+
+-----------------------------------------------
+--Trigger to prevent booking timeslot outside of opening hours
+-----------------------------------------------
+create or replace function validHours()
+returns trigger as $$
+begin if
+	new.bookedtimeslot < (select branches.opentime from branches where rname = new.rname and bid = new.bid) or new.bookedtimeslot > (select branches.closetime from branches where rname = new.rname and bid = new.bid)
+	then raise exception 'This branch is not opened at this time';
+	return null;
+else return new;
+end if;
+end; $$ language plpgsql;
+
+create trigger trig_validHours
+before insert or update
+on BookedTables
+for each row
+execute procedure validHours();
+
 
 
 -------------------------------------------------
@@ -370,23 +478,6 @@ insert into BranchTables (rname, bid, tid, capacity) values
 ('Thai Tantric Authentic Thai Cuisine', 1, 1, 4),
 ('NamNam', 1, 1, 3);
 
-
-/*
-insert into BookedTables (rname, bid, tid, pax, bookedTimeslot, bookedDate) values
-('Crystal Jade', 1, 1, 0, '23:00:00', '2019-05-16');
---('MacDonalds', 1, 1, 50, '10:00:00', '2019-04-11');
-*/
-insert into BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) values
-('Crystal Jade', 1, 1, '23:00:00', '2019-05-16'),
-('Crystal Jade', 1, 1, '23:15:00', '2019-05-16'),
-('Crystal Jade', 1, 1, '23:30:00', '2019-05-16'),
-('Crystal Jade', 1, 1, '23:45:00', '2019-05-16');
-
---('MacDonalds', 1, 1, '10:00:00', '2019-04-11');
-
-
-
-
 insert into Sells (menuname, rname, bid) values
 ('MacDonalds Breakfast Menu', 'MacDonalds', 1),
 ('MacDonalds Breakfast Menu', 'MacDonalds', 2),
@@ -436,21 +527,6 @@ insert into confirmedbookings (userName, rname, bid) values
 ('Aaron', 'BurgerKing', 1),
 ('Aaron', 'Forlino', 1);
 
-/*
-SELECT DISTINCT rname FROM confirmedBookings WHERE username = 'Aaron';
-*/
---testing
---for one booking, need four entries to Booked Table
-/*
-insert into BookedTables (rname, bid, tid, pax, bookedTimeslot, bookedDate)
-values ('MacDonalds', 1, 1, 1, '10:00:00', '2020-01-01'),
-('MacDonalds', 1, 1, 1, '10:15:00', '2020-01-01'),
-('MacDonalds', 1, 1, 1, '10:30:00', '2020-01-01'),
-('MacDonalds', 1, 1, 1, '10:45:00', '2020-01-01'),
---last entry just to test that deleting a reservationTime 10:00:00 only deletes the first four not the last one
-('MacDonalds', 1, 1, 1, '11:00:00', '2020-01-01');
-*/
-
 
 insert into BookedTables (rname, bid, tid, bookedTimeslot, bookedDate)
 values ('MacDonalds', 1, 1, '10:00:00', '2020-01-01'),
@@ -477,77 +553,4 @@ insert into Books (username, rname, bid, tid, pax, reservationtime, reservationd
 values ('Aaron', 'MacDonalds', 1, 1, 1, '10:00:00', '2020-01-01');
 
 
---SELECT DISTINCT rname, bid, tid, pax, reservationTime, reservationDate FROM Books WHERE username = 'Aaron';
-
-
---result means it is available for booking (i only need the TID)
-
---testing
-
-/*
- select * from bookedtables;
-
-delete from bookedtables where rname = 'MacDonalds' and bid= 1 and tid=1 and bookedTimeslot>='10:00:00' and bookedTimeslot < '11:00:00' and  bookedDate ='2020-01-01';
-select * from Books where username = 'Aaron';
-select * from bookedtables;
-
-
-SELECT tid
-FROM branches B NATURAL JOIN branchTables BT
-WHERE B.rname = 'MacDonalds' AND B.bid = 1 AND BT.capacity >= 2
-AND B.openTime <= '10:00:00' AND B.closeTime >= '10:00:00'
-AND NOT EXISTS (SELECT 1
-FROM bookedtables BKT
-WHERE BKT.bid = BT.bid AND BT.rname = BKT.rname AND BT.tid = BKT.tid
-and BKT.bookeddate = '2020-01-01' and BKT.bookedtimeslot = '10:00:00')
-order by BT.capacity
-limit 1;
- */
-
--- from Branches ('BurgerKing', 1, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Western'),
---from branchTables ('BurgerKing', 1, 1, 2),
--- current no BookedTables at Burgerking
-
-/*
-insert into BookedTables (rname, bid, tid, bookedTimeslot, bookedDate)
-values('BurgerKing', 1, 1, '19:30:00', '2019-01-01');
---values ('BurgerKing', 1, 1, '21:30:00', '2019-01-01'),
---('BurgerKing', 1, 1, '21:45:00', '2019-01-01'),
---('BurgerKing', 1, 1, '21:00:00', '2019-01-01'),
---('BurgerKing', 1, 1, '22:00:00', '2019-01-01'),
---('BurgerKing', 1, 1, '22:30:00', '2019-01-01'),
---('BurgerKing', 1, 1, '23:00:00', '2019-01-01'),
---('BurgerKing', 1, 1, '23:30:00', '2019-01-01');
-
-
-SELECT * FROM branchtables B NATURAL JOIN branches BB
-    WHERE NOT EXISTS ( SELECT 1 FROM bookedtables T WHERE T.rname = B.rname AND
-    T.bookeddate = '2019-01-01' AND T.bookedtimeslot + '1:00:00' < '22:00:00' )
-    AND B.rname = 'BurgerKing' AND B.capacity >= 1 AND BB.location = 'Orchard Scape' AND B.bid = 1
-    ORDER BY bid, tid LIMIT 1 ;
-*/
-
-INSERT INTO ConfirmedBookings (userName, rname, bid) VALUES ('Aaron','Astons', 2);
-
---INSERT INTO ConfirmedBookings (userName, rname, bid) VALUES ('Aaron','Thai Tantric Authentic Cuisine', 1);
-
-/*
-INSERT INTO ConfirmedBookings (userName, rname, bid) VALUES ('Aaron','Astons', 3)
-    ON CONFLICT (username, rname, bid) DO UPDATE SET username = EXCLUDED.username,
-    rname = EXCLUDED.rname, bid = EXCLUDED.bid;
-    */
-create or replace function noTimeTravel()
-returns trigger as $$
-begin if new.preferredDate < current_date or (new.preferredDate = current_date and new.preferredTime <= localtime) then
-	raise exception 'This app is not a time machine';
-	return null;
-else return new;
-end if;
-end; $$ language plpgsql;
-
-create trigger trig_noTimeTravel
-before insert or update
-on userpreferences
-for each row
-execute procedure noTimeTravel();
 

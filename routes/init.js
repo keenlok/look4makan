@@ -47,12 +47,12 @@ function initRouter(app) {
   app.post('/insert/intomenu'   , admin.insertIntoMenu               );
   app.post('/insert/cuisine'    , admin.insertCuisine                );
 
-  app.post('/update/menu'   , admin.updateMenu   )
-  app.post('/update/cuisine', admin.updateCuisine)
-  app.post('/update/user'   , admin.updateUser   )
+  app.post('/update/menu'   , admin.updateMenu   );
+  app.post('/update/cuisine', admin.updateCuisine);
+  app.post('/update/user'   , admin.updateUser   );
 
-  app.post('/delete/menu', admin.deleteMenu)
-  app.post('/delete/user', admin.deleteUser)
+  app.post('/delete/menu', admin.deleteMenu);
+  app.post('/delete/user', admin.deleteUser);
 
 
   app.get('/search'             , admin.search);
@@ -521,7 +521,8 @@ function insertIntoConfirmedBooking (req, res, next) {
     }
 
     let queryArgs = [req.user.username, rname, bid];
-
+    console.log("INSERTQUERY : " + insertQuery);
+    console.log("ARUGMENTS : " + queryArgs);
     pool.query(insertQuery, queryArgs, (err, data) => {
         if(!err) {
             console.log("Successful insertion into ConfirmedBookings Table");
@@ -662,12 +663,13 @@ function insertIntoBookedTables(req, res, next) {
     let pax = args.pax;
     let queryArgs = [date, time, rname, pax, location, bid];
 
+    console.log("for insertintobookedtables: "+ queryArgs);
     pool.query(sql_query.find_empty_tables, queryArgs, (err, data) => {
         if(err) {
             console.error("ERROR", err)
         } else {
             if (data.rows.length === 0) {
-                console.log("No empty tables found")
+                console.log("No empty tables found");
             } else {
                 console.log("table found, inserting into bookedTables,", data.rows);
                 let args = data.rows[0];
@@ -686,17 +688,16 @@ function insertIntoBookedTables(req, res, next) {
                 pool.query(sql_query.insert_into_bookedtables, queryArgs, (err, data) => {
                     if (err) {
                         console.error("Insertion into bookedtables Fail!", err);
-                        return next()
+                        return next();
                     } else {
                         console.log('Insertion into bookedtables: Success');
-                        return next()
+                        return next();
                     }
                 })
-
             }
         }
-    })
-    // next();
+        // return next();
+    });
 }
 
 function contact (req, res, next) {

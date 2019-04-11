@@ -41,7 +41,7 @@ const search_result = 'SELECT distinct rname, bid, openingHours, location ' +
     'NOT EXISTS (SELECT 1 FROM bookedtables BKT ' +
     'WHERE BKT.bid = BT.bid AND BT.rname = BKT.rname ' +
     'AND BT.tid = BKT.tid AND BKT.bookedtimeslot >= $4 ' +
-    'AND BKT.bookedtimeslot - \'00:45:00\' < $4 AND BKT.bookeddate = $6);';
+    'AND BKT.bookedtimeslot - \'01:00:00\' < $4 AND BKT.bookeddate = $6);';
 
 //used in /bookings page to ensure the change in reservationTime is limited to opening hours of that same branch
 //may be obsolete, depends if there is a relevant trigger in place (may just keep as safe guard)
@@ -55,6 +55,8 @@ const get_menu_items = 'SELECT DISTINCT menuname, foodname, price ' +
 
 
 const insertConfirmedBooking =  "INSERT INTO ConfirmedBookings (userName, rname, bid) VALUES ($1, $2, $3);";
+   // " ON CONFLICT (username, rname, bid) DO UPDATE SET username = EXCLUDED.username, " +
+   // " rname = EXCLUDED.rname, bid = EXCLUDED.bid;";
 
 //find the best-fit tid given a bid and rname
 const find_tid_given_bid_rname = "SELECT tid from BranchTables BT WHERE BT.rname = $1 AND " +

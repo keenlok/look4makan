@@ -126,7 +126,7 @@ const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, boo
 
 const find_empty_tables = 'SELECT * FROM branchtables B NATURAL JOIN branches BB ' +
     'WHERE NOT EXISTS ( SELECT 1 FROM bookedtables T WHERE T.rname = B.rname AND ' +
-    'T.bookeddate = $1 AND T.bookedtimeslot + \'1:00:00\' < $2 ) ' +
+    'T.bookeddate = $1 AND T.bookedtimeslot >= $2 AND T.bookedtimeslot < $2::time + \'01:00:00\') ' +
     'AND B.rname = $3 AND B.capacity >= $4 AND BB.location = $5 AND B.bid = $6 ' +
     'ORDER BY bid, tid LIMIT 1 ;';
 

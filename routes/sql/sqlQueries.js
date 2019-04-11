@@ -14,6 +14,8 @@ const setup_user_awards = 'INSERT INTO awards (username, awardpoints) VALUES ($1
 
 const userpass = 'SELECT * FROM diners WHERE username = $1';
 
+
+//used for home page multi-search option   (CHECK : Aaron)
 const all_locations = "select * from Locations;";
 
 const all_cuisines = "select * from CuisineTypes;";
@@ -23,14 +25,14 @@ const all_rname= "select rname from Restaurants;";
 const all_timeSlots= "select * from Time;";
 
 
-//checked
+//used for Main Feature  (CHECKED: Aaron)
 const insertUserPreference =  'INSERT INTO UserPreferences (userName, preferredRname, preferredLoc, preferredDate,' +
     ' preferredTime, cuisineType, paxNum) VALUES ($1, $2, $3, $4, $5, $6, $7) ' +
     'ON CONFLICT (username) DO UPDATE SET preferredrname = EXCLUDED.preferredrname,' +
     'preferredloc = EXCLUDED.preferredloc, preferreddate = EXCLUDED.preferreddate, ' +
     'preferredTime = EXCLUDED.preferredtime, cuisinetype = EXCLUDED.cuisinetype, paxnum = EXCLUDED.paxnum;';
 
-//checked
+//this is the result to be displayed after user enters preferences in home page
 const search_result = 'SELECT distinct rname, bid, openingHours, location ' +
     'FROM branches B NATURAL JOIN advertises A NATURAL JOIN branchTables BT ' +
     'WHERE B.rname IN ($1) AND B.location IN ($2) AND ' +
@@ -41,11 +43,12 @@ const search_result = 'SELECT distinct rname, bid, openingHours, location ' +
     'AND BT.tid = BKT.tid AND BKT.bookedtimeslot >= $4 ' +
     'AND BKT.bookedtimeslot - \'00:45:00\' < $4 AND BKT.bookeddate = $6);';
 
-
+//used in /bookings page to ensure the change in reservationTime is limited to opening hours of that same branch
+//may be obsolete, depends if there is a relevant trigger in place (may just keep as safe guard)
 const min_max_hour_of_a_branch = "SELECT openTime, closeTime FROM Branches B " +
     "WHERE B.rname = $1 AND B.bid = $2;";
 
-
+//used in /bookings page
 const get_menu_items = 'SELECT DISTINCT menuname, foodname, price ' +
     'FROM menu M NATURAL JOIN menuitems F NATURAL JOIN sells S ' +
     'WHERE S.rname = $1 ORDER BY menuname;';
@@ -53,6 +56,7 @@ const get_menu_items = 'SELECT DISTINCT menuname, foodname, price ' +
 
 const insertConfirmedBooking =  "INSERT INTO ConfirmedBookings (userName, rname, bid) VALUES ($1, $2, $3);";
 
+//find the best-fit tid given a bid and rname
 const find_tid_given_bid_rname = "SELECT tid from BranchTables BT WHERE BT.rname = $1 AND " +
     "BT.bid = $2 AND BT.capacity >= $3 ORDER BY capacity limit 1;";
 
@@ -86,9 +90,6 @@ const checkForVacancyForUpdatedReservation = "SELECT tid FROM branches B NATURAL
     + " ORDER BY BT.capacity LIMIT 1;";
 
 
-
-
-
 const insert_rname = 'INSERT INTO restaurants (rname) VALUES ($1);';
 
 const insert_branch = 'INSERT INTO branches (rname, bid, location, openingHours, openTime, closeTime, cuisineType) ' +
@@ -100,7 +101,8 @@ const insert_menu = 'INSERT INTO menu (name) VALUES ($1);';
 
 const insert_cuisine = 'INSERT INTO cuisinetypes (cuisinename) VALUES ($1);';
 
-const menu = 'SELECT * FROM menu;'; //where is this used? if not delete this
+//used for admin rights, basic search
+const menu = 'SELECT * FROM menu;';
 
 const insert_into_menu = 'INSERT INTO  menuitems (menuname, foodname, price) VALUES ($1, $2, $3);';
 

@@ -1,8 +1,8 @@
-const sql_query = require('./sql/sqlQueries')
-const passport = require('passport')
-const bcrypt = require('bcrypt')
-const utils = require('./utils/util')
-const admin = require('./admin')
+const sql_query = require('./sql/sqlQueries');
+const passport = require('passport');
+const bcrypt = require('bcrypt');
+const utils = require('./utils/util');
+const admin = require('./admin');
 
 
 // Postgre SQL Connection
@@ -21,7 +21,7 @@ function initRouter(app) {
   //Main Feature
   app.get('/'                    , index);
   app.post('/search/restaurants' , insertIntoUserPreference, search_restaurant);
-  app.post('/booking'            , booking          );
+  app.post('/booking'            , booking);
   app.post('/booking/confirmation', passport.authMiddleware(), insertIntoConfirmedBooking, insertIntoBookedTables, insertIntoBooks, updateAward, confirmation);
 
   //Rate your Bookings Feature
@@ -34,25 +34,25 @@ function initRouter(app) {
   app.post('/editReservations/edit', editReservationMode);
   app.post('/edits/complete', updateDeleteReservation);
 
-  app.get('/restaurant'          , restaurant       );
 
   /*  Admin privileges  */
-  app.get('/edit'       , admin.adminDashboard   )
-  app.get('/edit/insert', admin.insertData       )
-  app.get('/edit/update', admin.updateData       )
+  app.get('/edit'       , admin.adminDashboard);
+  app.get('/edit/insert', admin.insertData);
+  app.get('/edit/update', admin.updateData);
 
-  app.post('/insert/diners'     , admin.insertIntoDiners             )
-  app.post('/insert/restaurants', admin.insertIntoRestaurantsBranches)
-  app.post('/insert/locations'  , admin.insertLocations              )
-  app.post('/insert/menu'       , admin.insertMenu                   )
-  app.post('/insert/intomenu'   , admin.insertIntoMenu               )
-  app.post('/insert/cuisine'    , admin.insertCuisine                )
+  app.post('/insert/diners'     , admin.insertIntoDiners             );
+  app.post('/insert/restaurants', admin.insertIntoRestaurantsBranches);
+  app.post('/insert/locations'  , admin.insertLocations              );
+  app.post('/insert/menu'       , admin.insertMenu                   );
+  app.post('/insert/intomenu'   , admin.insertIntoMenu               );
+  app.post('/insert/cuisine'    , admin.insertCuisine                );
 
   app.post('/update/menu', admin.updateMenu)
   app.post('/delete/menu', admin.deleteMenu)
 
 
   app.get('/search'             , admin.search);
+  app.get('/restaurant'          , restaurant);  //can move to admin?
 
 
   /*  PROTECTED GET */
@@ -71,8 +71,65 @@ function initRouter(app) {
   app.get('/logout', passport.authMiddleware(), logout);
 
 
-  app.get('/contactUs'           , contact            );
+  app.get('/contactUs'           , contact);
 }
+
+
+function rateReservations (req, res, next) {
+
+    let selectQuery = sql_query.findAllUserBookings;
+    let username = (req.user === undefined) ? '' : req.user.username;
+    pool.query(selectQuery, [username], (err, data) => {
+        if(!err) {
+            let auth = req.isAuthenticated();
+            res.render("rateReservations", {data: data.rows, auth : auth, user: req.user});
+        }
+    });
+}
+
+function ratings (req, res, next) {
+    let rname = req.body.rname;
+    let bid = req.body.bid;
+
+    if(req.user !== undefined) {
+        let selectQuery = sql_query.findRatingsGivenUsernameRname;
+        console.log("query : " + selectQuery);
+        console.log("rname : " + rname);
+        console.log("bid : " + bid);
+        console.log("username : " + req.user.username);
+        pool.query(selectQuery, [rname,req.user.username, bid], (err, data) => {
+            if(err) {
+                console.log("FUCK");
+            }
+            let auth = req.isAuthenticated();
+            res.render("ratings", {rname : rname, username : req.user.username, bid : bid, data : data.rows, auth: auth});
+        });
+    }
+}
+
+function insertIntoRatings (req, res, next) {
+    if(req.body.rname === undefined) {
+        return next();
+    }
+
+    let rname = req.body.rname;
+    let bid = req.body.bid;
+    let rating = req.body.newRating;
+
+    let insertQuery = sql_query.insertIntoRatings;
+
+    pool.query(insertQuery, [rating, req.user.username, rname, bid], (err, data) => {
+        if(!err) {
+            console.log("successful insertion into Ratings Table!");
+        }
+        else {
+            console.error("failed insertion into Ratings Table", err);
+        }
+    });
+    res.redirect("/");
+}
+
+
 
 function editReservations (req, res, next) {
 
@@ -105,7 +162,6 @@ function editReservationMode (req, res, next) {
     let auth = req.isAuthenticated();
 
     res.render("editReservationMode", {rname : rname, rname: rname, bid : bid, tid : tid, pax : pax, reservationTime : reservationTime, reservationDate : reservationDate, auth: auth});
-
 }
 
 function updateDeleteReservation (req, res, next) {
@@ -146,62 +202,6 @@ function updateDeleteReservation (req, res, next) {
                 //needed details => bookedTables : rname, bid, tid, capacity  --should change to paxNo not capacity, bookedTimeslot ,bookedDate
                 //=>  Books: userName, rname, bid, tid, pax, reservationTime, reservationDate
             }
-        }
-    });
-    res.redirect("/");
-}
-
-
-
-function rateReservations (req, res, next) {
-
-  let selectQuery = sql_query.findAllUserBookings;
-  let username = (req.user === undefined) ? '' : req.user.username;
-  pool.query(selectQuery, [username], (err, data) => {
-    if(!err) {
-      let auth = req.isAuthenticated();
-      res.render("rateReservations", {data: data.rows, auth : auth, user: req.user});
-    }
-  });
-}
-
-function ratings (req, res, next) {
-    let rname = req.body.rname;
-    let bid = req.body.bid;
-
-    if(req.user !== undefined) {
-        let selectQuery = sql_query.findRatingsGivenUsernameRname;
-        console.log("query : " + selectQuery);
-        console.log("rname : " + rname);
-        console.log("bid : " + bid);
-        console.log("username : " + req.user.username);
-        pool.query(selectQuery, [rname,req.user.username, bid], (err, data) => {
-            if(err) {
-                console.log("FUCK");
-            }
-            let auth = req.isAuthenticated();
-            res.render("ratings", {rname : rname, username : req.user.username, bid : bid, data : data.rows, auth: auth});
-        });
-    }
-}
-
-function insertIntoRatings (req, res, next) {
-    if(req.body.rname === undefined) {
-        return next();
-    }
-
-    let rname = req.body.rname;
-    let bid = req.body.bid;
-    let rating = req.body.newRating;
-
-    let insertQuery = sql_query.insertIntoRatings;
-
-    pool.query(insertQuery, [rating, req.user.username, rname, bid], (err, data) => {
-        if(!err) {
-            console.log("successful insertion into Ratings Table!");
-        }
-        else {
-            console.error("failed insertion into Ratings Table", err);
         }
     });
     res.redirect("/");
@@ -283,18 +283,8 @@ function insertIntoUserPreference (req, res, next) {
     paxNo = 2; //by default
   }
 
-  let arguments = [
-    username,         //$1
-    rname,            //$2
-    location,         //$3
-    date,             //$4
-    reservationTime,  //$5
-    cuisineType,      //$6
-    paxNo             //$7
-  ];
+  let arguments = [username, rname, location, date, reservationTime, cuisineType, paxNo];
 
-
-  console.log("INSERT QUERY :", insertQuery, arguments);
   pool.query(insertQuery, arguments, (err, data) => {
     if(!err) {
       console.log("successful insertion into UserPreferences Table");
@@ -537,7 +527,6 @@ function confirmation(req, res, next) {
 
 
 
-
 function register(req, res, next) {
   res.render('register', {title: 'Look4Makan', auth: false});
 }
@@ -586,22 +575,16 @@ function error(err, res) {
 }
  
 function insertIntoBookedTables(req, res, next) {
-  let args = req.body
+  let args = req.body;
   // console.log(req.body)
-  let rname = args.rname
-  let location = args.location
-  let time = args.reservationTime
-  let date = args.reservationDate
-  let bid = args.bid
-  let pax = args.pax
-  let queryArgs = [
-    date,
-    time,
-    rname,
-    pax,
-    location,
-    bid
-  ]
+  let rname = args.rname;
+  let location = args.location;
+  let time = args.reservationTime;
+  let date = args.reservationDate;
+  let bid = args.bid;
+  let pax = args.pax;
+  let queryArgs = [date, time, rname, pax, location, bid];
+
   pool.query(sql_query.find_empty_tables, queryArgs, (err, data) => {
     if(err) {
       console.error("ERROR", err)
@@ -609,11 +592,11 @@ function insertIntoBookedTables(req, res, next) {
       if (data.rows.length === 0) {
         console.log("No empty tables found")
       } else {
-        console.log("table found, inserting into bookedTAbles,", data.rows)
-        let args = data.rows[0]
-        let rname = args.rname
-        let bid = args.bid
-        let tid = args.tid
+        console.log("table found, inserting into bookedTAbles,", data.rows);
+        let args = data.rows[0];
+        let rname = args.rname;
+        let bid = args.bid;
+        let tid = args.tid;
         let queryArgs = [
           rname,
           bid,
@@ -626,12 +609,13 @@ function insertIntoBookedTables(req, res, next) {
         ]
         // console.log(utils.addIntervalToTime(time, 15))
         console.log("to be inserted", queryArgs)
+        console.log("to be inserted", queryArgs);
         pool.query(sql_query.insert_into_bookedtables, queryArgs, (err, data) => {
           if (err) {
-            console.error("Insertion into bookedtables Fail!", err)
+            console.error("Insertion into bookedtables Fail!", err);
             return next()
           } else {
-            console.log('Insertion into bookedtables: Success')
+            console.log('Insertion into bookedtables: Success');
             return next()
           }
         })

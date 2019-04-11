@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
+    <script src='/stylesheets/vendor/jquery/jquery.js'></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 
@@ -71,6 +72,58 @@
         </div>
     </form>
 </div>
+<div class="row">
+    <div class="col-xl-9 mx-auto">
+        <h2 class="mb-5">Update diners!:</h2>
+    </div>
+    <form class="d-flex flex-row justify-content-center" method="post">
+        <div class="row">
+            <div class="col m-1">
+                <select class="m-1 flex-grow-1 " id="users" name="username">
+                    <option id="username" value=""> Select Diner to Update </option>
+                    <% for (var i = 0; i < users.length; i++) { %>
+                    <option value="<%= users[i].username %>"><%= users[i].username %> </option>
+                    <% } %>
+                </select>
+            </div>
+            <div class="col m-1">
+                <input class="form-control flex-grow-1 m-1" id="firstname" type="text" placeholder="Type new First name here" name="newfirstname">
+            </div>
+            <div class="col m-1">
+                <input class="form-control flex-grow-1 m-1" id="lastname" type="text" placeholder="Type new Last name here" name="newlastname">
+            </div>
+        </div>
+        <div class="row m-1">
+            <button class="btn btn-primary m-1" formaction="/update/user" type="submit">Submit</button>
+            <button class="btn btn-danger m-1 disabled" formaction="/delete/user" type="submit">Delete</button>
+        </div>
+    </form>
+</div>
+<table class="table" style="display:table-row" id="usertable">
+    <thead class="thead-light" style="display:none">
+    <tr>
+        <th scope="col">username</th>
+        <th scope="col">firstname</th>
+        <th scope="col">lastname</th>
+    </tr>
+    </thead>
+    <tbody style="display:none">
+    <% for (var i = 0; i < users.length; i++) { %>
+    <tr>
+        <td style="display:none !important"><%= users[i].username%></td>
+        <td style="display:none !important"><%= users[i].firstname%></td>
+        <td style="display:none !important"><%= users[i].lastname%></td>
+    </tr>
+    </tbody>
+</table>
+<% } %>
+<script>
+    $('select').change(function(){
+      console.log($(this).val())
+      $('input#firstName').val()
+      }
+    )
+</script>
 </body>
 <footer>
     <%- include ./partials/footer.ejs %>

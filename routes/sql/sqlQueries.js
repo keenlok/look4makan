@@ -121,11 +121,15 @@ const find_empty_tables = 'SELECT * FROM branchtables B NATURAL JOIN branches BB
 
 const update_menu = 'UPDATE menu SET name = $2 WHERE name = $1;'
 
-const update_cuisine = 'UPDATE cuisinetypes SET cuisinename = $2 WHERE cuisinename = $1;';
+const update_cuisine = 'UPDATE cuisinetypes SET cuisinename = $2 WHERE cuisinename = $1;'
 
 const delete_menu = 'DELETE FROM menu WHERE name = $1;'
 
+const update_users = 'UPDATE diners SET firstname = $2, lastname = $3 WHERE username = $1;'
 
+const delete_users = 'DELETE FROM diners WHERE username = $1;'
+
+const get_users = 'SELECT * FROM diners;'
 
 
 const queries = {
@@ -158,6 +162,7 @@ const queries = {
 
 
   get_menu: menu,
+  get_users: get_users,
   delete_old_entries: delete_old_entries,
   // delete_old_entries: delete_old_entries_for_testing, // use this when testing
   insert_rname: insert_rname,
@@ -169,8 +174,10 @@ const queries = {
 
   update_menu: update_menu,
   update_cuisine: update_cuisine,
+  update_users: update_users,
 
   delete_menu: delete_menu,
+  delete_users: delete_users,
 
   insert_into_bookedtables: insert_into_bookedtables,
   find_empty_tables: find_empty_tables

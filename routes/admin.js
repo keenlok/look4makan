@@ -42,13 +42,17 @@ function updateData (req, res, next) {
     let menu = data.rows
     pool.query(sql_query.getAllCuisines, (err, data) => {
       let cuisine = data.rows
-      res.render('admin_update', {
-        page: "Admin Update",
-        dateInStr: date,
-        auth: true,
-        user: user,
-        menu: menu,
-        cuisine: cuisine
+      pool.query(sql_query.get_users, (err, data) => {
+        let users = data.rows
+        res.render('admin_update', {
+          page: "Admin Update",
+          dateInStr: date,
+          auth: true,
+          user: user,
+          menu: menu,
+          cuisine: cuisine,
+          users: users
+        })
       })
     })
   })

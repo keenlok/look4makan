@@ -47,7 +47,9 @@ function initRouter(app) {
   app.post('/insert/intomenu'   , admin.insertIntoMenu               );
   app.post('/insert/cuisine'    , admin.insertCuisine                );
 
-  app.post('/update/menu', admin.updateMenu)
+  app.post('/update/menu'   , admin.updateMenu   )
+  app.post('/update/cuisine', admin.updateCuisine)
+
   app.post('/delete/menu', admin.deleteMenu)
 
 

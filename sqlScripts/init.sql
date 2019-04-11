@@ -67,24 +67,24 @@ preferredRname varchar(40),
 preferredLoc varchar(40) references Locations,
 preferredDate date not null,
 preferredTime time not null,
-cuisineType varchar(10) references CuisineTypes,
+cuisineType varchar(10) references CuisineTypes on update cascade on delete cascade,
 paxNum integer not null,
 primary key (userName)
 );
 
 create table Branches (
-rname varchar(40),
+rname varchar(40) references restaurants,
 bid integer,
 location varchar(40) references Locations not null,
 openingHours varchar(20),
 openTime time,
 closeTime time,
-cuisineType varchar(10) references CuisineTypes not null,
+cuisineType varchar(10) references CuisineTypes on update cascade on delete cascade not null, 
 primary key (rname, bid)
 );
 
 create table BranchTables (
-rname varchar(40),
+rname varchar(40) references restaurants,
 bid integer,
 tid integer,
 capacity integer,
@@ -304,11 +304,11 @@ insert into branches (rname, bid, location, openinghours, opentime, closetime, c
 ('Astons', 3, 'Causeway Point', '7am - 7pm', '07:00:00', '19:00:00', 'Western'),
 ('Astons', 4, 'Centre Point', '10am - 10pm', '10:00:00', '22:00:00', 'Western'),
 
-('Sakae Sushi', 1, 'Orchard Scape', '11am - 9.30pm', '11:00:00', '21:30:00', 'Japanese'),
-('Sakae Sushi', 2, 'Plaza Singapura', '12pm - 7.30pm', '12:00:00', '19:30:00', 'Japanese'),
+('Sushi Express', 1, 'Orchard Scape', '11am - 9.30pm', '11:00:00', '21:30:00', 'Japanese'),
+('Sushi Express', 2, 'Plaza Singapura', '12pm - 7.30pm', '12:00:00', '19:30:00', 'Japanese'),
 
-('Sushi Express', 1, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Japanese'),
-('Sushi Express', 2, 'Buona Vista', '12pm - 7.30pm', '12:00:00', '19:30:00', 'Japanese'),
+('Sushi Express', 3, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Japanese'),
+('Sushi Express', 4, 'Buona Vista', '12pm - 7.30pm', '12:00:00', '19:30:00', 'Japanese'),
 
 ('Forlino', 1, 'Orchard Scape', '1pm - 10pm', '13:00:00', '10:00:00', 'French'),
 ('Forlino', 2, 'Buona Vista', '2pm - 7.30pm', '14:00:00', '19:30:00', 'French'),
@@ -408,12 +408,14 @@ insert into Sells (menuname, rname, bid) values
 ('Astons Western Menu', 'Astons', 3),
 ('Astons Western Menu', 'Astons', 4),
 
-('Sakae Lunch Menu', 'Sakae Sushi', 1),
-('Sakae Lunch Menu', 'Sakae Sushi', 2),
+--('Sakae Lunch Menu', 'Sakae Sushi', 1),
+--('Sakae Lunch Menu', 'Sakae Sushi', 2),
 
 
 ('Sushi Express Menu', 'Sushi Express', 1),
 ('Sushi Express Menu', 'Sushi Express', 2),
+('Sushi Express Menu', 'Sushi Express', 3),
+('Sushi Express Menu', 'Sushi Express', 4),
 
 ('Forlino Menu', 'Forlino', 1),
 ('Forlino Menu', 'Forlino', 2),

@@ -47,6 +47,10 @@ function initRouter(app) {
   app.post('/insert/intomenu'   , admin.insertIntoMenu               );
   app.post('/insert/cuisine'    , admin.insertCuisine                );
 
+  app.post('/update/menu', admin.updateMenu)
+  app.post('/delete/menu', admin.deleteMenu)
+
+
   app.get('/search'             , admin.search);
   app.get('/restaurant'          , restaurant);  //can move to admin?
 
@@ -453,12 +457,6 @@ function insertIntoConfirmedBooking (req, res, next) {
     return next();
 }
 
-function insertIntoBookedTables(req, res, next) {
-    console.log(req.body);
-    pool.query(sql_query.find_empty_tables, );
-    next();
-}
-
 
 function insertIntoBooks (req, res, next) {
     let rname = req.body.rname;
@@ -600,8 +598,17 @@ function insertIntoBookedTables(req, res, next) {
         let bid = args.bid;
         let tid = args.tid;
         let queryArgs = [
-          rname, bid, tid, time, date
-        ];
+          rname,
+          bid,
+          tid,
+          time,
+          date,
+          utils.addIntervalToTime(time, 15),
+          utils.addIntervalToTime(time, 30),
+          utils.addIntervalToTime(time, 45)
+        ]
+        // console.log(utils.addIntervalToTime(time, 15))
+        console.log("to be inserted", queryArgs)
         console.log("to be inserted", queryArgs);
         pool.query(sql_query.insert_into_bookedtables, queryArgs, (err, data) => {
           if (err) {

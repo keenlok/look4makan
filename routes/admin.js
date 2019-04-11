@@ -38,11 +38,15 @@ function updateData (req, res, next) {
   }
   let date = utils.getDateInStr()
 
-  res.render('admin_update', {
-    page: "Admin Update",
-    dateInStr: date,
-    auth: true,
-    user: user
+  pool.query(sql_query.get_menu, (err, data) => {
+    let menu = data.rows
+    res.render('admin_update', {
+      page: "Admin Update",
+      dateInStr: date,
+      auth: true,
+      user: user,
+      menu: menu
+    })
   })
 }
 
@@ -229,8 +233,6 @@ function search (req, res, next) {
     })
 }
 
-
-
 module.exports.insertIntoDiners = insertIntoDiners;
 module.exports.insertIntoRestaurantsBranches = insertIntoRestaurantsBranches;
 module.exports.insertLocations = insertLocations;
@@ -238,6 +240,44 @@ module.exports.insertCuisine = insertCuisine;
 module.exports.insertMenu = insertMenu;
 module.exports.insertIntoMenu = insertIntoMenu;
 module.exports.search = search;
+
+
+function updateMenu (req, res, next) {
+  console.log(req.body)
+  let oldmenu = req.body.oldmenu
+  let newmenu = req.body.newmenu
+
+  pool.query(sql_query.update_menu, [oldmenu, newmenu], (err, data) => {
+    if (err) {
+      console.error('Error updating', err)
+      res.redirect('/edit/update?menu=fail')
+    } else {
+      console.log('Successfully update menu' + oldmenu + ' with ' + newmenu)
+      res.redirect('/edit/update?menu=success')
+    }
+  })
+}
+
+function deleteMenu (req, res, next) {
+  console.log(req.body)
+  let oldmenu = req.body.oldmenu
+
+  pool.query(sql_query.delete_menu, [oldmenu], (err, data) => {
+    if (err) {
+      console.error('Error deleting', err)
+      res.redirect('/edit/update?deletemenu=fail')
+    } else {
+      console.log('Successfully deleted menu', oldmenu)
+      res.redirect('/edit/update?deletemenu=success')
+    }
+  })
+}
+
+
+module.exports.updateMenu = updateMenu
+module.exports.deleteMenu = deleteMenu
+
+
 
 
 

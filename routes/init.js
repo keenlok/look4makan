@@ -463,6 +463,13 @@ function insertIntoConfirmedBooking (req, res, next) {
     return next();
 }
 
+function insertIntoBookedTables(req, res, next) {
+    console.log(req.body);
+    pool.query(sql_query.find_empty_tables, );
+    next();
+}
+
+
 function insertIntoBooks (req, res, next) {
     let rname = req.body.rname;
     let bid = req.body.bid;
@@ -578,11 +585,7 @@ function error(err, res) {
   res.render('error', {message: 'ERROR OCCURED', error: err});
 }
  
-function insertIntoBookedTables(req, res, next) {
-  console.log(req.body)
-  pool.query(sql_query.find_empty_tables, )
-  next();
-}
+\
 
 function contact (req, res, next) {
 

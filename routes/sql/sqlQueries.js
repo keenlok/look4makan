@@ -8,11 +8,9 @@ const find_restaurant = 'SELECT distinct R.rname, openinghours, location, ' +
                         'FROM (restaurants NATURAL JOIN branches) R ' +
                         'WHERE LOWER(R.rname) LIKE $1;';
 
-const add_user = 'INSERT INTO diners (userName, password, firstName, lastName, isAdmin) ' +
-                 'VALUES ($1, $2, $3, $4, FALSE);';
+const add_user = 'INSERT INTO diners (userName, password, firstName, lastName, isAdmin) VALUES ($1, $2, $3, $4, FALSE);';
 
-const setup_user_awards = 'INSERT INTO awards (username, awardpoints) ' +
-                          'VALUES ($1, $2);';
+const setup_user_awards = 'INSERT INTO awards (username, awardpoints) VALUES ($1, $2);';
 
 const userpass = 'SELECT * FROM diners WHERE username = $1';
 
@@ -111,6 +109,10 @@ const delete_old_entries = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:
 const delete_old_entries_for_testing = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:01:00\' <= $1 AND bookedDate <= $2;';
 
 
+const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, capacity, bookedTimeslot, bookedDate) VALUES ($1, $2, $3, $4, $5, $6);'
+
+const find_empty_tables = 'SELECT * FROM branchtables B NATURAL JOIN branches BB WHERE NOT EXISTS ( SELECT 1 FROM bookedtables T WHERE T.rname = B.rname AND T.bookeddate = $1 AND T.bookedtimeslot + \'1:00:00\' < $2 ) AND B.rname = $3 AND B.capacity >= 4 AND BB.location = $4 ORDER BY bid, tid LIMIT 1 ;'
+
 const queries = {
   getRestaurant : get_restaurant,
   findRestaurant : find_restaurant,
@@ -149,6 +151,9 @@ const queries = {
   insert_menu: insert_menu,
   insert_cuisine: insert_cuisine,
   insert_into_menu: insert_into_menu,
+
+  insert_into_bookedtables: insert_into_bookedtables,
+  find_empty_tables: find_empty_tables
 };
 
 module.exports = queries;

@@ -135,7 +135,7 @@ name varchar(50) primary key
 );
 
 create table Sells (
-menuName varchar(50) references Menu,
+menuName varchar(50) references Menu on update cascade on delete cascade,
 rname varchar(40),
 bid integer,
 primary key (menuName, rname, bid),
@@ -153,7 +153,7 @@ foreign key (rname,bid) references Branches
 
 
 create table menuItems (
-menuName varchar(50) references Menu,
+menuName varchar(50) references Menu on update cascade on delete cascade,
 foodName varchar(50),
 price integer,
 primary key (menuName,foodName, price)

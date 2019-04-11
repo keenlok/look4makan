@@ -48,6 +48,10 @@ function initRouter(app) {
   app.post('/insert/intomenu'   , admin.insertIntoMenu               )
   app.post('/insert/cuisine'    , admin.insertCuisine                )
 
+  app.post('/update/menu', admin.updateMenu)
+  app.post('/delete/menu', admin.deleteMenu)
+
+
   app.get('/search'             , admin.search);
 
 

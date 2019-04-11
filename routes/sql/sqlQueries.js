@@ -113,6 +113,10 @@ const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, boo
 
 const find_empty_tables = 'SELECT * FROM branchtables B NATURAL JOIN branches BB WHERE NOT EXISTS ( SELECT 1 FROM bookedtables T WHERE T.rname = B.rname AND T.bookeddate = $1 AND T.bookedtimeslot + \'1:00:00\' < $2 ) AND B.rname = $3 AND B.capacity >= $4 AND BB.location = $5 AND B.bid = $6 ORDER BY bid, tid LIMIT 1 ;'
 
+const update_menu = 'UPDATE menu SET name = $2 WHERE name = $1;'
+
+const delete_menu = 'DELETE FROM menu WHERE name = $1;'
+
 
 const queries = {
   getRestaurant : get_restaurant,
@@ -152,6 +156,10 @@ const queries = {
   insert_menu: insert_menu,
   insert_cuisine: insert_cuisine,
   insert_into_menu: insert_into_menu,
+
+  update_menu: update_menu,
+
+  delete_menu: delete_menu,
 
   insert_into_bookedtables: insert_into_bookedtables,
   find_empty_tables: find_empty_tables

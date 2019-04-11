@@ -23,9 +23,30 @@
 <div class="align-content-md-start">
     <p><%= dateInStr %></p>
 </div>
-<script>
-    <!--var arr = <%= menu %>;-->
-</script>
+<div class="row">
+    <div class="col-xl-9 mx-auto">
+        <h2 class="mb-5">Update Menu names:</h2>
+    </div>
+    <form class="d-flex flex-row justify-content-center" method="post">
+        <div class="row">
+            <div class="col m-1">
+                <select class="m-1 flex-grow-1 " id="menu" name="oldmenu">
+                    <option value=""> Select Menu to Update </option>
+                    <% for (var i = 0; i < menu.length; i++) { %>
+                    <option value="<%= menu[i].name %>"><%= menu[i].name %> </option>
+                    <% } %>
+                </select>
+            </div>
+            <div class="col m-1">
+                <input class="form-control flex-grow-1 m-1" type="text" placeholder="Type in menu name..." name="newmenu">
+            </div>
+        </div>
+        <div class="row m-1">
+            <button class="btn btn-primary m-1" formaction="/update/menu" type="submit">Submit</button>
+            <button class="btn btn-danger m-1" formaction="/delete/menu" type="submit">Delete</button>
+        </div>
+    </form>
+</div>
 </body>
 <footer>
     <%- include ./partials/footer.ejs %>

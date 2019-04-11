@@ -95,34 +95,32 @@
         </div>
         <div class="row m-1">
             <button class="btn btn-primary m-1" formaction="/update/user" type="submit">Submit</button>
-            <button class="btn btn-danger m-1 disabled" formaction="/delete/user" type="submit">Delete</button>
+            <button class="btn btn-danger m-1" formaction="/delete/user" type="submit">Delete</button>
         </div>
     </form>
 </div>
-<table class="table" style="display:table-row" id="usertable">
-    <thead class="thead-light" style="display:none">
-    <tr>
-        <th scope="col">username</th>
-        <th scope="col">firstname</th>
-        <th scope="col">lastname</th>
-    </tr>
-    </thead>
-    <tbody style="display:none">
-    <% for (var i = 0; i < users.length; i++) { %>
-    <tr>
-        <td style="display:none !important"><%= users[i].username%></td>
-        <td style="display:none !important"><%= users[i].firstname%></td>
-        <td style="display:none !important"><%= users[i].lastname%></td>
-    </tr>
-    </tbody>
-</table>
+<% for (var i = 0; i < users.length; i++) { %>
+    <form id="<%= users[i].username%>" style="display:none">
+        <input value="<%= users[i].firstname%>">
+        <input value="<%= users[i].lastname%>">
+    </form>
 <% } %>
 <script>
-    $('select').change(function(){
+  // Updates the form fields
+  $('select').change(function(){
+      let username = $(this).val();
       console.log($(this).val())
-      $('input#firstName').val()
-      }
-    )
+      $('form').each(function () {
+        if ($(this).attr('id') == username) {
+          let form = $(this).find('input');
+          // console.log("name is", form[0].value, form[1].value)
+          $('input#firstname').val(form[0].value)
+          $('input#lastname').val(form[1].value)
+          // console.log($('input#firstname').val(), $('input#lastname').val())
+        }
+      })
+    }
+  )
 </script>
 </body>
 <footer>

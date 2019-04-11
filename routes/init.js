@@ -49,12 +49,14 @@ function initRouter(app) {
 
   app.post('/update/menu'   , admin.updateMenu   )
   app.post('/update/cuisine', admin.updateCuisine)
+  app.post('/update/user'   , admin.updateUser   )
 
   app.post('/delete/menu', admin.deleteMenu)
+  app.post('/delete/user', admin.deleteUser)
 
 
   app.get('/search'             , admin.search);
-  app.get('/restaurant'          , restaurant);  //can move to admin?
+  app.get('/restaurant'         , admin.restaurant);  //can move to admin?
 
 
   /*  PROTECTED GET */
@@ -702,69 +704,5 @@ function contact (req, res, next) {
     res.render("contact", {auth : req.isAuthenticated()});
 }
 
-
-function restaurant(req, res, next) {
-    let rname = req.query.rname;
-    const time = utils.getTime();
-    let query = sql_query.getRestaurant;
-    pool.query(query, [rname, time], (err, data) => {
-        let table, count, auth
-        let date = utils.getDateInStr();
-
-        if (err) {
-            error(err, res)
-        } else if (!data.rows || data.rows.length === 0) {
-            table = [];
-            count = 0
-        } else {
-            table = data.rows;
-            count = data.rows.length;
-            rname = table[0].rname
-        }
-
-        // Get menu items for this restaurant
-        let subquery = sql_query.getMenuItems;
-        pool.query(subquery, [rname], (err, data) => {
-            let menu, menuCount;
-
-            if (err) {
-                console.error("CANNOT GET MENU items")
-            } else if (!data.rows || data.rows.length === 0) {
-                menuCount = 0;
-                menu = []
-            } else {
-                menu = data.rows;
-                let getMenuCount = (menu) => {
-                    let count = 0
-                    for (let i = 0; i < menu.length; i++) {
-                        if (i === 0 ) {
-                            count++;
-                        } else if (menu[i].menuname !== menu[i-1].menuname) {
-                            count++
-                        }
-                    }
-                    return count
-                };
-                menuCount = getMenuCount(menu);
-                menu = utils.separateData(menu, menuCount);
-                console.log("The menu count is: ",menuCount);
-            }
-
-            auth = req.isAuthenticated();
-            res.render('restaurant', {
-                page: 'Look4Makan',
-                data: table,
-                auth: auth,
-                count: count,
-                rname: rname,
-                date: date,
-                menu: menu,
-                menuCount: menuCount,
-                user: req.user
-            })
-        })
-
-    })
-}
 
 module.exports = initRouter;

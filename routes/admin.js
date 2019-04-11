@@ -13,14 +13,17 @@ const round = 10;
 const salt  = bcrypt.genSaltSync(round);
 
 /*  --- Admin functions ---  */
-
-// The main admin page with 3 buttons
-function adminDashboard (req, res, next) {
-  let user = req.user;
+function antiMiddle(user, res) {
   if (typeof user === "undefined") {
     res.redirect('/') // Prevent unauthenticated access to this page
   }
-  let date = utils.getDateInStr();
+}
+
+// The main admin page with 3 buttons
+function adminDashboard (req, res, next) {
+  let user = req.user
+  antiMiddle(user, res)
+  let date = utils.getDateInStr()
 
   res.render('edit', {
     page: "Admin Dashboard",
@@ -32,11 +35,9 @@ function adminDashboard (req, res, next) {
 
 // Update data page
 function updateData (req, res, next) {
-  let user = req.user;
-  if (typeof user === "undefined") {
-    res.redirect('/') // Prevent unauthenticated access to this page
-  }
-  let date = utils.getDateInStr();
+  let user = req.user
+  antiMiddle(user, res)
+  let date = utils.getDateInStr()
 
   pool.query(sql_query.get_menu, (err, data) => {
     let menu = data.rows
@@ -60,11 +61,10 @@ function updateData (req, res, next) {
 
 // insert data page
 function insertData (req, res, next) {
-  let user = req.user;
-  if (typeof user === "undefined") {
-    res.redirect('/') // Prevent unauthenticated access to this page
-  }
-  let date = utils.getDateInStr();
+  let user = req.user
+  antiMiddle(user, res)
+  let date = utils.getDateInStr()
+
   pool.query(sql_query.getAllLocations, (err, data) => {
     if (err) {
       console.error("Error getting Locations", err)
@@ -102,6 +102,98 @@ function insertData (req, res, next) {
 module.exports.adminDashboard = adminDashboard
 module.exports.updateData = updateData
 module.exports.insertData = insertData
+
+
+function search (req, res, next) {
+  let ctx = 0, avg = 0, table;
+  let queryStr = req.query.restaurant;
+  let rname = '%' + queryStr.toLowerCase() + '%';
+  let searchQuery = sql_query.findRestaurant;
+  let time = utils.getTime();
+
+  pool.query(searchQuery, [rname, time], (err, data) => {
+    if (err || !data.rows || data.rows.length === 0) {
+      ctx = 0;
+      table = [];
+      console.log("Error in search", err)
+    } else {
+      ctx = data.rows.length;
+      table = data.rows
+    }
+    if (req.isAuthenticated()) {
+      res.render('search', {page: 'Search Results', auth: true, query: queryStr, table: table, ctx: ctx})
+    } else {
+      res.render('search', {page: 'Search Results', auth: false, query: queryStr, table: table, ctx: ctx})
+    }
+  })
+}
+
+function restaurant(req, res, next) {
+  let rname = req.query.rname;
+  const time = utils.getTime();
+  let query = sql_query.getRestaurant;
+  pool.query(query, [rname, time], (err, data) => {
+    let table, count, auth
+    let date = utils.getDateInStr();
+
+    if (err) {
+      error(err, res)
+    } else if (!data.rows || data.rows.length === 0) {
+      table = [];
+      count = 0
+    } else {
+      table = data.rows;
+      count = data.rows.length;
+      rname = table[0].rname
+    }
+
+    // Get menu items for this restaurant
+    let subquery = sql_query.getMenuItems;
+    pool.query(subquery, [rname], (err, data) => {
+      let menu, menuCount;
+
+      if (err) {
+        console.error("CANNOT GET MENU items")
+      } else if (!data.rows || data.rows.length === 0) {
+        menuCount = 0;
+        menu = []
+      } else {
+        menu = data.rows;
+        let getMenuCount = (menu) => {
+          let count = 0
+          for (let i = 0; i < menu.length; i++) {
+            if (i === 0 ) {
+              count++;
+            } else if (menu[i].menuname !== menu[i-1].menuname) {
+              count++
+            }
+          }
+          return count
+        };
+        menuCount = getMenuCount(menu);
+        menu = utils.separateData(menu, menuCount);
+        console.log("The menu count is: ",menuCount);
+      }
+
+      auth = req.isAuthenticated();
+      res.render('restaurant', {
+        page: 'Look4Makan',
+        data: table,
+        auth: auth,
+        count: count,
+        rname: rname,
+        date: date,
+        menu: menu,
+        menuCount: menuCount,
+        user: req.user
+      })
+    })
+
+  })
+}
+
+module.exports.search = search;
+module.exports.restaurant = restaurant
 
 
 // Basically register without the logging in to the user
@@ -217,37 +309,13 @@ function insertIntoMenu(req, res, next) {
   })
 }
 
-function search (req, res, next) {
-    let ctx = 0, avg = 0, table;
-    let queryStr = req.query.restaurant;
-    let rname = '%' + queryStr.toLowerCase() + '%';
-    let searchQuery = sql_query.findRestaurant;
-    let time = utils.getTime();
-
-    pool.query(searchQuery, [rname, time], (err, data) => {
-        if (err || !data.rows || data.rows.length === 0) {
-            ctx = 0;
-            table = [];
-            console.log("Error in search", err)
-        } else {
-            ctx = data.rows.length;
-            table = data.rows
-        }
-        if (req.isAuthenticated()) {
-            res.render('search', {page: 'Search Results', auth: true, query: queryStr, table: table, ctx: ctx})
-        } else {
-            res.render('search', {page: 'Search Results', auth: false, query: queryStr, table: table, ctx: ctx})
-        }
-    })
-}
-
 module.exports.insertIntoDiners = insertIntoDiners;
 module.exports.insertIntoRestaurantsBranches = insertIntoRestaurantsBranches;
 module.exports.insertLocations = insertLocations;
 module.exports.insertCuisine = insertCuisine;
 module.exports.insertMenu = insertMenu;
 module.exports.insertIntoMenu = insertIntoMenu;
-module.exports.search = search;
+
 
 
 function updateMenu (req, res, next) {
@@ -297,11 +365,53 @@ function updateCuisine (req, res, next) {
   })
 }
 
+function updateUser(req, res, next) {
+  console.log(req.body);
+  let username = req.body.username
+  let first = req.body.newfirstname
+  let last = req.body.newlastname
+
+  let args = [
+    username, first, last
+  ]
+  console.log(args)
+  pool.query(sql_query.update_users, args, (err, data) => {
+    if (err) {
+      console.error("User update: FAILED!", err)
+      res.redirect('/edit/update?user=fail')
+    } else {
+      console.log("User update: Success!")
+      res.redirect('/edit/update?user=success')
+    }
+  })
+}
+
+function deleteUser(req, res, next) {
+  console.log(req.body);
+  let username = req.body.username
+
+  let args = [
+    username
+  ]
+  console.log(args)
+  pool.query(sql_query.delete_users, args, (err, data) => {
+    if (err) {
+      console.error("User delete: FAILED!", err)
+      res.redirect('/edit/update?delete_user=fail')
+    } else {
+      console.log("User delete: Success!")
+      res.redirect('/edit/update?delete_user=success')
+    }
+  })
+}
 
 
 module.exports.updateMenu = updateMenu
 module.exports.deleteMenu = deleteMenu
 module.exports.updateCuisine = updateCuisine
+module.exports.updateUser = updateUser
+module.exports.deleteUser = deleteUser
+
 
 
 

@@ -1,5 +1,5 @@
 drop trigger if exists prevent_password_changes on diners;
-drop trigger if exists trig_validPax on bookedtables;
+drop trigger if exists trig_validPax on books;
 drop trigger if exists trig_notTooShort on diners;
 drop trigger if exists trig_noTimeTravel on userpreferences;
 drop trigger if exists trig_validHours on bookedtables;
@@ -35,7 +35,7 @@ select * from diners;
 create or replace function validPax()
 returns trigger as $$
 begin if 
-	new.capacity <= 0 or new.capacity > (select branchtables.capacity from branchtables where rname = new.rname and tid = new.tid and bid = new.bid)
+	new.pax <= 0 or new.pax > (select branchtables.capacity from branchtables where rname = new.rname and tid = new.tid and bid = new.bid)
 	then raise notice 'Invalid pax number or not enough seats at this table';
 	return null;
 else return new;
@@ -44,7 +44,7 @@ end; $$ language plpgsql;
 
 create trigger trig_validPax
 before insert or update
-on BookedTables
+on books
 for each row
 execute procedure validPax();
 
@@ -53,10 +53,18 @@ update BookedTables
 set capacity = capacity - 1
 where rname = 'Crystal Jade' and bid = 1 and tid = 1 and bookedtimeslot = '23:00:00' and bookeddate = '2019-05-16';
 
-insert into bookedtables (rname, bid, tid, capacity, bookedtimeslot, bookeddate) values
-('MacDonalds', 1, 3, 3213, '10:00:00', '2019-04-10');
+insert into books (username, rname, bid, tid, pax, reservationtime, reservationdate) values
+('lokeen', 'MacDonalds', 1, 1, 3, '10:00:00', '2019-04-12');
 
-select * from BookedTables;
+select * from userpreferences;
+
+insert into bookedtables (rname, bid, tid, bookedtimeslot, bookeddate) values
+('MacDonalds', 1, 1, '10:00:00', '2019-04-12');
+
+insert into userpreferences (username, preferredrname, preferredloc, preferreddate, preferredtime, paxnum) values
+('lokeen', 'MacDonalds', 'Jurong Point', '2019-04-12', '10:00:00', 3);
+
+select * from books;
 
 -----------------------------------------------
 --Trigger to prevent username to be less than 9 characters

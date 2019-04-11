@@ -111,7 +111,14 @@ const delete_old_entries = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:
 const delete_old_entries_for_testing = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:01:00\' <= $1 AND bookedDate <= $2;';
 
 
-const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) VALUES ($1, $2, $3, $4, $5), ($1, $2, $3, $6, $5), ($1, $2, $3, $7, $5), ($1, $2, $3, $8, $5);'
+//const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) VALUES ($1, $2, $3, $4, $5), ($1, $2, $3, $6, $5), ($1, $2, $3, $7, $5), ($1, $2, $3, $8, $5);'
+
+
+const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) ' +
+    'VALUES ($1, $2, $3, $4, $5), ' +
+    '($1, $2, $3, $4::time + \'00:15:00\' , $5), ' +
+    '($1, $2, $3, $4::time + \'00:30:00\' , $5), ' +
+    '($1, $2, $3, $4::time + \'00:45:00\' , $5);';
 
 // const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) VALUES ($1, $2, $3, $4, $5), ($1, $2, $3, to_timestamp($4, \'HH24:Mi:SS\')::time + INTERVAL \'15 minutes\', $5), ($1, $2, $3, to_timestamp($4, \'HH24:Mi:SS\')::time + INTERVAL \'30 minutes\', $5), ($1, $2, $3, to_timestamp($4, \'HH24:Mi:SS\')::time + INTERVAL \'45 minutes\', $5);'
 // The correct way to do this in sql but unable to find to_timestamp when using in javascript

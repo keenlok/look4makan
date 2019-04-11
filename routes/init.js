@@ -360,16 +360,36 @@ function insertIntoUserPreference (req, res, next) {
     paxNo = 2; //by default
   }
 
-  let arguments = [username, rname, location, date, reservationTime, cuisineType, paxNo];
+   let arguments = [username, rname, location, date, reservationTime, cuisineType, paxNo];
 
-  pool.query(insertQuery, arguments, (err, data) => {
-    console.log(err);
-    if(!err) {
-      console.log("successful insertion into UserPreferences Table");
-    }
-    else
-      console.error("failed insertion into UserPreferences Table", err);
-  });
+
+    // pool.connect(function(err, client, done) {
+    //     client.query('BEGIN', function (err, res1) {
+    //         client.query(insertQuery, [username, rname, location, date, reservationTime, cuisineType, paxNo], (err, data) => {
+    //             // for (let i = 0; i < data.rows.length; i++) {
+    //             //     console.log("data: " + data.rows[i]);
+    //             // }
+    //             if (!err) {
+    //                 console.log("successful insertion into UserPreferences Table");
+    //             }
+    //             else {
+    //                 console.log("failed insertion into UserPreferences Table");
+    //             }
+    //             client.query('COMMIT', function (err, res6) {
+    //                 done();
+    //             });
+    //         });
+    //     });
+    // });
+        pool.query(insertQuery, arguments, (err, data) => {
+            if (!err) {
+                console.log("successful insertion into UserPreferences Table");
+            }
+            else {
+                // console.log(err.message);
+                console.log("failed insertion into UserPreferences Table");
+            }
+        });
   return next();
 }
 
@@ -431,7 +451,7 @@ function search_restaurant(req, res, next) {
   searchQuery = searchQuery.replace('$6', date);
   searchQuery = searchQuery.replace('$6', date);
 
-    console.log("SEARCHQUERY " + searchQuery);
+   // console.log("SEARCHQUERY " + searchQuery);
 
   pool.query(searchQuery, (err, data) => {
     if (err || !data.rows || data.rows.length === 0) {

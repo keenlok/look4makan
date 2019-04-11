@@ -21,6 +21,8 @@ drop table if exists Locations cascade;
 drop table if exists Time cascade;
 drop table if exists BookedTables cascade;
 
+drop trigger if exists trig_noTimeTravel on userpreferences;
+
 
 create table Time (
 timeSlot time primary key,
@@ -67,24 +69,24 @@ preferredRname varchar(40),
 preferredLoc varchar(40) references Locations,
 preferredDate date not null,
 preferredTime time not null,
-cuisineType varchar(10) references CuisineTypes on update cascade on delete cascade,
+cuisineType varchar(10) references CuisineTypes,
 paxNum integer not null,
 primary key (userName)
 );
 
 create table Branches (
-rname varchar(40) references restaurants,
+rname varchar(40),
 bid integer,
 location varchar(40) references Locations not null,
 openingHours varchar(20),
 openTime time,
 closeTime time,
-cuisineType varchar(10) references CuisineTypes on update cascade on delete cascade not null, 
+cuisineType varchar(10) references CuisineTypes not null,
 primary key (rname, bid)
 );
 
 create table BranchTables (
-rname varchar(40) references restaurants,
+rname varchar(40),
 bid integer,
 tid integer,
 capacity integer,
@@ -127,6 +129,7 @@ rname varchar(40),
 bid integer,
 primary key (userName, rname, bid),
 foreign key (userName, rname, bid) references ConfirmedBookings
+on delete cascade
 );
 
 
@@ -241,7 +244,7 @@ insert into Time (timeSlot, timeSlotStr)  values
 ('15:00:00', '3:00 pm'), ('15:15:00', '3:15 pm'), ('15:30:00', '3:30 pm'), ('15:45:00', '3:45 pm'),
 ('16:00:00', '4:00 pm'), ('16:15:00', '4:15 pm'), ('16:30:00', '4:30 pm'), ('16:45:00', '4:45 pm'),
 ('17:00:00', '5:00 pm'), ('17:15:00', '5:15 pm'), ('17:30:00', '5:30 pm'), ('17:45:00', '5:45 pm'),
-('18:00:00', '6:00 pm'), ('18:15:00', '6:15 pm'), ('18:30:00', '6:30 m'), ('18:45:00', '6:45 pm'),
+('18:00:00', '6:00 pm'), ('18:15:00', '6:15 pm'), ('18:30:00', '6:30 pm'), ('18:45:00', '6:45 pm'),
 ('19:00:00', '7:00 pm'), ('19:15:00', '7:15 pm'), ('19:30:00', '7:30 pm'), ('19:45:00', '7:45 pm'),
 ('20:00:00', '8:00 pm'), ('20:15:00', '8:15 pm'), ('20:30:00', '8:30 pm'), ('20:45:00', '8:45 pm'),
 ('21:00:00', '9:00 pm'), ('21:15:00', '9:15 pm'), ('21:30:00', '9:30 pm'), ('21:45:00', '9:45 pm'),
@@ -304,11 +307,11 @@ insert into branches (rname, bid, location, openinghours, opentime, closetime, c
 ('Astons', 3, 'Causeway Point', '7am - 7pm', '07:00:00', '19:00:00', 'Western'),
 ('Astons', 4, 'Centre Point', '10am - 10pm', '10:00:00', '22:00:00', 'Western'),
 
-('Sushi Express', 1, 'Orchard Scape', '11am - 9.30pm', '11:00:00', '21:30:00', 'Japanese'),
-('Sushi Express', 2, 'Plaza Singapura', '12pm - 7.30pm', '12:00:00', '19:30:00', 'Japanese'),
+('Sakae Sushi', 1, 'Orchard Scape', '11am - 9.30pm', '11:00:00', '21:30:00', 'Japanese'),
+('Sakae Sushi', 2, 'Plaza Singapura', '12pm - 7.30pm', '12:00:00', '19:30:00', 'Japanese'),
 
-('Sushi Express', 3, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Japanese'),
-('Sushi Express', 4, 'Buona Vista', '12pm - 7.30pm', '12:00:00', '19:30:00', 'Japanese'),
+('Sushi Express', 1, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Japanese'),
+('Sushi Express', 2, 'Buona Vista', '12pm - 7.30pm', '12:00:00', '19:30:00', 'Japanese'),
 
 ('Forlino', 1, 'Orchard Scape', '1pm - 10pm', '13:00:00', '10:00:00', 'French'),
 ('Forlino', 2, 'Buona Vista', '2pm - 7.30pm', '14:00:00', '19:30:00', 'French'),
@@ -408,14 +411,12 @@ insert into Sells (menuname, rname, bid) values
 ('Astons Western Menu', 'Astons', 3),
 ('Astons Western Menu', 'Astons', 4),
 
---('Sakae Lunch Menu', 'Sakae Sushi', 1),
---('Sakae Lunch Menu', 'Sakae Sushi', 2),
+('Sakae Lunch Menu', 'Sakae Sushi', 1),
+('Sakae Lunch Menu', 'Sakae Sushi', 2),
 
 
 ('Sushi Express Menu', 'Sushi Express', 1),
 ('Sushi Express Menu', 'Sushi Express', 2),
-('Sushi Express Menu', 'Sushi Express', 3),
-('Sushi Express Menu', 'Sushi Express', 4),
 
 ('Forlino Menu', 'Forlino', 1),
 ('Forlino Menu', 'Forlino', 2),
@@ -525,4 +526,28 @@ SELECT * FROM branchtables B NATURAL JOIN branches BB
     AND B.rname = 'BurgerKing' AND B.capacity >= 1 AND BB.location = 'Orchard Scape' AND B.bid = 1
     ORDER BY bid, tid LIMIT 1 ;
 */
+
+INSERT INTO ConfirmedBookings (userName, rname, bid) VALUES ('Aaron','Astons', 2);
+
+--INSERT INTO ConfirmedBookings (userName, rname, bid) VALUES ('Aaron','Thai Tantric Authentic Cuisine', 1);
+
+/*
+INSERT INTO ConfirmedBookings (userName, rname, bid) VALUES ('Aaron','Astons', 3)
+    ON CONFLICT (username, rname, bid) DO UPDATE SET username = EXCLUDED.username,
+    rname = EXCLUDED.rname, bid = EXCLUDED.bid;
+    */
+create or replace function noTimeTravel()
+returns trigger as $$
+begin if new.preferredDate < current_date or (new.preferredDate = current_date and new.preferredTime <= localtime) then
+	raise exception 'This app is not a time machine';
+	return null;
+else return new;
+end if;
+end; $$ language plpgsql;
+
+create trigger trig_noTimeTravel
+before insert or update
+on userpreferences
+for each row
+execute procedure noTimeTravel();
 

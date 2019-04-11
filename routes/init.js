@@ -1,8 +1,8 @@
-const sql_query = require('./sql/sqlQueries')
-const passport = require('passport')
-const bcrypt = require('bcrypt')
-const utils = require('./utils/util')
-const admin = require('./admin')
+const sql_query = require('./sql/sqlQueries');
+const passport = require('passport');
+const bcrypt = require('bcrypt');
+const utils = require('./utils/util');
+const admin = require('./admin');
 
 
 // Postgre SQL Connection
@@ -34,24 +34,24 @@ function initRouter(app) {
   app.post('/editReservations/edit', editReservationMode);
   app.post('/edits/complete', updateDeleteReservation);
 
-  app.get('/restaurant'          , restaurant       ); // for what? delete right
 
   /*  Admin privileges  */
-  app.get('/edit'       , admin.adminDashboard   )
-  app.get('/edit/insert', admin.insertData       )
-  app.get('/edit/update', admin.updateData       )
+  app.get('/edit'       , admin.adminDashboard   );
+  app.get('/edit/insert', admin.insertData       );
+  app.get('/edit/update', admin.updateData       );
 
-  app.post('/insert/diners'     , admin.insertIntoDiners             )
-  app.post('/insert/restaurants', admin.insertIntoRestaurantsBranches)
-  app.post('/insert/locations'  , admin.insertLocations              )
-  app.post('/insert/menu'       , admin.insertMenu                   )
-  app.post('/insert/intomenu'   , admin.insertIntoMenu               )
-  app.post('/insert/cuisine'    , admin.insertCuisine                )
+  app.post('/insert/diners'     , admin.insertIntoDiners             );
+  app.post('/insert/restaurants', admin.insertIntoRestaurantsBranches);
+  app.post('/insert/locations'  , admin.insertLocations              );
+  app.post('/insert/menu'       , admin.insertMenu                   );
+  app.post('/insert/intomenu'   , admin.insertIntoMenu               );
+  app.post('/insert/cuisine'    , admin.insertCuisine                );
 
   app.get('/search'             , admin.search);
+  app.get('/restaurant'          , restaurant);
 
 
-  /*  PROTECTED GET */
+    /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register);
   app.get('/signin', login   );
 
@@ -67,7 +67,7 @@ function initRouter(app) {
   app.get('/logout', passport.authMiddleware(), logout);
 
 
-  app.get('/contactUs'           , contact            );
+  app.get('/contactUs'           , contact);
 }
 
 function editReservations (req, res, next) {
@@ -101,7 +101,6 @@ function editReservationMode (req, res, next) {
     let auth = req.isAuthenticated();
 
     res.render("editReservationMode", {rname : rname, rname: rname, bid : bid, tid : tid, pax : pax, reservationTime : reservationTime, reservationDate : reservationDate, auth: auth});
-
 }
 
 function updateDeleteReservation (req, res, next) {
@@ -279,18 +278,8 @@ function insertIntoUserPreference (req, res, next) {
     paxNo = 2; //by default
   }
 
-  let arguments = [
-    username,         //$1
-    rname,            //$2
-    location,         //$3
-    date,             //$4
-    reservationTime,  //$5
-    cuisineType,      //$6
-    paxNo             //$7
-  ];
+  let arguments = [username, rname, location, date, reservationTime, cuisineType, paxNo];
 
-
-  console.log("INSERT QUERY :", insertQuery, arguments);
   pool.query(insertQuery, arguments, (err, data) => {
     if(!err) {
       console.log("successful insertion into UserPreferences Table");

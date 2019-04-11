@@ -79,7 +79,7 @@ const insertIntoRatings = "INSERT INTO Ratings (rating, userName, rname, bid) VA
 
 const deleteBookedTable = "DELETE FROM BookedTables WHERE rname = $1 AND bid = $2 AND " +
     "tid = $3 AND bookedTimeslot >= $4 AND " +
-    "bookedTimeslot < $4 + '01:00:00' AND bookedDate = $5;";
+    "bookedTimeslot < $4::time + '01:00:00' AND bookedDate = $5;";
 
 const checkForVacancyForUpdatedReservation = "SELECT tid FROM branches B NATURAL JOIN branchTables BT"
     + " WHERE B.rname = $1 AND B.bid = $2 AND BT.capacity >= $3"

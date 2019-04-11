@@ -179,43 +179,43 @@ function updateDeleteReservation (req, res, next) {
 
     let newRname = req.body.rname;
     let newBid = req.body.bid;
-    let newPax = req.body.pax;
-    let newReservationTime = req.body.reservationTime;
-    let newReservationDate = req.body.reservationDate;
-
+    let newPax = req.body.newPax;
+    let newReservationTime = req.body.newReservationTime;
+    let newReservationDate = req.body.newReservationDate;
+    let newTid;
     //check if there is such a vacancy given all the above parameters (only need TID output)
-    let select_query = checkForVacancyForUpdatedReservation;
+    let select_query = sql_query.checkForVacancyForUpdatedReservation;
     //this functon deletes current reservation in BookedTables, Books, (only delete ConfirmedBookings, Ratings, update Awards) if is
     //updating reservation
 
     function call() {
         let arguments = [rname, bid, tid, reservationTime, reservationDate];
         let delete_query1 = sql_query.deleteBookedTable;
-        pool.query(delete_query1, arguments, (err, data) => {
-            if (err) {
-                console.error("Fail to delete from BookedTables", err);
+        pool.query(delete_query1, arguments, (err1, data1) => {
+            if (err1) {
+                console.error("Fail to delete from BookedTables", err1);
             }
 
-            else if (!err) {
+            else if (!err1) {
                 console.log("Successful delete from BookedTables, cascades to delete from Books too");
 
                 if (isUpdate === "false") {
                     let delete_query2 = sql_query.deleteConfirmedBooking;
-                    pool.query(delete_query2, [req.user.username, rname, bid], (err, data) => {
-                        if (err) {
-                            console.error("Fail to delete from ConfirmedBookings", err);
+                    pool.query(delete_query2, [req.user.username, rname, bid], (err2, data2) => {
+                        if (err2) {
+                            console.error("Fail to delete from ConfirmedBookings", err2);
                         }
-                        else if (!err) {
+                        else if (!err2) {
                             console.log("Successful delete from ConfirmedBookings, cascades to delete from Ratings");
                         }
                     });
                     let update_query = sql_query.updateAward;
-                    pool.query(update_query, [-100, req.user.username], (err, data) => {
-                        if (err) {
-                            console.error("Fail to update Awards", err);
+                    pool.query(update_query, [-100, req.user.username], (err3, data3) => {
+                        if (err3) {
+                            console.error("Fail to update Awards", err3);
                         }
 
-                        else if (!err) {
+                        else if (!err3) {
                             console.log("Successful update from Awards, minus 100 points");
                         }
                     });
@@ -231,17 +231,36 @@ function updateDeleteReservation (req, res, next) {
     if(isUpdate === "true") {
 
         pool.query(select_query, [newRname, newBid, newPax, newReservationTime, newReservationDate], (err, data) => {
-            if (err) {
+            if (err || !data.rows || data.rows.length===0) {
                 console.log("failed to find vacancy!");
+                console.log("hence no changes to current reservation!");
             }
             else { //can find vacancy for change in reservation, so delete current reservation
-              call();
+                newTid = data.rows[0].tid;
+                console.log("THE NEWTID IS " + newTid);
+                call();
                 //if there is, insert into bookedTables,  Books (dont have to insert confirmedBookings as entry remains same
-                //needed details => bookedTables : rname, bid, tid, capacity  --should change to paxNo not capacity, bookedTimeslot ,bookedDate
-                //=>  Books: userName, rname, bid, tid, pax, reservationTime, reservationDate
+                let insert_query = sql_query.insert_into_bookedtables;
+                    pool.query(insert_query, [newRname, newBid, newTid,newReservationTime, newReservationDate], (err, data) => {
+                  if(err) {
+                    console.error("failed to insert into bookedTables", err);
+                  }
+                  else {
+                      console.log("successful insert into bookedTables");
+                      console.log("ARGUMENTS: " + [req.user.username, newRname, newBid, newTid, newPax, newReservationTime, newReservationDate]);
+                      let insert_query1 = sql_query.insertBooks;
+                      console.log("INSERT QUERY: "  + insert_query1);
 
-
-
+                      pool.query(insert_query1, [req.user.username, newRname, newBid, newTid, newPax, newReservationTime, newReservationDate], (err1, data1) => {
+                          if (err1) {
+                              console.error("failed to insert into books!", err1);
+                          }
+                          else {
+                              console.log("successful insert into books!");
+                          }
+                      });
+                  }
+                });
             }
         });
     }

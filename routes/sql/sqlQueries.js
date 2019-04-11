@@ -89,8 +89,7 @@ const checkForVacancyForUpdatedReservation = "SELECT tid FROM branches B NATURAL
     + " and BKT.bookeddate = $5 and BKT.bookedtimeslot = $4)"
     + " ORDER BY BT.capacity LIMIT 1;";
 
-const deleteConfirmedBooking = "DELETE FROM ConfirmedBookings WHERE userName, rname, bid"
-
+const deleteConfirmedBooking = "DELETE FROM ConfirmedBookings WHERE userName = $1 AND rname = $2 AND bid = $3;";
 
 const insert_rname = 'INSERT INTO restaurants (rname) VALUES ($1);';
 

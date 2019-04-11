@@ -22,7 +22,7 @@ function initRouter(app) {
   app.get('/'                    , index);
   app.post('/search/restaurants' , insertIntoUserPreference, search_restaurant);
   app.post('/booking'            , booking          );
-  app.post('/booking/confirmation', passport.authMiddleware(), insertIntoConfirmedBooking, insertIntoBooks, updateAward, confirmation);
+  app.post('/booking/confirmation', passport.authMiddleware(), insertIntoConfirmedBooking, insertIntoBookedTables, insertIntoBooks, updateAward, confirmation);
 
   //Rate your Bookings Feature
   app.get('/rateReservations'    , rateReservations);
@@ -54,7 +54,6 @@ function initRouter(app) {
   /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register);
   app.get('/signin', login   );
-  app.post('/booking/confirmation', passport.authMiddleware(), insertIntoConfirmedBooking, insertIntoBookedTables, insertIntoBooks, updateAward, confirmation);
 
   /*  PROTECTED POST */
   app.post('/reg_user', passport.antiMiddleware(), registerUser);
@@ -106,7 +105,6 @@ function editReservationMode (req, res, next) {
 }
 
 function updateDeleteReservation (req, res, next) {
-    // console.log(req);
     let rname = req.body.rname;
     let bid = req.body.bid;
     let tid = req.body.tid;

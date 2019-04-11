@@ -363,6 +363,7 @@ function insertIntoUserPreference (req, res, next) {
   let arguments = [username, rname, location, date, reservationTime, cuisineType, paxNo];
 
   pool.query(insertQuery, arguments, (err, data) => {
+    console.log(err);
     if(!err) {
       console.log("successful insertion into UserPreferences Table");
     }
@@ -415,8 +416,10 @@ function search_restaurant(req, res, next) {
   searchQuery = searchQuery.replace('$4', reservationTime);
   searchQuery = searchQuery.replace('$4', reservationTime);
   searchQuery = searchQuery.replace('$4', reservationTime);
+  searchQuery = searchQuery.replace('$4', reservationTime);
 
-  if(paxNo === '')  {
+
+    if(paxNo === '')  {
     paxNo = 2; //by default
   }
 
@@ -425,8 +428,10 @@ function search_restaurant(req, res, next) {
   date = pad(date);
 
   searchQuery = searchQuery.replace('$6', date);
+  searchQuery = searchQuery.replace('$6', date);
+  searchQuery = searchQuery.replace('$6', date);
 
-  console.log("SEARCHQUERY " + searchQuery);
+    console.log("SEARCHQUERY " + searchQuery);
 
   pool.query(searchQuery, (err, data) => {
     if (err || !data.rows || data.rows.length === 0) {

@@ -41,7 +41,8 @@ const search_result = 'SELECT distinct rname, bid, openingHours, location ' +
     'NOT EXISTS (SELECT 1 FROM bookedtables BKT ' +
     'WHERE BKT.bid = BT.bid AND BT.rname = BKT.rname ' +
     'AND BT.tid = BKT.tid AND BKT.bookedtimeslot >= $4 ' +
-    'AND BKT.bookedtimeslot - \'01:00:00\' < $4 AND BKT.bookeddate = $6);';
+    'AND BKT.bookedtimeslot - \'01:00:00\' < $4 AND BKT.bookeddate = $6) AND' +
+    '($6  > current_date or ($6 = current_date and $4 >= localtime));';
 
 //used in /bookings page to ensure the change in reservationTime is limited to opening hours of that same branch
 //may be obsolete, depends if there is a relevant trigger in place (may just keep as safe guard)

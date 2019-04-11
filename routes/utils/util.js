@@ -304,4 +304,23 @@ function getCorrectTimeFormat(time) {
   return time
 }
 
+/**
+ * Add interval to a time str
+ * @param time a string value of time
+ * @param interval an integer in minutes
+ */
+function addIntervalToTime(time, interval) {
+  let timeArgs = time.split(':')
+  let hours = timeArgs[0]
+  let minutes = timeArgs[1]
+  minutes = parseInt(minutes) + interval
+  if (Math.floor(minutes / 60) > 0) {
+    hours = parseInt(hours) + Math.floor(minutes / 60)
+    minutes = minutes % 60
+  }
+
+  return getCorrectTimeFormat(hours +':'+minutes)
+}
+
 module.exports.getCorrectTimeFormat = getCorrectTimeFormat
+module.exports.addIntervalToTime = addIntervalToTime

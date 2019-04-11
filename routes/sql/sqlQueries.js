@@ -109,7 +109,11 @@ const delete_old_entries = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:
 const delete_old_entries_for_testing = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:01:00\' <= $1 AND bookedDate <= $2;';
 
 
-const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) VALUES ($1, $2, $3, $4, $5);'
+const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) VALUES ($1, $2, $3, $4, $5), ($1, $2, $3, $6, $5), ($1, $2, $3, $7, $5), ($1, $2, $3, $8, $5);'
+
+// const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) VALUES ($1, $2, $3, $4, $5), ($1, $2, $3, to_timestamp($4, \'HH24:Mi:SS\')::time + INTERVAL \'15 minutes\', $5), ($1, $2, $3, to_timestamp($4, \'HH24:Mi:SS\')::time + INTERVAL \'30 minutes\', $5), ($1, $2, $3, to_timestamp($4, \'HH24:Mi:SS\')::time + INTERVAL \'45 minutes\', $5);'
+// The correct way to do this in sql but unable to find to_timestamp when using in javascript
+
 
 const find_empty_tables = 'SELECT * FROM branchtables B NATURAL JOIN branches BB WHERE NOT EXISTS ( SELECT 1 FROM bookedtables T WHERE T.rname = B.rname AND T.bookeddate = $1 AND T.bookedtimeslot + \'1:00:00\' < $2 ) AND B.rname = $3 AND B.capacity >= $4 AND BB.location = $5 AND B.bid = $6 ORDER BY bid, tid LIMIT 1 ;'
 

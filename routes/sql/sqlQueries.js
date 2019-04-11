@@ -113,7 +113,6 @@ const delete_old_entries_for_testing = 'DELETE FROM bookedtables WHERE bookedTim
 
 //const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) VALUES ($1, $2, $3, $4, $5), ($1, $2, $3, $6, $5), ($1, $2, $3, $7, $5), ($1, $2, $3, $8, $5);'
 
-
 const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) ' +
     'VALUES ($1, $2, $3, $4, $5), ' +
     '($1, $2, $3, $4::time + \'00:15:00\' , $5), ' +

@@ -66,7 +66,7 @@ const insertBooks =  "INSERT INTO Books (userName, rname, bid, tid , pax, reserv
 const updateAward = "UPDATE Awards  SET awardpoints = awardpoints + $1 WHERE username = $2;";
 
 
-
+const deleteRating = "DELETE FROM Ratings WHERE username = $1 AND rname = $2 AND bid = $3;";
 
 const findAllUserBookings = "SELECT rname, bid FROM confirmedBookings WHERE username = $1;";
 
@@ -162,7 +162,7 @@ const queries = {
   find_tid : find_tid_given_bid_rname,
   insertBooks : insertBooks,
   updateAward : updateAward,
-
+  deleteRating : deleteRating,
 
   findAllUserBookings : findAllUserBookings,
   findRatingsGivenUsernameRname : findRatingsGivenUsernameRname,

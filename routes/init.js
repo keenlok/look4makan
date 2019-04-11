@@ -195,11 +195,12 @@ function updateDeleteReservation (req, res, next) {
             if (err1) {
                 console.error("Fail to delete from BookedTables", err1);
             }
-
             else if (!err1) {
                 console.log("Successful delete from BookedTables, cascades to delete from Books too");
 
                 if (isUpdate === "false") {
+                    //remove from confirmedBookings, cascade deletes in ratings too
+                    //minus 100 from awards
                     let delete_query2 = sql_query.deleteConfirmedBooking;
                     pool.query(delete_query2, [req.user.username, rname, bid], (err2, data2) => {
                         if (err2) {
@@ -209,6 +210,7 @@ function updateDeleteReservation (req, res, next) {
                             console.log("Successful delete from ConfirmedBookings, cascades to delete from Ratings");
                         }
                     });
+
                     let update_query = sql_query.updateAward;
                     pool.query(update_query, [-100, req.user.username], (err3, data3) => {
                         if (err3) {
@@ -219,9 +221,17 @@ function updateDeleteReservation (req, res, next) {
                             console.log("Successful update from Awards, minus 100 points");
                         }
                     });
-
-                    //remove from confirmedBookings, cascade deletes in ratings too
-                    //minus 100 from awards
+                }
+                else {
+                  let delete_query3 = sql_query.deleteRating;
+                  pool.query(delete_query3, (err4, data4) => {
+                    if(err4) {
+                      console.error("faild to delete from Ratings", err4);
+                    }
+                    else {
+                      console.log("successful delete from Ratings")
+                    }
+                  });
                 }
             }
         });

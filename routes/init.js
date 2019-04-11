@@ -21,7 +21,7 @@ function initRouter(app) {
   //Main Feature
   app.get('/'                    , index);
   app.post('/search/restaurants' , insertIntoUserPreference, search_restaurant);
-  app.post('/booking'            , booking          );
+  app.post('/booking'            , booking);
   app.post('/booking/confirmation', passport.authMiddleware(), insertIntoConfirmedBooking, insertIntoBookedTables, insertIntoBooks, updateAward, confirmation);
 
   //Rate your Bookings Feature
@@ -36,9 +36,9 @@ function initRouter(app) {
 
 
   /*  Admin privileges  */
-  app.get('/edit'       , admin.adminDashboard   );
-  app.get('/edit/insert', admin.insertData       );
-  app.get('/edit/update', admin.updateData       );
+  app.get('/edit'       , admin.adminDashboard);
+  app.get('/edit/insert', admin.insertData);
+  app.get('/edit/update', admin.updateData);
 
   app.post('/insert/diners'     , admin.insertIntoDiners             );
   app.post('/insert/restaurants', admin.insertIntoRestaurantsBranches);
@@ -48,10 +48,10 @@ function initRouter(app) {
   app.post('/insert/cuisine'    , admin.insertCuisine                );
 
   app.get('/search'             , admin.search);
-  app.get('/restaurant'          , restaurant);
+  app.get('/restaurant'          , restaurant);  //can move to admin?
 
 
-    /*  PROTECTED GET */
+  /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register);
   app.get('/signin', login   );
 
@@ -523,7 +523,6 @@ function confirmation(req, res, next) {
         res.render('confirmation', { page: "Confirmation", rname : rname, location : location,  reservationTime : reservationTime, reservationDate : reservationDate, paxNo : paxNo, auth : false});
     }
 }
-
 
 
 

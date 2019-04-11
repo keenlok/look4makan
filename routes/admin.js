@@ -230,6 +230,7 @@ function search (req, res, next) {
 }
 
 
+
 module.exports.insertIntoDiners = insertIntoDiners;
 module.exports.insertIntoRestaurantsBranches = insertIntoRestaurantsBranches;
 module.exports.insertLocations = insertLocations;

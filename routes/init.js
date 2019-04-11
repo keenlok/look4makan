@@ -538,6 +538,8 @@ function confirmation(req, res, next) {
 
 
 
+
+
 function register(req, res, next) {
   res.render('register', {title: 'Look4Makan', auth: false});
 }
@@ -584,8 +586,7 @@ function logout(req, res, next) {
 function error(err, res) {
   res.render('error', {message: 'ERROR OCCURED', error: err});
 }
- 
-\
+
 
 function contact (req, res, next) {
 

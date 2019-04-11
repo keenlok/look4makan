@@ -142,7 +142,7 @@ const queries = {
   insertIntoRatings : insertIntoRatings,
   findAllUserBooks : findAllUserBooks,
   deleteBookedTable : deleteBookedTable,
-  checkForVacancyForUpdatedReservation : checkForVacancyForUpdatedReservation
+  checkForVacancyForUpdatedReservation : checkForVacancyForUpdatedReservation,
 
 
   get_menu: menu,

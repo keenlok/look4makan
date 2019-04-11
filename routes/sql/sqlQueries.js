@@ -22,6 +22,7 @@ const all_rname= "select rname from Restaurants;";
 
 const all_timeSlots= "select * from Time;";
 
+
 //checked
 const insertUserPreference =  'INSERT INTO UserPreferences (userName, preferredRname, preferredLoc, preferredDate,' +
     ' preferredTime, cuisineType, paxNum) VALUES ($1, $2, $3, $4, $5, $6, $7) ' +
@@ -87,6 +88,7 @@ const checkForVacancyForUpdatedReservation = "SELECT tid FROM branches B NATURAL
 
 
 
+
 const insert_rname = 'INSERT INTO restaurants (rname) VALUES ($1);';
 
 const insert_branch = 'INSERT INTO branches (rname, bid, location, openingHours, openTime, closeTime, cuisineType) ' +
@@ -98,7 +100,7 @@ const insert_menu = 'INSERT INTO menu (name) VALUES ($1);';
 
 const insert_cuisine = 'INSERT INTO cuisinetypes (cuisinename) VALUES ($1);';
 
-const menu = 'SELECT * FROM menu;';
+const menu = 'SELECT * FROM menu;'; //where is this used? if not delete this
 
 const insert_into_menu = 'INSERT INTO  menuitems (menuname, foodname, price) VALUES ($1, $2, $3);';
 
@@ -111,40 +113,46 @@ const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, boo
 
 const find_empty_tables = 'SELECT * FROM branchtables B NATURAL JOIN branches BB WHERE NOT EXISTS ( SELECT 1 FROM bookedtables T WHERE T.rname = B.rname AND T.bookeddate = $1 AND T.bookedtimeslot + \'1:00:00\' < $2 ) AND B.rname = $3 AND B.capacity >= $4 AND BB.location = $5 AND B.bid = $6 ORDER BY bid, tid LIMIT 1 ;'
 
+
 const queries = {
-  findRestaurant : find_restaurant,
   getRestaurant : get_restaurant,
-  search_result : search_result,
+  findRestaurant : find_restaurant,
   add_user : add_user,
   setup_user_awards: setup_user_awards,
   userpass : userpass,
-  get_menu: menu,
-  getMenuItems : get_menu_items,
   getAllLocations : all_locations,
   getAllCuisines : all_cuisines,
   getAllRestaurantName : all_rname,
   getAllTimeSlots : all_timeSlots,
-  findMinMaxHourOfABranch : min_max_hour_of_a_branch,
 
   insertUserPreference : insertUserPreference,
+  search_result : search_result,
+  findMinMaxHourOfABranch : min_max_hour_of_a_branch,
+  getMenuItems : get_menu_items,
   insertConfirmedBooking : insertConfirmedBooking,
-  insertBooks : insertBooks,
   find_tid : find_tid_given_bid_rname,
+  insertBooks : insertBooks,
+  updateAward : updateAward,
+
+
+  findAllUserBookings : findAllUserBookings,
+  findRatingsGivenUsernameRname : findRatingsGivenUsernameRname,
+  insertIntoRatings : insertIntoRatings,
+  findAllUserBooks : findAllUserBooks,
+  deleteBookedTable : deleteBookedTable,
+  checkForVacancyForUpdatedReservation : checkForVacancyForUpdatedReservation,
+
+
+  get_menu: menu,
   delete_old_entries: delete_old_entries,
   // delete_old_entries: delete_old_entries_for_testing, // use this when testing
-  updateAward : updateAward,
-  findAllUserBookings : findAllUserBookings,
   insert_rname: insert_rname,
   insert_branch: insert_branch,
   insert_location: insert_location,
   insert_menu: insert_menu,
   insert_cuisine: insert_cuisine,
   insert_into_menu: insert_into_menu,
-  findRatingsGivenUsernameRname : findRatingsGivenUsernameRname,
-  insertIntoRatings : insertIntoRatings,
-  findAllUserBooks : findAllUserBooks,
-  deleteBookedTable : deleteBookedTable,
-  checkForVacancyForUpdatedReservation : checkForVacancyForUpdatedReservation,
+
   insert_into_bookedtables: insert_into_bookedtables,
   find_empty_tables: find_empty_tables
 };

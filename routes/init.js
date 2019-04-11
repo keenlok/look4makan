@@ -54,7 +54,6 @@ function initRouter(app) {
   /*  PROTECTED GET */
   app.get('/register', passport.antiMiddleware(), register);
   app.get('/signin', login   );
-  app.post('/booking/confirmation', passport.authMiddleware(), insertIntoConfirmedBooking, insertIntoBookedTables, insertIntoBooks, updateAward, confirmation);
 
   /*  PROTECTED POST */
   app.post('/reg_user', passport.antiMiddleware(), registerUser);
@@ -106,7 +105,6 @@ function editReservationMode (req, res, next) {
 }
 
 function updateDeleteReservation (req, res, next) {
-    // console.log(req);
     let rname = req.body.rname;
     let bid = req.body.bid;
     let tid = req.body.tid;
@@ -465,6 +463,13 @@ function insertIntoConfirmedBooking (req, res, next) {
     return next();
 }
 
+function insertIntoBookedTables(req, res, next) {
+    console.log(req.body);
+    pool.query(sql_query.find_empty_tables, );
+    next();
+}
+
+
 function insertIntoBooks (req, res, next) {
     let rname = req.body.rname;
     let bid = req.body.bid;
@@ -529,6 +534,8 @@ function confirmation(req, res, next) {
         res.render('confirmation', { page: "Confirmation", rname : rname, location : location,  reservationTime : reservationTime, reservationDate : reservationDate, paxNo : paxNo, auth : false});
     }
 }
+
+
 
 
 
@@ -627,6 +634,7 @@ function insertIntoBookedTables(req, res, next) {
   })
   // next();
 }
+
 
 function contact (req, res, next) {
 

@@ -40,12 +40,16 @@ function updateData (req, res, next) {
 
   pool.query(sql_query.get_menu, (err, data) => {
     let menu = data.rows
-    res.render('admin_update', {
-      page: "Admin Update",
-      dateInStr: date,
-      auth: true,
-      user: user,
-      menu: menu
+    pool.query(sql_query.getAllCuisines, (err, data) => {
+      let cuisine = data.rows
+      res.render('admin_update', {
+        page: "Admin Update",
+        dateInStr: date,
+        auth: true,
+        user: user,
+        menu: menu,
+        cuisine: cuisine
+      })
     })
   })
 }
@@ -252,7 +256,7 @@ function updateMenu (req, res, next) {
       console.error('Error updating', err)
       res.redirect('/edit/update?menu=fail')
     } else {
-      console.log('Successfully update menu' + oldmenu + ' with ' + newmenu)
+      console.log('Successfully updated menu' + oldmenu + ' with ' + newmenu)
       res.redirect('/edit/update?menu=success')
     }
   })
@@ -273,9 +277,27 @@ function deleteMenu (req, res, next) {
   })
 }
 
+function updateCuisine (req, res, next) {
+  console.log(req.body)
+  let oldcuisine = req.body.oldcuisine
+  let newcuisine = req.body.newcuisine
+
+  pool.query(sql_query.update_cuisine, [oldcuisine, newcuisine], (err, data) => {
+    if (err) {
+      console.error('Error updating', err)
+      res.redirect('/edit/update?cuisine=fail')
+    } else {
+      console.log('Successfully updated cuisine types!' + oldcuisine + ' with ' + newcuisine)
+      res.redirect('/edit/update?cuisine=success')
+    }
+  })
+}
+
+
 
 module.exports.updateMenu = updateMenu
 module.exports.deleteMenu = deleteMenu
+module.exports.updateCuisine = updateCuisine
 
 
 

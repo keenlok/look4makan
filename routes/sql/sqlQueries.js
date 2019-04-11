@@ -121,7 +121,11 @@ const find_empty_tables = 'SELECT * FROM branchtables B NATURAL JOIN branches BB
 
 const update_menu = 'UPDATE menu SET name = $2 WHERE name = $1;'
 
+const update_cuisine = 'UPDATE cuisinetypes SET cuisinename = $2 WHERE cuisinename = $1;';
+
 const delete_menu = 'DELETE FROM menu WHERE name = $1;'
+
+
 
 
 const queries = {
@@ -164,6 +168,7 @@ const queries = {
   insert_into_menu: insert_into_menu,
 
   update_menu: update_menu,
+  update_cuisine: update_cuisine,
 
   delete_menu: delete_menu,
 

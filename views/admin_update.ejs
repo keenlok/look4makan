@@ -47,6 +47,30 @@
         </div>
     </form>
 </div>
+<div class="row">
+    <div class="col-xl-9 mx-auto">
+        <h2 class="mb-5">Update cuisine type names:</h2>
+    </div>
+    <form class="d-flex flex-row justify-content-center" method="post">
+        <div class="row">
+            <div class="col m-1">
+                <select class="m-1 flex-grow-1 " id="menu" name="oldcuisine">
+                    <option value=""> Select Cuisine Type to Update </option>
+                    <% for (var i = 0; i < cuisine.length; i++) { %>
+                    <option value="<%= cuisine[i].cuisinename %>"><%= cuisine[i].cuisinename %> </option>
+                    <% } %>
+                </select>
+            </div>
+            <div class="col m-1">
+                <input class="form-control flex-grow-1 m-1" type="text" placeholder="Type in cuisine name..." name="newcuisine">
+            </div>
+        </div>
+        <div class="row m-1">
+            <button class="btn btn-primary m-1" formaction="/update/cuisine" type="submit">Submit</button>
+            <button class="btn btn-danger m-1 disabled" formaction="/delete/menu" type="submit">Delete</button>
+        </div>
+    </form>
+</div>
 </body>
 <footer>
     <%- include ./partials/footer.ejs %>

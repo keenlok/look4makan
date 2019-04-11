@@ -174,66 +174,80 @@ function updateDeleteReservation (req, res, next) {
     let isUpdate = req.body.isUpdate;
 
     console.log(req.user.username + " " + rname + " " + bid + " " + tid + " " + reservationTime + " " + reservationDate + " " + isUpdate);
-    let arguments = [rname, bid, tid, reservationTime, reservationDate];
-    let delete_query1 = sql_query.deleteBookedTable;
-    pool.query(delete_query1, arguments, (err, data) => {
-        if (err) {
-            console.error("Fail to delete from Books", err);
-        }
 
-        else if (!err) {
-            console.log("Successful delete from BookedTables, cascades to delete from Books too");
+    let newRname = req.body.rname;
+    let newBid = req.body.bid;
+    let newPax = req.body.pax;
+    let newReservationTime = req.body.reservationTime;
+    let newReservationDate = req.body.reservationDate;
 
-            if(isUpdate === "false") {
-                let delete_query2 = sql_query.deleteConfirmedBooking;
-                pool.query(delete_query2, [req.user.username, rname, bid], (err, data) => {
-                  if(err) {
-                      console.error("Fail to delete from ConfirmedBookings", err);
-                  }
-                  else if (!err) {
-                      console.log("Successful delete from ConfirmedBookings, cascades to delete from Ratings");
-                  }
-                });
-                let update_query = sql_query.updateAward;
-                pool.query(update_query, [-100, req.user.username], (err, data) => {
-                    if (err) {
-                        console.error("Fail to update Awards", err);
-                    }
+    //check if there is such a vacancy given all the above parameters (only need TID output)
+    let select_query = checkForVacancyForUpdatedReservation;
+    //this functon deletes current reservation in BookedTables, Books, (only delete ConfirmedBookings, Ratings, update Awards) if is
+    //updating reservation
 
-                    else if (!err) {
-                        console.log("Successful update from Awards, minus 100 points");
-                    }
-                });
-
-                //remove from confirmedBookings, cascade deletes in ratings too
-                //minus 100 from awards
-
+    function call() {
+        let arguments = [rname, bid, tid, reservationTime, reservationDate];
+        let delete_query1 = sql_query.deleteBookedTable;
+        pool.query(delete_query1, arguments, (err, data) => {
+            if (err) {
+                console.error("Fail to delete from BookedTables", err);
             }
-            if (isUpdate === "true") {
-                let newRname = req.body.rname;
-                let newBid = req.body.bid;
-                let newPax = req.body.pax;
-                let newReservationTime = req.body.reservationTime;
-                let newReservationDate = req.body.reservationDate;
-                //check if there is such a vacancy given all the above parameters (only need TID output)
-                let select_query = checkForVacancyForUpdatedReservation;
+
+            else if (!err) {
+                console.log("Successful delete from BookedTables, cascades to delete from Books too");
+
+                if (isUpdate === "false") {
+                    let delete_query2 = sql_query.deleteConfirmedBooking;
+                    pool.query(delete_query2, [req.user.username, rname, bid], (err, data) => {
+                        if (err) {
+                            console.error("Fail to delete from ConfirmedBookings", err);
+                        }
+                        else if (!err) {
+                            console.log("Successful delete from ConfirmedBookings, cascades to delete from Ratings");
+                        }
+                    });
+                    let update_query = sql_query.updateAward;
+                    pool.query(update_query, [-100, req.user.username], (err, data) => {
+                        if (err) {
+                            console.error("Fail to update Awards", err);
+                        }
+
+                        else if (!err) {
+                            console.log("Successful update from Awards, minus 100 points");
+                        }
+                    });
+
+                    //remove from confirmedBookings, cascade deletes in ratings too
+                    //minus 100 from awards
+                }
+            }
+        });
+    }
 
 
-                pool.query(select_query, [newRname, newBid, newPax, newReservationTime, newReservationDate], (err,data) => {
-                  if(err) {
-                    console.log("failed to find vacancy!");
-                  }
-                  else {
-                      //if there is, insert into bookedTables,  Books (dont have to insert confirmedBookings as entry remains same
-                  }
-                })
+    if(isUpdate === "true") {
 
+        pool.query(select_query, [newRname, newBid, newPax, newReservationTime, newReservationDate], (err, data) => {
+            if (err) {
+                console.log("failed to find vacancy!");
+            }
+            else { //can find vacancy for change in reservation, so delete current reservation
+              call();
                 //if there is, insert into bookedTables,  Books (dont have to insert confirmedBookings as entry remains same
                 //needed details => bookedTables : rname, bid, tid, capacity  --should change to paxNo not capacity, bookedTimeslot ,bookedDate
                 //=>  Books: userName, rname, bid, tid, pax, reservationTime, reservationDate
+
+
+
             }
-        }
-    });
+        });
+    }
+    else {
+      call();
+    }
+
+
     res.redirect("/");
 }
 

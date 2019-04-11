@@ -19,7 +19,7 @@
         <br><br>
      <label>Current Rating: </label>
         <% if (data.length === 0) { %>
-            <input type="text" id="rating" name="rating" value="0" disabled>
+            <input type="text" id="rating" name="rating" value="--" disabled>
         <% } else { %>
             <input type="text" id="rating" name="rating" value="<%=data[0].rating%>" readonly>
         <% } %>

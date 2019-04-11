@@ -111,7 +111,7 @@ const delete_old_entries = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:
 const delete_old_entries_for_testing = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:01:00\' <= $1 AND bookedDate <= $2;';
 
 
-const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) VALUES ($1, $2, $3, $4, $5);'
+const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) VALUES ($1, $2, $3, $4, $5);';
 
 const find_empty_tables = 'SELECT * FROM branchtables B NATURAL JOIN branches BB WHERE NOT EXISTS ( SELECT 1 FROM bookedtables T WHERE T.rname = B.rname AND T.bookeddate = $1 AND T.bookedtimeslot + \'1:00:00\' < $2 ) AND B.rname = $3 AND B.capacity >= $4 AND BB.location = $5 AND B.bid = $6 ORDER BY bid, tid LIMIT 1 ;'
 

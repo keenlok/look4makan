@@ -70,6 +70,63 @@ function initRouter(app) {
   app.get('/contactUs'           , contact);
 }
 
+
+function rateReservations (req, res, next) {
+
+    let selectQuery = sql_query.findAllUserBookings;
+    let username = (req.user === undefined) ? '' : req.user.username;
+    pool.query(selectQuery, [username], (err, data) => {
+        if(!err) {
+            let auth = req.isAuthenticated();
+            res.render("rateReservations", {data: data.rows, auth : auth, user: req.user});
+        }
+    });
+}
+
+function ratings (req, res, next) {
+    let rname = req.body.rname;
+    let bid = req.body.bid;
+
+    if(req.user !== undefined) {
+        let selectQuery = sql_query.findRatingsGivenUsernameRname;
+        console.log("query : " + selectQuery);
+        console.log("rname : " + rname);
+        console.log("bid : " + bid);
+        console.log("username : " + req.user.username);
+        pool.query(selectQuery, [rname,req.user.username, bid], (err, data) => {
+            if(err) {
+                console.log("FUCK");
+            }
+            let auth = req.isAuthenticated();
+            res.render("ratings", {rname : rname, username : req.user.username, bid : bid, data : data.rows, auth: auth});
+        });
+    }
+}
+
+function insertIntoRatings (req, res, next) {
+    if(req.body.rname === undefined) {
+        return next();
+    }
+
+    let rname = req.body.rname;
+    let bid = req.body.bid;
+    let rating = req.body.newRating;
+
+    let insertQuery = sql_query.insertIntoRatings;
+
+    pool.query(insertQuery, [rating, req.user.username, rname, bid], (err, data) => {
+        if(!err) {
+            console.log("successful insertion into Ratings Table!");
+        }
+        else {
+            console.error("failed insertion into Ratings Table", err);
+        }
+    });
+    res.redirect("/");
+}
+
+
+
 function editReservations (req, res, next) {
 
     let selectQuery = sql_query.findAllUserBooks;
@@ -141,62 +198,6 @@ function updateDeleteReservation (req, res, next) {
                 //needed details => bookedTables : rname, bid, tid, capacity  --should change to paxNo not capacity, bookedTimeslot ,bookedDate
                 //=>  Books: userName, rname, bid, tid, pax, reservationTime, reservationDate
             }
-        }
-    });
-    res.redirect("/");
-}
-
-
-
-function rateReservations (req, res, next) {
-
-  let selectQuery = sql_query.findAllUserBookings;
-  let username = (req.user === undefined) ? '' : req.user.username;
-  pool.query(selectQuery, [username], (err, data) => {
-    if(!err) {
-      let auth = req.isAuthenticated();
-      res.render("rateReservations", {data: data.rows, auth : auth, user: req.user});
-    }
-  });
-}
-
-function ratings (req, res, next) {
-    let rname = req.body.rname;
-    let bid = req.body.bid;
-
-    if(req.user !== undefined) {
-        let selectQuery = sql_query.findRatingsGivenUsernameRname;
-        console.log("query : " + selectQuery);
-        console.log("rname : " + rname);
-        console.log("bid : " + bid);
-        console.log("username : " + req.user.username);
-        pool.query(selectQuery, [rname,req.user.username, bid], (err, data) => {
-            if(err) {
-                console.log("FUCK");
-            }
-            let auth = req.isAuthenticated();
-            res.render("ratings", {rname : rname, username : req.user.username, bid : bid, data : data.rows, auth: auth});
-        });
-    }
-}
-
-function insertIntoRatings (req, res, next) {
-    if(req.body.rname === undefined) {
-        return next();
-    }
-
-    let rname = req.body.rname;
-    let bid = req.body.bid;
-    let rating = req.body.newRating;
-
-    let insertQuery = sql_query.insertIntoRatings;
-
-    pool.query(insertQuery, [rating, req.user.username, rname, bid], (err, data) => {
-        if(!err) {
-            console.log("successful insertion into Ratings Table!");
-        }
-        else {
-            console.error("failed insertion into Ratings Table", err);
         }
     });
     res.redirect("/");
@@ -576,22 +577,16 @@ function error(err, res) {
 }
  
 function insertIntoBookedTables(req, res, next) {
-  let args = req.body
+  let args = req.body;
   // console.log(req.body)
-  let rname = args.rname
-  let location = args.location
-  let time = args.reservationTime
-  let date = args.reservationDate
-  let bid = args.bid
-  let pax = args.pax
-  let queryArgs = [
-    date,
-    time,
-    rname,
-    pax,
-    location,
-    bid
-  ]
+  let rname = args.rname;
+  let location = args.location;
+  let time = args.reservationTime;
+  let date = args.reservationDate;
+  let bid = args.bid;
+  let pax = args.pax;
+  let queryArgs = [date, time, rname, pax, location, bid];
+
   pool.query(sql_query.find_empty_tables, queryArgs, (err, data) => {
     if(err) {
       console.error("ERROR", err)
@@ -599,21 +594,21 @@ function insertIntoBookedTables(req, res, next) {
       if (data.rows.length === 0) {
         console.log("No empty tables found")
       } else {
-        console.log("table found, inserting into bookedTAbles,", data.rows)
-        let args = data.rows[0]
-        let rname = args.rname
-        let bid = args.bid
-        let tid = args.tid
+        console.log("table found, inserting into bookedTAbles,", data.rows);
+        let args = data.rows[0];
+        let rname = args.rname;
+        let bid = args.bid;
+        let tid = args.tid;
         let queryArgs = [
           rname, bid, tid, time, date
-        ]
-        console.log("to be inserted", queryArgs)
+        ];
+        console.log("to be inserted", queryArgs);
         pool.query(sql_query.insert_into_bookedtables, queryArgs, (err, data) => {
           if (err) {
-            console.error("Insertion into bookedtables Fail!", err)
+            console.error("Insertion into bookedtables Fail!", err);
             return next()
           } else {
-            console.log('Insertion into bookedtables: Success')
+            console.log('Insertion into bookedtables: Success');
             return next()
           }
         })

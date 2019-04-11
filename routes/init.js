@@ -34,7 +34,7 @@ function initRouter(app) {
   app.post('/editReservations/edit', editReservationMode);
   app.post('/edits/complete', updateDeleteReservation);
 
-  app.get('/restaurant'          , restaurant       ); // for what? delete right
+  app.get('/restaurant'          , restaurant       );
 
   /*  Admin privileges  */
   app.get('/edit'       , admin.adminDashboard   )
@@ -585,6 +585,54 @@ function logout(req, res, next) {
 
 function error(err, res) {
   res.render('error', {message: 'ERROR OCCURED', error: err});
+}
+ 
+function insertIntoBookedTables(req, res, next) {
+  let args = req.body
+  // console.log(req.body)
+  let rname = args.rname
+  let location = args.location
+  let time = args.reservationTime
+  let date = args.reservationDate
+  let bid = args.bid
+  let pax = args.pax
+  let queryArgs = [
+    date,
+    time,
+    rname,
+    pax,
+    location,
+    bid
+  ]
+  pool.query(sql_query.find_empty_tables, queryArgs, (err, data) => {
+    if(err) {
+      console.error("ERROR", err)
+    } else {
+      if (data.rows.length === 0) {
+        console.log("No empty tables found")
+      } else {
+        console.log("table found, inserting into bookedTAbles,", data.rows)
+        let args = data.rows[0]
+        let rname = args.rname
+        let bid = args.bid
+        let tid = args.tid
+        let queryArgs = [
+          rname, bid, tid, time, date
+        ]
+        console.log("to be inserted", queryArgs)
+        pool.query(sql_query.insert_into_bookedtables, queryArgs, (err, data) => {
+          if (err) {
+            console.error("Insertion into bookedtables Fail!", err)
+            return next()
+          } else {
+            console.log('Insertion into bookedtables: Success')
+            return next()
+          }
+        })
+      }
+    }
+  })
+  // next();
 }
 
 

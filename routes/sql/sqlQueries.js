@@ -145,6 +145,12 @@ const get_users = 'SELECT * FROM diners;';
 
 const findUserRewards = "SELECT awardpoints FROM Awards WHERE username = $1;";
 
+const find_largest_empty_table = 'SELECT * FROM branchtables B NATURAL JOIN branches BB ' +
+  'WHERE NOT EXISTS ( SELECT 1 FROM bookedtables T WHERE T.rname = B.rname AND ' +
+  'T.bookeddate = $1 AND T.bookedtimeslot >= $2 AND T.bookedtimeslot < $2::time + \'01:00:00\') ' +
+  'AND B.rname = $3 AND BB.location = $4' +
+  'ORDER BY B.capacity LIMIT 1 ;';
+
 const queries = {
   getRestaurant : get_restaurant,
   findRestaurant : find_restaurant,
@@ -195,6 +201,7 @@ const queries = {
 
   insert_into_bookedtables: insert_into_bookedtables,
   find_empty_tables: find_empty_tables,
+  find_largest_empty_table: find_largest_empty_table,
 
   findUserRewards: findUserRewards
 };

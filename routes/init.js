@@ -749,6 +749,8 @@ function displayCustomReservePage (req, res, next) {
   }
 
   let err_message = undefined
+  let success_message = undefined
+
   // console.log(req.query)
   if (typeof req.query !== "undefined") {
     let messages = req.query
@@ -760,9 +762,12 @@ function displayCustomReservePage (req, res, next) {
       } else if (id == 'insertionfail') {
         err_message = messages[id]
         console.log(err_message)
+      } else if (id == 'insertion') {
+        success_message = messages[id]
       }
     }
   }
+
 
   let time = utils.getTime()
   let dateInStr = utils.getDateInStr()
@@ -798,7 +803,8 @@ function displayCustomReservePage (req, res, next) {
               cuisines:   cuisines,
               locations:  locations,
               user:       user,
-              err:        err_message
+              err:        err_message,
+              succ:       success_message
             })
           })
         })
@@ -884,7 +890,15 @@ function makeCustomReservation (req, res, next) {
                   res.redirect('/custom?insertionfail='+err.message)
                 } else {
                   console.log("Successful insertion into books")
-                  res.redirect('/custom?insertion=success')
+                  pool.query(sql_query.insertConfirmedBooking, [username, rname, branch_id], (err, data) => {
+                    if (err) {
+                      console.error('Insertion Error AT confirmedbooking!', err)
+                      res.redirect('/custom?insertionfail='+err.message)
+                    } else {
+                      console.log("Successful insertion into confirmed booking")
+                      res.redirect('/custom?insertion=success')
+                    }
+                  })
                 }
               })
             }

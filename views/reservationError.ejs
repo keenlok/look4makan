@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rate Your Reservation</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <script src='/stylesheets/vendor/jquery/jquery.js'></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+</head>
+<header>
+    <% include ./partials/header %>
+</header>
+<body>
+<br><br>
+<label><strong>Current Reservation:</strong></label><br>
+
+<form method="post" action="/edits/complete">
+    <table>
+        <tbody>
+        <tr>
+            <td> Restaurant:</td>
+            <td><input type="text" id="rname" name="rname" value="" readonly style="margin-top:5px; margin-left : 10px"></td>
+        </tr>
+        <tr>
+            <td> Branch Number:</td>
+
+            <td><input type=text" id="bid" name="bid" value="" readonly style="margin-top:5px; margin-left : 10px"></td>
+        </tr>
+        <tr>
+            <td> Table Number:</td>
+
+            <td><input type=text" id="tid" name="tid" value="" readonly style="margin-top:5px; margin-left : 10px"></td>
+        </tr>
+        <tr>
+            <td> Pax:</td>
+            <td><input type="text" id="pax" name="pax" value="" readonly style="margin-top:5px; margin-left : 10px"></td>
+        </tr>
+        <tr>
+
+            <td> Reservation Time:</td>
+            <td><input type="time" id="reservationTime" name="reservationTime" value="" readonly style="margin-top:5px; margin-left : 10px"></td>
+        </tr>
+
+        <tr>
+            <td> Reservation Date:</td>
+            <td><input type="text" id="reservationDate" name="reservationDate" value="" readonly style="margin-top:5px; margin-left : 10px"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <br><br>
+    <label><strong>New  Reservation:</strong></label><br>
+
+    <table>
+        <tbody>
+        <tr>
+            <td> Restaurant:</td>
+            <td><input type="text" id="newRname" name="newRname" value="" readonly style="margin-top:5px; margin-left : 10px"></td>
+        </tr>
+        <tr>
+            <td> Branch Number:</td>
+            <td><input type=text" id="newBid" name="newBid" value="" readonly style="margin-top:5px; margin-left : 10px"></td>
+        </tr>
+        <tr>
+            <td> Pax:</td>
+            <td><input type="number" id="newPax" name="newPax" value="" style="margin-top:5px; margin-left : 10px"></td>
+        </tr>
+        <tr>
+            <td> Reservation Time:</td>
+            <td><input type="time" id="newReservationTime" name="newReservationTime" value="" style="margin-top:5px; margin-left : 10px"></td>
+        </tr>
+
+        <tr>
+            <td> Reservation Date:</td>
+            <td><input type="date" id="newReservationDate" name="newReservationDate" value="" style="margin-top:5px; margin-left : 10px"></td>
+        </tr>
+        </tbody>
+    </table>
+    <input type="hidden" id="isUpdate" name="isUpdate" value="true">
+</form>
+<br>
+<table>
+    <tbody>
+    <tr>
+        <td><button class="btn btn-primary" onclick="change()">Confirm New Reservation</button></td>
+
+        <td><button class="btn btn-primary" onclick="cancel()" style="margin-left : 200px">Cancel Reservation</button></td>
+    </tr>
+    </tbody>
+</table>
+
+
+</form>
+
+
+<script>
+    alert("FAILED UPDATE OF RESERVATION");
+</script>
+</body>
+</html>

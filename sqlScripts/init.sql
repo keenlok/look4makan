@@ -161,7 +161,6 @@ drop trigger if exists trig_validPax on books;
 drop trigger if exists trig_notTooShort on diners;
 drop trigger if exists trig_noTimeTravel on userpreferences;
 drop trigger if exists trig_validHours on bookedtables;
-drop trigger if exists trig_test on bookedtables;
 
 
 -----------------------------------------------
@@ -264,31 +263,6 @@ on BookedTables
 for each row
 execute procedure validHours();
 
------------------------------------------------
---Trigger to prevent booking timeslot too close to another booking
------------------------------------------------
-create or replace function test()
-returns trigger as $$
-begin if exists (
-	select * 
-	from books 
-	where rname = new.rname and 
-	bid = new.bid and 
-	tid = new.tid and 
-	reservationdate = new.bookeddate and 
-	(new.bookedtimeslot - interval '15 minutes' < reservationtime and reservationtime < new.bookedtimeslot + interval '15 minutes')
-) then
-raise exception 'Timeslot too close to another booking';
-return null;
-else return new;
-end if;
-end; $$ language plpgsql;
-
-create trigger trig_test
-before insert or update
-on bookedtables
-for each row
-execute procedure test();
 -------------------------------------------------
 --INSERT VALUES
 -------------------------------------------------

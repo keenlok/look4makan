@@ -140,7 +140,42 @@ update BookedTables
 set capacity = capacity - 1
 where rname = 'Crystal Jade' and bid = 1 and tid = 1 and bookedtimeslot = '23:00:00' and bookeddate = '2019-05-16';
 
-insert into bookedtables (rname, bid, tid, capacity, bookedtimeslot, bookeddate) values
+insert into bookedtables (rname, bid, tid, bookedtimeslot, bookeddate) values
 ('MacDonalds', 1, 3, 3213, '23:00:00', '2019-04-11');
 
 select * from BookedTables;
+-----------------------------------------------
+--Trigger to prevent booking timeslot too close to another booking
+-----------------------------------------------
+drop trigger if exists trig_test on bookedtables;
+
+create or replace function test()
+returns trigger as $$
+begin if exists (
+	select * 
+	from books 
+	where rname = new.rname and 
+	bid = new.bid and 
+	tid = new.tid and 
+	reservationdate = new.bookeddate and 
+	(new.bookedtimeslot - interval '1 hour' = reservationtime or reservationtime = new.bookedtimeslot + interval '1 hour')
+) then
+raise exception 'Timeslot too close to another booking';
+return null;
+else return new;
+end if;
+end; $$ language plpgsql;
+
+create trigger trig_test
+before insert or update
+on bookedtables
+for each row
+execute procedure test();
+
+--test
+
+select * from books;
+select * from bookedtables;
+
+insert into bookedtables (rname, bid, tid, bookedtimeslot, bookeddate) values
+('MacDonalds', 1, 1, '10:12:00', '2020-01-01');

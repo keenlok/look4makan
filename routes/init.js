@@ -827,7 +827,7 @@ function makeCustomReservation (req, res, next) {
     location,
   ]
 
-  pool.query(sql_query.find_empty_tables, args, (err, data) => {
+  pool.query(sql_query.find_largest_empty_table, args, (err, data) => {
     if (err ) {
       console.error('Error in finding tables!')
       res.redirect('/custom?tables='+err.message)

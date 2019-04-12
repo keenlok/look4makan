@@ -289,7 +289,6 @@ function updateDeleteReservation (req, res, next) {
 
 
 
-
 const pad = utils.pad;
 
 function index(req, res, next) {
@@ -397,7 +396,7 @@ function insertIntoUserPreference (req, res, next) {
 }
 
 function search_restaurant(req, res, next) {
-  let ctx = 0, avg = 0, table
+  let ctx = 0, avg = 0, table;
   let searchQuery = sql_query.search_result;
   let rname = req.body.rname;
   let location = req.body.location;
@@ -410,7 +409,7 @@ function search_restaurant(req, res, next) {
     rname = pad(rname);
   }
   else {
-    rname = 'SELECT DISTINCT rname FROM branches';
+    rname = 'SELECT * from Restaurants';
   }
 
   searchQuery = searchQuery.replace('$1', rname);
@@ -419,7 +418,7 @@ function search_restaurant(req, res, next) {
     location = pad(location);
   }
   else {
-    location = 'SELECT DISTINCT location FROM branches';
+    location = 'SELECT * FROM Locations';
   }
 
 
@@ -429,7 +428,7 @@ function search_restaurant(req, res, next) {
     cuisineType = pad(cuisineType);
   }
   else {
-    cuisineType = 'SELECT cuisineName FROM cuisineTypes';
+    cuisineType = 'SELECT * FROM cuisineTypes';
   }
   searchQuery = searchQuery.replace('$3', cuisineType);
 

@@ -114,17 +114,11 @@ const delete_old_entries = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:
 
 const delete_old_entries_for_testing = 'DELETE FROM bookedtables WHERE bookedTimeslot + \'0:01:00\' <= $1 AND bookedDate <= $2;';
 
-
-//const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) VALUES ($1, $2, $3, $4, $5), ($1, $2, $3, $6, $5), ($1, $2, $3, $7, $5), ($1, $2, $3, $8, $5);'
-
 const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) ' +
     'VALUES ($1, $2, $3, $4, $5), ' +
     '($1, $2, $3, $4::time + \'00:15:00\' , $5), ' +
     '($1, $2, $3, $4::time + \'00:30:00\' , $5), ' +
     '($1, $2, $3, $4::time + \'00:45:00\' , $5);';
-
-// const insert_into_bookedtables = 'INSERT INTO BookedTables (rname, bid, tid, bookedTimeslot, bookedDate) VALUES ($1, $2, $3, $4, $5), ($1, $2, $3, to_timestamp($4, \'HH24:Mi:SS\')::time + INTERVAL \'15 minutes\', $5), ($1, $2, $3, to_timestamp($4, \'HH24:Mi:SS\')::time + INTERVAL \'30 minutes\', $5), ($1, $2, $3, to_timestamp($4, \'HH24:Mi:SS\')::time + INTERVAL \'45 minutes\', $5);'
-// The correct way to do this in sql but unable to find to_timestamp when using in javascript
 
 
 const find_empty_tables = 'SELECT * FROM branchtables B NATURAL JOIN branches BB ' +
@@ -135,15 +129,15 @@ const find_empty_tables = 'SELECT * FROM branchtables B NATURAL JOIN branches BB
 
 const update_menu = 'UPDATE menu SET name = $2 WHERE name = $1;';
 
-const update_cuisine = 'UPDATE cuisinetypes SET cuisinename = $2 WHERE cuisinename = $1;'
+const update_cuisine = 'UPDATE cuisinetypes SET cuisinename = $2 WHERE cuisinename = $1;';
 
-const delete_menu = 'DELETE FROM menu WHERE name = $1;'
+const delete_menu = 'DELETE FROM menu WHERE name = $1;';
 
-const update_users = 'UPDATE diners SET firstname = $2, lastname = $3 WHERE username = $1;'
+const update_users = 'UPDATE diners SET firstname = $2, lastname = $3 WHERE username = $1;';
 
-const delete_users = 'DELETE FROM diners WHERE username = $1;'
+const delete_users = 'DELETE FROM diners WHERE username = $1;';
 
-const get_users = 'SELECT * FROM diners;'
+const get_users = 'SELECT * FROM diners;';
 
 
 const queries = {

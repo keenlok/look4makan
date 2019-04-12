@@ -110,8 +110,9 @@ function search (req, res, next) {
   let rname = '%' + queryStr.toLowerCase() + '%';
   let searchQuery = sql_query.findRestaurant;
   let time = utils.getTime();
+  let date = utils.getDate();
 
-  pool.query(searchQuery, [rname, time], (err, data) => {
+  pool.query(searchQuery, [date, time, rname], (err, data) => {
     if (err || !data.rows || data.rows.length === 0) {
       ctx = 0;
       table = [];
@@ -132,7 +133,7 @@ function restaurant(req, res, next) {
   let rname = req.query.rname;
   const time = utils.getTime();
   let query = sql_query.getRestaurant;
-  pool.query(query, [rname, time], (err, data) => {
+  pool.query(query, [utils.getDate(), time, rname], (err, data) => {
     let table, count, auth
     let date = utils.getDateInStr();
 

@@ -41,7 +41,7 @@ const search_result = 'SELECT distinct rname, bid, openingHours, location ' +
     'FROM branches B NATURAL JOIN advertises A NATURAL JOIN branchTables BT ' +
     'WHERE B.rname IN ($1) AND B.location IN ($2) AND ' +
     'cuisineType IN ($3) AND B.openTime <= $4 AND ' +
-    'B.closeTime >= $4 AND BT.capacity >= $5 AND ' +
+    'B.closeTime >= $4::time + \'01:00:00\' AND BT.capacity >= $5 AND ' +
     'NOT EXISTS (SELECT 1 FROM bookedtables BKT ' +
     'WHERE BKT.bid = BT.bid AND BT.rname = BKT.rname ' +
     'AND BT.tid = BKT.tid AND BKT.bookedtimeslot >= $4 ' +
@@ -49,7 +49,6 @@ const search_result = 'SELECT distinct rname, bid, openingHours, location ' +
     '($6  > current_date or ($6 = current_date and $4 >= localtime));';
 
 //used in /bookings page to ensure the change in reservationTime is limited to opening hours of that same branch
-//may be obsolete, depends if there is a relevant trigger in place (may just keep as safe guard)
 const min_max_hour_of_a_branch = "SELECT openTime, closeTime FROM Branches B " +
     "WHERE B.rname = $1 AND B.bid = $2;";
 
@@ -82,11 +81,12 @@ const findAllUserBooks = "SELECT DISTINCT rname, bid, tid, pax, reservationTime,
 
 const findRatingsGivenUsernameRname = "SELECT rating FROM Ratings WHERE rname = $1 AND username = $2 and bid = $3;";
 
-const insertIntoRatings = "INSERT INTO Ratings (rating, userName, rname, bid) VALUES ($1, $2, $3, $4);";
+const insertIntoRatings = "INSERT INTO Ratings (rating, userName, rname, bid) VALUES ($1, $2, $3, $4) " +
+    "ON CONFLICT (username, rname, bid) DO UPDATE SET rating = EXCLUDED.rating";
 
 const deleteBookedTable = "DELETE FROM BookedTables WHERE rname = $1 AND bid = $2 AND " +
     "tid = $3 AND bookedTimeslot >= $4 AND " +
-    "bookedTimeslot < $4::time + '01:00:00' AND bookedDate = $5;";
+    "bookedTimeslot < $4::time + \'01:00:00\' AND bookedDate = $5;";
 
 const checkForVacancyForUpdatedReservation = "SELECT tid FROM branches B NATURAL JOIN branchTables BT"
     + " WHERE B.rname = $1 AND B.bid = $2 AND BT.capacity >= $3"
@@ -143,6 +143,7 @@ const delete_users = 'DELETE FROM diners WHERE username = $1;';
 
 const get_users = 'SELECT * FROM diners;';
 
+const findUserRewards = "SELECT awardpoints FROM Awards WHERE username = $1;";
 
 const queries = {
   getRestaurant : get_restaurant,
@@ -193,7 +194,9 @@ const queries = {
   delete_users: delete_users,
 
   insert_into_bookedtables: insert_into_bookedtables,
-  find_empty_tables: find_empty_tables
+  find_empty_tables: find_empty_tables,
+
+  findUserRewards: findUserRewards
 };
 
 module.exports = queries;

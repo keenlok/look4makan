@@ -229,7 +229,7 @@ function updateDeleteReservation (req, res, next) {
                 }
                 else {
                   let delete_query3 = sql_query.deleteRating;
-                  pool.query(delete_query3, (err4, data4) => {
+                  pool.query(delete_query3, [req.user.username, rname, bid], (err4, data4) => {
                     if(err4) {
                       console.error("faild to delete from Ratings", err4);
                     }
@@ -249,6 +249,8 @@ function updateDeleteReservation (req, res, next) {
             if (err || !data.rows || data.rows.length===0) {
                 console.log("failed to find vacancy!", err);
                 console.log("hence no changes to current reservation!");
+                let auth = req.isAuthenticated();
+                res.render("reservationError", {auth : auth});
             }
             else { //can find vacancy for change in reservation, so delete current reservation
                 newTid = data.rows[0].tid;
@@ -364,25 +366,6 @@ function insertIntoUserPreference (req, res, next) {
 
    let arguments = [username, rname, location, date, reservationTime, cuisineType, paxNo];
 
-
-    // pool.connect(function(err, client, done) {
-    //     client.query('BEGIN', function (err, res1) {
-    //         client.query(insertQuery, [username, rname, location, date, reservationTime, cuisineType, paxNo], (err, data) => {
-    //             // for (let i = 0; i < data.rows.length; i++) {
-    //             //     console.log("data: " + data.rows[i]);
-    //             // }
-    //             if (!err) {
-    //                 console.log("successful insertion into UserPreferences Table");
-    //             }
-    //             else {
-    //                 console.log("failed insertion into UserPreferences Table");
-    //             }
-    //             client.query('COMMIT', function (err, res6) {
-    //                 done();
-    //             });
-    //         });
-    //     });
-    // });
         pool.query(insertQuery, arguments, (err, data) => {
             if (!err) {
                 console.log("successful insertion into UserPreferences Table");

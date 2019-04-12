@@ -34,7 +34,11 @@ function initRouter(app) {
   app.post('/editReservations/edit', editReservationMode);
   app.post('/edits/complete'       , updateDeleteReservation);
 
-  /* custom booking page */
+  //View user rewards feature
+  app.get('/rewards', viewRewards);
+
+
+    /* custom booking page */
   app.get('/custom'         , displayCustomReservePage)
   app.post('/custom/booking', makeCustomReservation)
 
@@ -81,6 +85,24 @@ function initRouter(app) {
   app.get('/contactUs'           , contact);
 }
 
+
+function viewRewards (req, res, next) {
+    console.log("got here");
+    let username;
+    let auth = req.isAuthenticated();
+
+    if(req.user === undefined) {
+        res.render('viewRewards', {data : "", auth : auth});
+    }
+    else {
+        username = req.user.username;
+        let selectQuery = sql_query.findUserRewards;
+        pool.query(selectQuery, [username], (err, data) => {
+            res.render("viewRewards", {data: data.rows, auth: auth});
+        });
+    }
+
+}
 
 function rateReservations (req, res, next) {
 
@@ -242,15 +264,19 @@ function updateDeleteReservation (req, res, next) {
         });
     }
 
+    let auth = req.isAuthenticated();
 
     if(isUpdate === "true") {
-
+        let successfulUpdate = "true";
         pool.query(select_query, [newRname, newBid, newPax, newReservationTime, newReservationDate], (err, data) => {
             if (err || !data.rows || data.rows.length===0) {
                 console.log("failed to find vacancy!", err);
                 console.log("hence no changes to current reservation!");
+                successfulUpdate = "false";
                 let auth = req.isAuthenticated();
-                res.render("reservationError", {auth : auth});
+
+                res.render("reservationStatus", {auth : auth, successfulUpdate : successfulUpdate});
+
             }
             else { //can find vacancy for change in reservation, so delete current reservation
                 newTid = data.rows[0].tid;
@@ -278,15 +304,15 @@ function updateDeleteReservation (req, res, next) {
                       });
                   }
                 });
+                res.render("reservationStatus", {auth : auth, successfulUpdate : successfulUpdate});
             }
         });
     }
     else {
       call();
+      res.redirect("/");
+
     }
-
-
-    res.redirect("/");
 }
 
 
@@ -691,7 +717,7 @@ function insertIntoBookedTables(req, res, next) {
                     bid,
                     tid,
                     time,
-                    date,
+                    date
                 ];
                 console.log("to be inserted", queryArgs);
 

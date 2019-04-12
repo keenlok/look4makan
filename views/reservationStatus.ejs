@@ -16,7 +16,7 @@
 <br><br>
 <label><strong>Current Reservation:</strong></label><br>
 
-<form method="post" action="/edits/complete">
+<form method="get" action="/" disabled>
     <table>
         <tbody>
         <tr>
@@ -91,12 +91,26 @@
     </tbody>
 </table>
 
+</form>
 
+<form action="/" method="get">
+    <input type="text" id="update"  value="<%=successfulUpdate%>" disabled hidden>
 </form>
 
 
+
 <script>
-    alert("FAILED UPDATE OF RESERVATION");
+    let update = document.getElementById("update").value;
+    if(update === "true") {
+        alert("successful update of reservation! See you at your new reservation timing and date! :)");
+        $('form').submit();
+    }
+    else if(update === "false") {
+        alert("failed update of reservation, there aren't any vacancies to meet your request!" +
+            " Your current reservation is still active, please try again!");
+        $('form').submit();
+    }
+
 </script>
 </body>
 </html>

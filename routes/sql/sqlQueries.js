@@ -49,7 +49,6 @@ const search_result = 'SELECT distinct rname, bid, openingHours, location ' +
     '($6  > current_date or ($6 = current_date and $4 >= localtime));';
 
 //used in /bookings page to ensure the change in reservationTime is limited to opening hours of that same branch
-//may be obsolete, depends if there is a relevant trigger in place (may just keep as safe guard)
 const min_max_hour_of_a_branch = "SELECT openTime, closeTime FROM Branches B " +
     "WHERE B.rname = $1 AND B.bid = $2;";
 
@@ -82,7 +81,8 @@ const findAllUserBooks = "SELECT DISTINCT rname, bid, tid, pax, reservationTime,
 
 const findRatingsGivenUsernameRname = "SELECT rating FROM Ratings WHERE rname = $1 AND username = $2 and bid = $3;";
 
-const insertIntoRatings = "INSERT INTO Ratings (rating, userName, rname, bid) VALUES ($1, $2, $3, $4);";
+const insertIntoRatings = "INSERT INTO Ratings (rating, userName, rname, bid) VALUES ($1, $2, $3, $4) " +
+    "ON CONFLICT (username, rname, bid) DO UPDATE SET rating = EXCLUDED.rating";
 
 const deleteBookedTable = "DELETE FROM BookedTables WHERE rname = $1 AND bid = $2 AND " +
     "tid = $3 AND bookedTimeslot >= $4 AND " +
@@ -143,6 +143,7 @@ const delete_users = 'DELETE FROM diners WHERE username = $1;';
 
 const get_users = 'SELECT * FROM diners;';
 
+const findUserRewards = "SELECT awardpoints FROM Awards WHERE username = $1;";
 
 const queries = {
   getRestaurant : get_restaurant,
@@ -193,7 +194,9 @@ const queries = {
   delete_users: delete_users,
 
   insert_into_bookedtables: insert_into_bookedtables,
-  find_empty_tables: find_empty_tables
+  find_empty_tables: find_empty_tables,
+
+  findUserRewards: findUserRewards
 };
 
 module.exports = queries;

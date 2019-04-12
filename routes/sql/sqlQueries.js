@@ -5,7 +5,12 @@ const get_restaurant = 'WITH restaurantStatus AS ( SELECT rname, bid, COUNT(tid)
     'THEN \'CLOSED\' WHEN num > 0 THEN \'AVAILABLE\' WHEN num = 0 THEN \'FULL\' WHEN num IS NULL THEN \'UNAVAILABLE\' END AS status ' +
     'FROM branches B LEFT JOIN restaurantStatus RS ON B.bid = RS.bid AND B.rname = RS.rname WHERE B.rname = $3 ;';
 
-const find_restaurant = 'WITH restaurantStatus AS ( SELECT rname, bid, COUNT(tid) AS num FROM branchtables B WHERE NOT EXISTS ( SELECT 1 FROM bookedtables BT WHERE BT.tid = B.tid AND BT.bookeddate = $1 AND BT.bookedtimeslot >= $2 AND BT.bookedtimeslot < $2 ) GROUP BY rname, bid ) SELECT DISTINCT B.rname, openinghours, location, CASE WHEN (opentime > $2 OR closeTime < $2) THEN \'CLOSED\' WHEN num > 0 THEN \'AVAILABLE\' WHEN num = 0 THEN \'FULL\' WHEN num IS NULL THEN \'UNAVAILABLE\' END AS status FROM branches B LEFT JOIN restaurantStatus RS ON B.bid = RS.bid AND B.rname = RS.rname WHERE LOWER(B.rname) LIKE $3;';
+const find_restaurant = 'WITH restaurantStatus AS ( SELECT rname, bid, COUNT(tid) AS num FROM branchtables B ' +
+    'WHERE NOT EXISTS ( SELECT 1 FROM bookedtables BT WHERE BT.tid = B.tid AND BT.bookeddate = $1 AND BT.bookedtimeslot >= $2 AND ' +
+    'BT.bookedtimeslot < $2 ) GROUP BY rname, bid ) ' +
+    'SELECT DISTINCT B.rname, openinghours, location, CASE WHEN (opentime > $2 OR closeTime < $2) THEN \'CLOSED\' ' +
+    'WHEN num > 0 THEN \'AVAILABLE\' WHEN num = 0 THEN \'FULL\' WHEN num IS NULL THEN \'UNAVAILABLE\' END AS status ' +
+    'FROM branches B LEFT JOIN restaurantStatus RS ON B.bid = RS.bid AND B.rname = RS.rname WHERE LOWER(B.rname) LIKE $3;';
 
 const add_user = 'INSERT INTO diners (userName, password, firstName, lastName, isAdmin) VALUES ($1, $2, $3, $4, FALSE);';
 

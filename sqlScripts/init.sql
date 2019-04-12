@@ -46,7 +46,6 @@ create table CuisineTypes (
 cuisineName varchar(10) primary key
 );
 
---not sure
 create table Awards(
 userName varchar(20) primary key references diners,
 awardPoints integer
@@ -95,7 +94,6 @@ create table BookedTables (
 rname varchar(40),
 bid integer,
 tid integer,
---pax integer,  --should change to paxNo not capacity, i dont think need this
 bookedTimeslot time,
 bookedDate date,
 foreign key (rname, bid, tid) references BranchTables,
@@ -103,7 +101,6 @@ primary key (rname, bid, tid, bookedTimeslot, bookedDate)
 );
 
 
---problematic
 create table Books (
 userName varchar(20),
 rname varchar(40),
@@ -158,8 +155,6 @@ foodName varchar(50),
 price integer,
 primary key (menuName,foodName, price)
 );
-
-
 
 
 drop trigger if exists prevent_password_changes on diners;

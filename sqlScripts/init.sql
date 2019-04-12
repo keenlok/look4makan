@@ -276,7 +276,7 @@ begin if exists (
 	bid = new.bid and 
 	tid = new.tid and 
 	reservationdate = new.bookeddate and 
-	(new.bookedtimeslot - interval '15 minutes' < reservationtime and reservationtime < new.bookedtimeslot + interval '15 minutes')
+	(new.bookedtimeslot - interval '1 hour' = reservationtime or reservationtime = new.bookedtimeslot + interval '1 hour')
 ) then
 raise exception 'Timeslot too close to another booking';
 return null;

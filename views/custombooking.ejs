@@ -25,6 +25,11 @@
     <h3><%= err %></h3>
 </div>
 <% } %>
+<% if (typeof succ !== 'undefined') { %>
+<div class="row align-content-md-start text-success">
+    <h3><%= succ %></h3>
+</div>
+<% } %>
 <div class="row">
     <div class="col-xl-9 mx-auto">
         <h2 class="mb-5">Making a custom booking</h2>

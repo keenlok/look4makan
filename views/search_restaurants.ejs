@@ -62,10 +62,13 @@
         let location = $(locationElement).text();
         $('input#location').val(location);
 
-        alert("sending " + rname + " " + bid + " " + location); //leave for testing correctness
+        // alert("sending " + rname + " " + bid + " " + location); //leave for testing correctness
 
         $('form').submit();
     });
 </script>
 </body>
+<footer>
+    <%- include ./partials/footer.ejs %>
+</footer>
 </html>

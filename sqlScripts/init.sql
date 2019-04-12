@@ -47,25 +47,25 @@ cuisineName varchar(10) primary key
 );
 
 create table Awards(
-userName varchar(20) primary key references diners on update cascade on delete cascade,
+userName varchar(20) primary key references diners,
 awardPoints integer
 );
 
 
 create table ConfirmedBookings (
-userName varchar(20) references diners on update cascade on delete cascade,
+userName varchar(20),
 rname varchar(40),
 bid integer,
 primary key (userName, rname, bid)
 );
 
 create table UserPreferences (
-userName varchar(20) references diners on update cascade on delete cascade,
+userName varchar(20),
 preferredRname varchar(40),
-preferredLoc varchar(40) references Locations on update cascade,
+preferredLoc varchar(40) references Locations,
 preferredDate date not null,
 preferredTime time not null,
-cuisineType varchar(10) references CuisineTypes on update cascade,
+cuisineType varchar(10) references CuisineTypes,
 paxNum integer not null,
 primary key (userName)
 );
@@ -77,7 +77,7 @@ location varchar(40) references Locations not null,
 openingHours varchar(20),
 openTime time,
 closeTime time,
-cuisineType varchar(10) references CuisineTypes on update cascade not null,
+cuisineType varchar(10) references CuisineTypes not null,
 primary key (rname, bid)
 );
 
@@ -111,7 +111,7 @@ reservationDate date,
 pax integer not null,
 foreign key (rname, bid, tid, reservationTime, reservationDate) references BookedTables
 on delete cascade,
-foreign key (userName) references userpreferences on update cascade on delete cascade,
+foreign key (userName) references userpreferences,
 primary key (userName, rname, bid, tid, reservationTime, reservationDate)
 );
 
@@ -122,7 +122,8 @@ userName varchar(20) references Diners,
 rname varchar(40),
 bid integer,
 primary key (userName, rname, bid),
-foreign key (userName, rname, bid) references ConfirmedBookings on update cascade on delete cascade
+foreign key (userName, rname, bid) references ConfirmedBookings
+on delete cascade
 );
 
 
@@ -131,7 +132,7 @@ name varchar(50) primary key
 );
 
 create table Sells (
-menuName varchar(50) references Menu on update cascade on delete cascade,
+menuName varchar(50) references Menu,
 rname varchar(40),
 bid integer,
 primary key (menuName, rname, bid),
@@ -149,7 +150,7 @@ foreign key (rname,bid) references Branches
 
 
 create table menuItems (
-menuName varchar(50) references Menu on update cascade on delete cascade,
+menuName varchar(50) references Menu,
 foodName varchar(50),
 price integer,
 primary key (menuName,foodName, price)
@@ -262,6 +263,8 @@ before insert or update
 on BookedTables
 for each row
 execute procedure validHours();
+
+
 
 -------------------------------------------------
 --INSERT VALUES
@@ -512,7 +515,7 @@ insert into Sells (menuname, rname, bid) values
 ('Yumyum Menu', 'NamNam', 1);
 
 
-
+/*
 insert into confirmedbookings (userName, rname, bid) values
 ('Aaron', 'MacDonalds', 1),
 ('Aaron', 'MacDonalds', 2),
@@ -543,6 +546,6 @@ on conflict (userName) do update set preferredDate = '2021-09-12';
 
 insert into Books (username, rname, bid, tid, pax, reservationtime, reservationdate)
 values ('Aaron', 'MacDonalds', 1, 1, 1, '10:00:00', '2020-01-01');
-
+*/
 
 

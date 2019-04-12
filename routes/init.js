@@ -32,8 +32,11 @@ function initRouter(app) {
   //Change or Cancel Reservation Feature
   app.get('/editReservations', editReservations);
   app.post('/editReservations/edit', editReservationMode);
-  app.post('/edits/complete', updateDeleteReservation);
+  app.post('/edits/complete'       , updateDeleteReservation);
 
+  /* custom booking page */
+  app.get('/custom'         , displayCustomReservePage)
+  app.post('/custom/booking', makeCustomReservation)
 
   /*  Admin privileges  */
   app.get('/edit'       , admin.adminDashboard);
@@ -244,7 +247,7 @@ function updateDeleteReservation (req, res, next) {
 
         pool.query(select_query, [newRname, newBid, newPax, newReservationTime, newReservationDate], (err, data) => {
             if (err || !data.rows || data.rows.length===0) {
-                console.log("failed to find vacancy!");
+                console.log("failed to find vacancy!", err);
                 console.log("hence no changes to current reservation!");
             }
             else { //can find vacancy for change in reservation, so delete current reservation
@@ -728,6 +731,161 @@ function insertIntoBookedTables(req, res, next) {
 function contact (req, res, next) {
 
     res.render("contact", {auth : req.isAuthenticated()});
+}
+
+function displayCustomReservePage (req, res, next) {
+  let user = req.user
+
+  if (typeof user === "undefined") {
+    res.redirect('/') // Prevent unauthenticated access to this page
+  }
+
+  let err_message = undefined
+  // console.log(req.query)
+  if (typeof req.query !== "undefined") {
+    let messages = req.query
+    console.log(messages)
+    for (let id in messages) {
+      console.log(id);
+      if (id == 'no_tables') {
+        err_message = "No tables Found!"
+      } else if (id == 'insertionfail') {
+        err_message = messages[id]
+        console.log(err_message)
+      }
+    }
+  }
+
+  let time = utils.getTime()
+  let dateInStr = utils.getDateInStr()
+  let title = "Custom Reservations"
+
+  let date = utils.getDate();
+  let getLocation  = sql_query.getAllLocations
+  let getCuisines  = sql_query.getAllCuisines
+  let getRname     = sql_query.getAllRestaurantName
+  let getTimeSlots = sql_query.getAllTimeSlots
+
+  pool.query(getRname, (err, data) => {
+    if (err) {
+      console.error(err)
+      error(err, res);
+    } else {
+      let restoran = data.rows
+      pool.query(getTimeSlots, (err, data) => {
+        let timeslots  = data.rows
+        pool.query(getCuisines, (err, data) => {
+          let cuisines = data.rows
+          pool.query(getLocation, (err, data) => {
+            let locations = data.rows
+            let auth = req.isAuthenticated()
+            res.render('custombooking', {
+              page:      title,
+              dateInStr:  dateInStr,
+              date:       date,
+              time:       time,
+              auth:       auth,
+              restoran:   restoran,
+              timeslots:  timeslots,
+              cuisines:   cuisines,
+              locations:  locations,
+              user:       user,
+              err:        err_message
+            })
+          })
+        })
+      })
+    }})
+}
+
+
+function makeCustomReservation (req, res, next) {
+  let user = req.user
+  if (typeof user === "undefined") {
+    res.redirect('/') // Prevent unauthenticated access to this page
+  }
+
+  let username = req.body.username
+  let rname = req.body.rname
+  let location = req.body.loc
+  let time = req.body.reservationTime
+  let date = req.body.date
+  let pax = req.body.paxNo
+
+  let args = [
+    date,
+    time,
+    rname,
+    location,
+  ]
+
+  pool.query(sql_query.find_empty_tables, args, (err, data) => {
+    if (err ) {
+      console.error('Error in finding tables!')
+      res.redirect('/custom?tables='+err.message)
+    } else if ( !data.rows || data.rows.length === 0) {
+      console.error('No tables found!')
+      res.redirect('/custom?no_tables')
+    } else {
+      let table_id = data.rows[0].tid
+      let cuisine = data.rows[0].cuisinetype
+      let branch_id = data.rows[0].bid
+      console.log("Empty table found!", table_id, cuisine)
+      args = [
+        username,
+        rname,
+        location,
+        date,
+        time,
+        cuisine,
+        pax
+      ]
+      console.log(args)
+      pool.query(sql_query.insertUserPreference, args, (err, data) => {
+        if (err) {
+          console.error('Insertion Error AT userpreference!', err.message)
+          res.redirect('/custom?insertionfail='+err.message)
+        } else {
+          console.log("Successful insertion into user preferences")
+          args = [
+            rname,
+            branch_id,
+            table_id,
+            time,
+            date
+          ]
+          console.log(args)
+          pool.query(sql_query.insert_into_bookedtables, args, (err, data) => {
+            if (err) {
+              console.error('Insertion Error AT bookedtables!', err.message)
+              res.redirect('/custom?insertionfail='+err.message)
+            } else {
+              console.log("Successful insertion into booked tables")
+              args = [
+                username,
+                rname,
+                branch_id,
+                table_id,
+                pax,
+                time,
+                date,
+              ]
+              pool.query(sql_query.insertBooks, args, (err, data) => {
+                if (err) {
+                  console.error('Insertion Error AT books!', err)
+                  res.redirect('/custom?insertionfail='+err.message)
+                } else {
+                  console.log("Successful insertion into books")
+                  res.redirect('/custom?insertion=success')
+                }
+              })
+            }
+          })
+        }
+      })
+    }
+  })
+
 }
 
 

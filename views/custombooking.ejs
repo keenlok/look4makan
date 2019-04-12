@@ -1,0 +1,89 @@
+<html>
+<head>
+    <title><%= page %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/landing-page.min.css' />
+    <!-- Custom fonts for this template -->
+    <link href="/stylesheets/vendor/fontawesome-free/css/all.css" rel="stylesheet">
+    <link href="/stylesheets/vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+</head>
+<header>
+    <% include ./partials/header %>
+</header>
+<body>
+<div class="row align-content-md-start">
+    <p><%= dateInStr %></p>
+</div>
+<% if (typeof err !== 'undefined') { %>
+<div class="row align-content-md-start text-danger">
+    <h3><%= err %></h3>
+</div>
+<% } %>
+<div class="row">
+    <div class="col-xl-9 mx-auto">
+        <h2 class="mb-5">Making a custom booking</h2>
+    </div>
+    <form class="d-flex flex-row justify-content-center " method="post">
+        <input style="display:none" value="<%= user.username%>" name="username">
+        <div class="container-fluid">
+            <div class="row m-1">
+                <div class="-align-center"> Select Restaurant: </div>
+                <select class="m-1 flex-grow-1 " id="rname" name="rname">
+                    <option value=""> Select restaurant to book </option>
+                    <% for (var i = 0; i < restoran.length; i++) { %>
+                    <option value="<%= restoran[i].rname %>"><%= restoran[i].rname %> </option>
+                    <% } %>
+                </select>
+            </div>
+            <div class="row m-1">
+                <div class="-align-center"> Select Location: </div>
+                <!-- Selecting a location means selecting a branch for the restaurant -->
+                <select class="m-1 flex-grow-1 " id="location" name="loc">
+                    <option value=""> Select Location to book </option>
+                    <% for (var i = 0; i < locations.length; i++) { %>
+                    <option value="<%= locations[i].locname %>"><%= locations[i].locname %> </option>
+                    <% } %>
+                </select>
+            </div>
+            <div class="row m-1">
+                <div class="col m-2">
+                    <div class="-align-center"> Select Reservation Time: </div>
+                    <select id="time" name="reservationTime">
+                        <% for (let i = 0; i < timeslots.length; i++) { %>
+                        <% if(timeslots[i].timeslot >= time && i - 1 >= 0 && timeslots[i-1].timeslot < time) { %>
+                        <option value="<%= timeslots[i].timeslot%>" selected ><%= timeslots[i].timeslotstr %></option>
+                        <% } else { %>
+                        <option value="<%= timeslots[i].timeslot%>"><%= timeslots[i].timeslotstr %></option>
+                        <% } %>
+                        <% } %>
+                    </select>
+                </div>
+            </div>
+            <div class="row m-2">
+                <div class="-align-center"> Select Reservation Date: </div>
+                <input type="date"  value="<%=date%>" class="form-control form-control-lg" name="date" required>
+            </div>
+            <div class="row m-2">
+                <select id="paxNo" name="paxNo">
+                    <% for (let i = 1; i <= 100; i++) { %>
+                    <%  if(i === 2) { %>
+                    <option value="<%=i%>" selected ><%= i %></option>
+                    <% } else { %>
+                    <option value="<%=i%>" ><%= i %></option>
+                    <% } %>
+                    <% } %>
+                </select>
+                <button class="btn btn-primary m-2" formaction="/custom/booking" type="submit">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>
+

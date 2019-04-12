@@ -15,9 +15,11 @@
                 <!--<li class="nav-item">-->
                     <!--<a class="nav-link" href="/restaurants">Restaurants</a>-->
                 <!--</li>-->
-                <!--&lt;!&ndash;<li class="nav-item">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<a class="nav-link" href="#">Make Reservations</a>&ndash;&gt;-->
-                <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                <% if (typeof user !== "undefined") { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/custom">Special Reservations</a>
+                </li>
+                <% } %>
             </ul>
 
 

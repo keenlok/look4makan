@@ -41,7 +41,7 @@ const search_result = 'SELECT distinct rname, bid, openingHours, location ' +
     'FROM branches B NATURAL JOIN advertises A NATURAL JOIN branchTables BT ' +
     'WHERE B.rname IN ($1) AND B.location IN ($2) AND ' +
     'cuisineType IN ($3) AND B.openTime <= $4 AND ' +
-    'B.closeTime >= $4 AND BT.capacity >= $5 AND ' +
+    'B.closeTime >= $4::time + \'01:00:00\' AND BT.capacity >= $5 AND ' +
     'NOT EXISTS (SELECT 1 FROM bookedtables BKT ' +
     'WHERE BKT.bid = BT.bid AND BT.rname = BKT.rname ' +
     'AND BT.tid = BKT.tid AND BKT.bookedtimeslot >= $4 ' +
@@ -86,7 +86,7 @@ const insertIntoRatings = "INSERT INTO Ratings (rating, userName, rname, bid) VA
 
 const deleteBookedTable = "DELETE FROM BookedTables WHERE rname = $1 AND bid = $2 AND " +
     "tid = $3 AND bookedTimeslot >= $4 AND " +
-    "bookedTimeslot < $4::time + '01:00:00' AND bookedDate = $5;";
+    "bookedTimeslot < $4::time + \'01:00:00\' AND bookedDate = $5;";
 
 const checkForVacancyForUpdatedReservation = "SELECT tid FROM branches B NATURAL JOIN branchTables BT"
     + " WHERE B.rname = $1 AND B.bid = $2 AND BT.capacity >= $3"

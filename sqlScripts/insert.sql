@@ -50,6 +50,9 @@ insert into awards (username, awardpoints) values
 
 
 INSERT INTO locations (locname) VALUES
+('Jurong Point'), ('Centre Point'), ('Causeway Point'), ('Vivo City'), ('Clementi Mall'),
+('Plaza Singapura'), ('Orchard Scape'), ('Kent Ridge Mall'),('100am Mall'),
+('Orchard Central'),('Shaw Plaza'),('Lucky Plaza'),('Buona Vista'),
 ('Cagliari'),('Villarrica'),('Acquasanta Terme'),('San Leucio del Sannio'),
 ('Hofstade'),('Heerenveen'),('As'),('Kanpur Cantonment'),('Narbolia'),
 ('Marano Lagunare'),('Adana'),('Spoleto'),('Bear'),('Tiel'),('Bionaz'),
@@ -61,6 +64,8 @@ INSERT INTO locations (locname) VALUES
 ('Luino'),('Halkirk'),('Beausejour'),('Warwick');
 
 INSERT INTO restaurants (rname) VALUES
+('MacDonalds'), ('BurgerKing'), ('Crystal Jade'), ('Astons'), ('Sushi Express'), ('Forlino'),
+('Ristorante Da Valentino'), ('Thai Tantric Authentic Thai Cuisine'), ('NamNam'),
 ('Vivamus Euismod Urna Ltd'),('Curabitur Sed Foundation'),('Tellus Sem Ltd'),
 ('Nec Ligula Inc.'),('Euismod Urna PC'),('Bibendum Sed Incorporated'),('Pellentesque Industries'),
 ('Eget Massa Suspendisse Incorporated'),('Semper Cursus Integer Corporation'),('Leo In Lobortis LLC'),
@@ -80,6 +85,29 @@ INSERT INTO CuisineTypes (cuisineName) VALUES
 ('French'), ('Indian'), ('Straits'), ('Malay'), ('Thai'), ('Vietnamese');
 
 INSERT INTO branches (rname, bid, location, openinghours, opentime, closetime, cuisinetype) VALUES
+('MacDonalds', 1, 'Jurong Point', '10am - 10pm', '10:00:00', '22:00:00', 'Western'),
+('MacDonalds', 2, 'Clementi Mall', '10am - 10pm', '10:00:00', '22:00:00', 'Western'),
+('MacDonalds', 3, 'Vivo City', '8am - 12am', '08:00:00', '23:59:59', 'Western'),
+('MacDonalds', 4, 'Plaza Singapura', '9.30am - 10pm', '09:30:00', '22:00:00', 'Western'),
+('MacDonalds', 5, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Western'),
+('BurgerKing', 1, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Western'),
+('BurgerKing', 2, 'Plaza Singapura', '8am - 8pm', '08:00:00', '20:00:00', 'Western'),
+('BurgerKing', 3, 'Causeway Point', '7am - 7pm', '07:00:00', '19:00:00', 'Western'),
+('Crystal Jade', 1, 'Vivo City', '10am - 10pm', '10:00:00', '22:00:00', 'Chinese'),
+('Astons', 1, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Western'),
+('Astons', 2, 'Plaza Singapura', '8am - 8pm', '08:00:00', '20:00:00', 'Western'),
+('Astons', 3, 'Causeway Point', '7am - 7pm', '07:00:00', '19:00:00', 'Western'),
+('Astons', 4, 'Centre Point', '10am - 10pm', '10:00:00', '22:00:00', 'Western'),
+('Sakae Sushi', 1, 'Orchard Scape', '11am - 9.30pm', '11:00:00', '21:30:00', 'Japanese'),
+('Sakae Sushi', 2, 'Plaza Singapura', '12pm - 7.30pm', '12:00:00', '19:30:00', 'Japanese'),
+('Sushi Express', 1, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Japanese'),
+('Sushi Express', 2, 'Buona Vista', '12pm - 7.30pm', '12:00:00', '19:30:00', 'Japanese'),
+('Forlino', 1, 'Orchard Scape', '1pm - 10pm', '13:00:00', '10:00:00', 'French'),
+('Forlino', 2, 'Buona Vista', '2pm - 7.30pm', '14:00:00', '19:30:00', 'French'),
+('Ristorante Da Valentino', 1, 'Orchard Scape', '1pm - 6.30pm', '13:00:00', '18:30:00', 'French'),
+('Thai Tantric Authentic Thai Cuisine', 1, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Thai'),
+('Thai Tantric Authentic Thai Cuisine', 2, 'Buona Vista', '12pm - 7.30pm', '10:00:00', '19:30:00', 'Thai'),
+('NamNam', 1, 'Orchard Scape', '10am - 10pm', '10:00:00', '22:00:00', 'Vietnamese'),
 ('Vivamus Euismod Urna Ltd', 1, 'Cagliari', '10am - 10pm', '10:00:00', '22:00:00', 'Italian'),
 ('Vivamus Euismod Urna Ltd', 2, 'Villarrica', '10am - 10pm', '10:00:00', '22:00:00', 'Italian'),
 ('Vivamus Euismod Urna Ltd', 3, 'Acquasanta Terme', '10am - 10pm', '10:00:00', '22:00:00', 'Italian'),
@@ -121,7 +149,24 @@ INSERT INTO branches (rname, bid, location, openinghours, opentime, closetime, c
 ('Tellus Sem Ltd', 9, 'Bahawalnagar', '10am - 10pm', '10:00:00', '22:00:00', 'Oriental'),
 ('Tellus Sem Ltd', 10, 'Helena', '10am - 10pm', '10:00:00', '22:00:00', 'Oriental');
 
-INSERT INTO advertises (rname, bid) VALUES 
+INSERT INTO advertises (rname, bid) VALUES
+('MacDonalds', 1),
+('MacDonalds', 2),
+('MacDonalds', 3),
+('MacDonalds', 4),
+('MacDonalds', 5),
+('BurgerKing', 1),
+('BurgerKing', 2),
+('Crystal Jade', 1),
+('Astons', 1),
+('Astons', 2),
+('Sushi Express', 1),
+('Sushi Express', 2),
+('Forlino', 1),
+('Forlino', 2),
+('Ristorante Da Valentino', 1),
+('Thai Tantric Authentic Thai Cuisine', 1),
+('NamNam', 1),
 ('Vivamus Euismod Urna Ltd', 1),
 ('Vivamus Euismod Urna Ltd', 2),
 ('Vivamus Euismod Urna Ltd', 3),
@@ -163,7 +208,25 @@ INSERT INTO advertises (rname, bid) VALUES
 ('Tellus Sem Ltd', 9),
 ('Tellus Sem Ltd', 10);
 
-INSERT INTO branchtables (rname, bid, tid, capacity) VALUES 
+INSERT INTO branchtables (rname, bid, tid, capacity) VALUES
+('MacDonalds', 1, 1, 4),
+('MacDonalds', 1, 2, 2),
+('MacDonalds', 1, 3, 4),
+('MacDonalds', 1, 4, 5),
+('MacDonalds', 2, 1, 4),
+('MacDonalds', 3, 1, 4),
+('BurgerKing', 1, 1, 2),
+('Crystal Jade', 1, 1, 10),
+('Astons', 1, 1, 3),
+('Astons', 2, 1, 5),
+('Sushi Express', 1, 1, 4),
+('Sushi Express', 2, 2, 2),
+('Forlino', 1, 1, 2),
+('Forlino', 2, 1, 2),
+('Forlino', 2, 2, 2),
+('Ristorante Da Valentino', 1, 1, 1),
+('Thai Tantric Authentic Thai Cuisine', 1, 1, 4),
+('NamNam', 1, 1, 3),
 ('Vivamus Euismod Urna Ltd', 1, 1, 4),
 ('Vivamus Euismod Urna Ltd', 1, 2, 4),
 ('Vivamus Euismod Urna Ltd', 1, 3, 4),
@@ -564,3 +627,51 @@ INSERT INTO branchtables (rname, bid, tid, capacity) VALUES
 ('Tellus Sem Ltd', 10, 8, 8),
 ('Tellus Sem Ltd', 10, 9, 8),
 ('Tellus Sem Ltd', 10, 10, 8);
+
+insert into menu (name) values
+('MacDonalds Breakfast Menu'),
+('MacDonalds Lunch Menu'),
+('BurgerKing Breakfast Menu'),
+('BurgerKing Lunch Menu'),
+('Crystal Jade Main Menu'),
+('Crystal Jade Promotion Menu'),
+('Astons Western Menu'),
+('Sakae Lunch Menu'),
+('Sushi Express Menu'),
+('Forlino Menu'),
+('Exquisite Menu'),
+('Thai Lunch Menu'),
+('Yumyum Menu');
+
+insert into Sells (menuname, rname, bid) values
+('MacDonalds Breakfast Menu', 'MacDonalds', 1),
+('MacDonalds Breakfast Menu', 'MacDonalds', 2),
+('MacDonalds Breakfast Menu', 'MacDonalds', 3),
+('MacDonalds Breakfast Menu', 'MacDonalds', 4),
+('MacDonalds Breakfast Menu', 'MacDonalds', 5),
+('MacDonalds Lunch Menu', 'MacDonalds', 1),
+('MacDonalds Lunch Menu', 'MacDonalds', 2),
+('MacDonalds Lunch Menu', 'MacDonalds', 3),
+('MacDonalds Lunch Menu', 'MacDonalds', 4),
+('MacDonalds Lunch Menu', 'MacDonalds', 5),
+('BurgerKing Lunch Menu', 'BurgerKing', 1),
+('BurgerKing Lunch Menu', 'BurgerKing', 2),
+('BurgerKing Lunch Menu', 'BurgerKing', 3),
+('BurgerKing Breakfast Menu', 'BurgerKing', 1),
+('BurgerKing Breakfast Menu', 'BurgerKing', 2),
+('BurgerKing Breakfast Menu', 'BurgerKing', 3),
+('Crystal Jade Main Menu', 'Crystal Jade', 1),
+('Astons Western Menu', 'Astons', 1),
+('Astons Western Menu', 'Astons', 2),
+('Astons Western Menu', 'Astons', 3),
+('Astons Western Menu', 'Astons', 4),
+('Sakae Lunch Menu', 'Sakae Sushi', 1),
+('Sakae Lunch Menu', 'Sakae Sushi', 2),
+('Sushi Express Menu', 'Sushi Express', 1),
+('Sushi Express Menu', 'Sushi Express', 2),
+('Forlino Menu', 'Forlino', 1),
+('Forlino Menu', 'Forlino', 2),
+('Exquisite Menu', 'Ristorante Da Valentino', 1),
+('Thai Lunch Menu', 'Thai Tantric Authentic Thai Cuisine', 1),
+('Thai Lunch Menu', 'Thai Tantric Authentic Thai Cuisine', 2),
+('Yumyum Menu', 'NamNam', 1);

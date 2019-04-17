@@ -661,7 +661,31 @@ insert into menuitems (menuname, foodname, price) values
 ('Crystal Jade Promotion Menu', 'Siew Mai', 2),
 ('Crystal Jade Promotion Menu', 'Ha Kau', 2),
 ('Crystal Jade Main Menu', 'Mango Prawn Roll', 5),
-('Crystal Jade Main Menu', 'Wasabi Prawn Roll', 5);
+('Crystal Jade Main Menu', 'Wasabi Prawn Roll', 5),
+('Vivamus Menu', 'Beef - Baby, Liver', 1),
+('Vivamus Menu', 'Star Fruit', 11),
+('Vivamus Menu', 'Coke - Classic, 355 Ml', 4),
+('Curabiturian Menu', 'Crackers - Trio', 9),
+('Curabiturian Menu', 'Sauce - Vodka Blush', 2),
+('Curabiturian Menu', 'Appetizer - Spring Roll, Veg', 1),
+('A Star Menu', 'Creamers - 10%', 6),
+('A Star Menu', 'Turkey Leg With Drum And Thigh', 2),
+('A Star Menu', 'Flower - Commercial Bronze', 11),
+('A Star Menu', 'Wine - White, Cooking', 2),
+('A Star Menu', 'Beef - Ox Tail, Frozen', 5),
+('A Star Menu', 'Watercress', 3),
+('Tellus Sem Menu', 'Chicken - Soup Base', 5),
+('Vivamus Menu', 'Beer - True North Strong Ale', 9),
+('Curabiturian Menu', 'Beer - True North Strong Ale', 9),
+('A Star Menu','Beer - True North Strong Ale', 9),
+('Tellus Sem Menu', 'Cheese - Mozzarella, Buffalo', 11),
+('Vivamus Menu', 'Wine - Pinot Grigio Collavini', 8),
+('Tellus Sem Menu', 'Wine - Pinot Grigio Collavini', 8),
+('A Star Menu', 'Wine - Pinot Grigio Collavini', 8),
+('Tellus Sem Menu', 'Chicken - Leg, Fresh', 9),
+('Tellus Sem Menu', 'Cinnamon Buns Sticky', 5),
+('Tellus Sem Menu', 'Appetizer - Veg Assortment', 11),
+('Tellus Sem Menu', 'Wine - White, Lindemans Bin 95', 6);
 
 
 INSERT INTO Sells (menuname, rname, bid) VALUES

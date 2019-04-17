@@ -1,6 +1,6 @@
 delete from Time cascade;
-delete from diners cascade;
 delete from awards cascade;
+delete from diners cascade;
 delete from advertises cascade;
 delete from restaurants cascade;
 delete from Sells cascade;

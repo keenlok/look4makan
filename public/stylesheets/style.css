@@ -1,10 +1,18 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background-color : #1c7430;
+
+  background-color: #f4f3f3;
 }
 
-a {
-  color: #00B7FF;
+
+
+.btn {
+  background: #0b8457;
+  border: #0b8457;
+    /*background: #226597;*/
+    /*border: #226597;*/
 }
 
+/* body {
+  background-color: #EEC1EA;
+}

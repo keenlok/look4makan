@@ -732,7 +732,7 @@ function insertIntoBookedTables(req, res, next) {
                 })
             }
         }
-        // return next();
+        return next();
     });
 }
 

@@ -24,4 +24,5 @@ account, and administrators can create/modify/delete entries.
 3. Setup `.env` file with the following line inside:  
 `DATABASE_URL=postgres://username:password@host_address:port/database_name`  
  This is to allow the app to connect to your postgres database.
-4. Run `npm run start`
+5. Run init.sql to insert data into your postgres database.
+6. Run `npm run start`

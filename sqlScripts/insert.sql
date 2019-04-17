@@ -641,7 +641,11 @@ insert into menu (name) values
 ('Forlino Menu'),
 ('Exquisite Menu'),
 ('Thai Lunch Menu'),
-('Yumyum Menu');
+('Yumyum Menu'),
+('Vivamus Menu'),
+('Curabiturian Menu'),
+('A Star Menu'),
+('Tellus Sem Menu');
 
 insert into Sells (menuname, rname, bid) values
 ('MacDonalds Breakfast Menu', 'MacDonalds', 1),

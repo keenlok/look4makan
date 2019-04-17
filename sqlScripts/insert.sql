@@ -1,16 +1,16 @@
-delete from Time cascade;
-delete from awards cascade;
-delete from diners cascade;
-delete from advertises cascade;
-delete from restaurants cascade;
-delete from Sells cascade;
-delete from bookedtables cascade;
-delete from branchtables cascade;
-delete from branches cascade;
-delete from CuisineTypes cascade;
-delete from menuitems cascade;
-delete from menu cascade;
-delete from Locations cascade;
+DELETE FROM Time CASCADE;
+DELETE FROM awards CASCADE;
+DELETE FROM diners CASCADE;
+DELETE FROM advertises CASCADE;
+DELETE FROM restaurants CASCADE;
+DELETE FROM Sells CASCADE;
+DELETE FROM bookedtables CASCADE;
+DELETE FROM branchtables CASCADE;
+DELETE FROM branches CASCADE;
+DELETE FROM CuisineTypes CASCADE;
+DELETE FROM menuitems CASCADE;
+DELETE FROM menu CASCADE;
+DELETE FROM Locations CASCADE;
 
 INSERT INTO Time (timeSlot, timeSlotStr)  VALUES
 ('05:00:00', '5:00 am'), ('05:15:00', '5:15 am'), ('05:30:00', '5:30 am'), ('05:45:00', '5:45 am'),
@@ -41,7 +41,7 @@ INSERT INTO diners (username, firstname, lastname, password, isAdmin) VALUES
 ('nicpang', 'Nicholas', 'Pang', '$2b$10$QFg3/z/fXRaHlIWfftdGkOYmPwxzSrR/iCAyVatgCSJBd/7eBNfC.', true),
 ('madScientist', 'Morty', 'Rick', '$2b$10$QFg3/z/fXRaHlIWfftdGkOCwam0wCdfW9yfA7u93IsWL2DVSul.Ue', false);
 
-insert into awards (username, awardpoints) values
+INSERT INTO awards (username, awardpoints) VALUES
 ('lokeen', 0),
 ('Aaron', 0),
 ('alexis', 0),
@@ -628,7 +628,7 @@ INSERT INTO branchtables (rname, bid, tid, capacity) VALUES
 ('Tellus Sem Ltd', 10, 9, 8),
 ('Tellus Sem Ltd', 10, 10, 8);
 
-insert into menu (name) values
+INSERT INTO menu (name) VALUES
 ('MacDonalds Breakfast Menu'),
 ('MacDonalds Lunch Menu'),
 ('BurgerKing Breakfast Menu'),
@@ -647,7 +647,24 @@ insert into menu (name) values
 ('A Star Menu'),
 ('Tellus Sem Menu');
 
-insert into Sells (menuname, rname, bid) values
+insert into menuitems (menuname, foodname, price) values
+('MacDonalds Breakfast Menu', 'Big Breakfast', 5),
+('MacDonalds Breakfast Menu', 'McMuffin' ,5),
+('MacDonalds Breakfast Menu', 'Deluxe Breakfast', 7),
+('MacDonalds Lunch Menu', 'McSpicy', 5),
+('MacDonalds Lunch Menu', 'McChicken', 2),
+('MacDonalds Lunch Menu', 'Fillet-o-Fish', 3),
+('BurgerKing Breakfast Menu', 'Hot Milo', 2),
+('BurgerKing Breakfast Menu', 'Hot Coffee', 2),
+('BurgerKing Lunch Menu', 'Zinger Burger', 5),
+('BurgerKing Lunch Menu', 'Cheese Fries', 3),
+('Crystal Jade Promotion Menu', 'Siew Mai', 2),
+('Crystal Jade Promotion Menu', 'Ha Kau', 2),
+('Crystal Jade Main Menu', 'Mango Prawn Roll', 5),
+('Crystal Jade Main Menu', 'Wasabi Prawn Roll', 5);
+
+
+INSERT INTO Sells (menuname, rname, bid) VALUES
 ('MacDonalds Breakfast Menu', 'MacDonalds', 1),
 ('MacDonalds Breakfast Menu', 'MacDonalds', 2),
 ('MacDonalds Breakfast Menu', 'MacDonalds', 3),
